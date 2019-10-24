@@ -1,0 +1,1 @@
+mysql -h db.sice.indiana.edu -u p565f19_lalovett p565f19_lalovett --pass=my+sql=p565f19_lalovett < ~/P565Group2/tables.sql

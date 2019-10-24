@@ -1,0 +1,43 @@
+{
+  "name": "ConnectHour",
+  "version": "0.0.1",
+  "description": "Group project for P565 by Group 2",
+  "repository": "https://https://github.iu.edu/lalovett/P565Group2",
+  "main": "server.js",
+  "scripts": {
+    "react": "cd react_app && npm start",
+    "start": "concurrently --kill-others \"node server.js\" \"npm run react\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "volunteer",
+    "management",
+    "organizer",
+    "event",
+    "donate"
+  ],
+  "author": "Luke, Sonia, Milan",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@material-ui/core": "^4.5.1",
+    "@material-ui/icons": "^4.5.1",
+    "@trendmicro/react-sidenav": "^0.4.5",
+    "antd": "^3.24.1",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
+    "concurrently": "^4.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mdbreact": "^4.21.1",
+    "jwt-simple": "^0.5.6",
+    "mysql2": "^1.7.0",
+    "nodemailer": "^6.3.1",
+    "react": "^16.10.2",
+    "react-animated-css": "^1.2.1",
+    "react-datepicker": "^2.9.6",
+    "react-dom": "^16.10.2",
+    "react-redux": "^7.1.1",
+    "react-time-picker": "^3.7.2"
+  }
+}
