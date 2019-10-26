@@ -16,6 +16,9 @@
     "event",
     "donate"
   ],
+  "engines": {
+    "node": "12.11.1"
+  },
   "author": "Luke, Sonia, Milan",
   "license": "UNLICENSED",
   "dependencies": {
