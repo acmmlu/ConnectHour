@@ -5,8 +5,8 @@
   "repository": "https://https://github.iu.edu/lalovett/P565Group2",
   "main": "server.js",
   "scripts": {
-    "react": "cd react_app && npm start",
-    "start": "concurrently --kill-others \"node server.js\" \"npm run react\"",
+    "heroku-postbuild": "cd react_app && npm i && npm run build",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
