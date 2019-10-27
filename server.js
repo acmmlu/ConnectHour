@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const server = app.listen(port,  function () {
+const server = app.listen(port,  "0.0.0.0", function () {
     console.log('Navigate to silo.sice.indiana.edu:'+port);
 });
 
