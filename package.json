@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "heroku-postbuild": "cd react_app && npm i && npm run build",
-    "start": "PORT=40951 node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
