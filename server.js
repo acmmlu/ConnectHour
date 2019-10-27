@@ -7,7 +7,7 @@ const cors = require('cors');
 const g = require('./globals');
 
 const app = express();
-const port = 40951;
+const port = process.env.PORT || 40951;
 
 app.use(express.static(path.join(__dirname, 'react_app', 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
