@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import EventCreate from "./EventCreate";
 import EventEdit from "./EventEdit";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  closeButton
-} from "reactstrap";
+import EventCreate from "./EventCreate";
 import { Animated } from "react-animated-css";
 import axios from "axios";
-import OrgLayout from "./OrgLayout";
-import { BrowserRouter, Link, Route } from "react-router-dom";
+import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
+import '../../App.css'
+
 class Events extends Component {
   constructor(props) {
     super(props);
@@ -39,23 +33,33 @@ class Events extends Component {
   };
   openEditReset() {
     this.setState({ editFormId: "" });
+    console.log('asd')
   }
 
   componentDidMount=()=> {
+   
+    console.log(Cookies.get())
+
+    if (Cookies.get("token")&& Cookies.get("type")==='/odashboard/') {
+    const ID= (jwt_decode(Cookies.get("token"))).uid
     const p= this
     axios
-      .get("http://localhost:40951/event/organizer/1")
+      .get("http://localhost:40951/event/organizer/"+ID)
       .then(function(response) {
-        console.log(response)
         p.setState({ eventList: response.data });
+        console.log(response)
       })
       .catch(function(error) {
         console.log(error);
       });
+    }
+    else{
+       this.props.history.push("/");
+    }
+   
   }
-  componentDidMount() {
-    console.log(this.state.eventList);
-  }
+  
+
   addEvent(event) {
     let eventList = this.state.eventList;
     eventList.push(event);
@@ -82,6 +86,8 @@ class Events extends Component {
                 editFormId={this.state.editFormId}
                 event={event}
                 openEdit={this.openEdit}
+                ID={(jwt_decode(Cookies.get("token"))).uid}
+
                 openEditReset={this.openEditReset}
               ></Event>
             </Animated>
@@ -100,10 +106,13 @@ class Events extends Component {
             >
               Close
             </button>
-            <EventCreate
+             <EventCreate
+            
               addEvent={this.addEvent}
               toggleCreateForm={this.toggleCreateForm}
-            />
+              ID={(jwt_decode(Cookies.get("token"))).uid}
+
+            /> 
           </div>
         </div>
       </React.Fragment>
@@ -133,7 +142,8 @@ class Event extends Component {
           <EventEdit
             eventdata={this.props.event}
             openEditReset={this.props.openEditReset}
-          /> 
+            ID={(jwt_decode(Cookies.get("token"))).uid}
+            /> 
         )}
       </div>
     );

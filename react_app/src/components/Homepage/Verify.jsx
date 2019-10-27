@@ -1,15 +1,13 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import axios from "axios";
-import { Redirect, Link } from "react-router-dom";
-import Header from '../Header'
-
-
-
 import { createBrowserHistory } from "history";
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+
 
 const history = createBrowserHistory();
 
+//Child component for verifying
 class Verify extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +18,8 @@ class Verify extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.toggleErrmMsg = this.toggleErrmMsg.bind(this);
   }
+
+  //sunction the hide/show the error message
   toggleErrmMsg() {
     this.setState({
       errmsg: !this.state.errmsg
@@ -27,41 +27,43 @@ class Verify extends React.Component {
   }
 
   render() {
-    return (<React.Fragment>
-     
-
-      <div id="Volunteer_form" className="card  mb-3 p-4 ">
-   
-        {this.state.errmsg && (
-          <span className="error_msg text-danger">
-            Invalid Code. Try again.
-          </span>
-        )}
-        <form className="text-center" onSubmit={e => this.onSubmit(e)}>
-          <div className="row">
-            <div className="col p-2">
-              <input
-                type="text"
-                name="Reset_code"
-                onChange={this.handleInputChange}
-                className="form-control"
-                placeholder="Check Your Email For Verification Code"
-                required
-              />
+    return (
+      <React.Fragment>
+        <div id="Volunteer_form" className="card  mb-3 p-4 ">
+          {/*Error message */}
+          {this.state.errmsg && (
+            <span className="error_msg text-danger">
+              Invalid Code. Try again.
+            </span>
+          )}
+          <form className="text-center" onSubmit={e => this.onSubmit(e)}>
+            <div className="row">
+              <div className="col p-2">
+                <input
+                  type="text"
+                  name="Reset_code"
+                  onChange={this.handleInputChange}
+                  className="form-control"
+                  placeholder="Check Your Email For Verification Code"
+                  required
+                />
+              </div>
             </div>
-          </div>
 
-          <input type="submit" className="btn btn-primary m-1" value="Submit" />
-        </form>
-        
-        <input
-          className="btn btn-danger m-auto"
-          type='button'
-          value='Close'
-          onClick={this.props.toggleVerify}
-        />
+            <input
+              type="submit"
+              className="btn btn-primary m-1"
+              value="Submit"
+            />
+          </form>
 
-      </div>
+          <input
+            className="btn btn-danger m-auto"
+            type="button"
+            value="Close"
+            onClick={this.props.toggleVerify}
+          />
+        </div>
       </React.Fragment>
     );
   }
@@ -69,147 +71,101 @@ class Verify extends React.Component {
   handleInputChange = e => {
     this.setState({ code: e.target.value });
   };
- 
 
+  //on submit function
   onSubmit = e => {
     e.preventDefault();
-
-    
-    //redirect to dashboard
-    console.log(this.props.verifyCode)
-
-    console.log(this.props.verifyCode.code,this.state.code)
-
-    if (this.props.verifyCode.code.verification_token=== parseInt(this.state.code)) {
-      console.log('in',this.props.verifyCode.code.verification_token,this.state.code)
-
+    console.log((this.props.verifyCode.code.verification_token));
+    //check if the user code and the actual code matches
+    if (
+      parseInt(this.props.verifyCode.code.verification_token) ===
+        parseInt(this.state.code) ||
+      parseInt(this.props.verifyCode.code) === parseInt(this.state.code)
+    ) {
       this.props.verifyCode["formData"]["Verified"] = "True";
       const type = this.props.verifyCode["formData"]["type"];
-    const fname = this.props.verifyCode["formData"]["formname"];
-    const thisprops=this.props
+      const fname = this.props.verifyCode["formData"]["formname"];
+      const thisprops = this.props;
+      let path_type = "";
 
+      //clear the error message on correct code
       if (this.state.errmsg) {
         this.toggleErrmMsg();
       }
-      if (type === "Volunteer" ) {
-        
-        if (fname === "login" || fname==='Volunteerlogin') {
-          //redirect to dashboard
-         
-          axios
-            .post(
-              "http://localhost:40951/login",
-              this.props.verifyCode["formData"]
-            )
-            .then(function(response) {
-              console.log('response',response)
-              const ID=response.data.id
-               thisprops.history.push('/vdashboard/'+ID)
-              console.log("Volunteer Logged in",response);
-              
-            })
-            .catch(function(error) {
-              console.log(error);
-              //Perform action based on error
-            });
-        }
-        if (fname === "VolunteerRegister") {
-          
-          //redirect to dashboard
-          axios
-            .post(
-              "http://localhost:40951/register",
-              this.props.verifyCode["formData"]
-            )
-            .then(function(response) {
-
-             
-              thisprops.toggleVerify()
-              window.location.reload();
-              console.log(response);
-             
-            })
-            .catch(function(error) {
-              console.log(error);
-              //Perform action based on error
-            });
-        }
-        if (fname === "reset"|| fname==='Volunteerreset') {
-          
-          //alert and redirect to login
-          axios
-            .post(
-              "http://localhost:40951/reset_password",
-              this.props.verifyCode["formData"]
-            )
-            .then(function(response) {
-              thisprops.toggleVerify()
-              thisprops.history.push('/')
-            })
-            .catch(function(error) {
-              console.log(error);
-              //Perform action based on error
-            });
-        }
+      //enter if redirected from register page
+      if (fname === "VolunteerRegister" || fname === "OrganizationRegister") {
+        axios
+          .post(
+            "http://localhost:40951/register",
+            this.props.verifyCode["formData"]
+          )
+          .then(function(response) {
+            thisprops.toggleVerify();
+            window.location.reload();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
       }
 
-      if (type === "Organization") {
-        if (fname === "login" || fname==='Organiztionlogin') {
-          //redirect to dashboard
-          axios
-            .post(
-              "http://localhost:40951/login",
-              this.props.verifyCode["formData"]
-            )
-            .then(function(response) {
-              const ID=response.data.id
-              thisprops.history.push('/odashboard/'+ID)
-
-              console.log("Organization loggedin");
-            })
-            .catch(function(error) {
-              console.log("Account does not Exists");
-              //Perform action based on error
-            });
-        }
-        if (fname === "OrganizationRegister") {
-          //redirect to dashboard
-          axios
-            .post(
-              "http://localhost:40591/register",
-              this.props.verifyCode["formData"]
-            )
-            .then(function(response) {
-              console.log("Organization registered");
-            })
-            .catch(function(error) {
-              thisprops.history.push('/')
-
-              console.log("Account Exists");
-              //Perform action based on error
-            });
-        }
-        if (fname === "reset" || fname==='Organizationreset') {
-          //alert and redirect to login
-          axios
-            .post(
-              "http://localhost:40591/reset_password",
-              this.props.verifyCode["formData"]
-            )
-            .then(function(response) {
-              thisprops.history.push('/')
-
-              console.log("Organization Password reset");
-            })
-            .catch(function(error) {
-              console.log("error");
-              //Perform action based on error
-            });
-        }
+      //enter if redirected from reset page
+      if (
+        fname === "reset" ||
+        fname === "Volunteerreset" ||
+        fname === "Organizationreset"
+      ) {
+        axios
+          .post(
+            "http://localhost:40951/reset_password",
+            this.props.verifyCode["formData"]
+          )
+          .then(function(response) {
+            thisprops.toggleVerify();
+            thisprops.history.push("/");
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
       }
 
-      //Perform action based on response redirect
+      //enter if redirected from login page
+      if (
+        fname === "login" ||
+        fname === "Organizationlogin" ||
+        fname === "login" ||
+        fname === "Volunteerlogin"
+      ) {
+        if (type === "Volunteer") {
+          path_type = "/vdashboard/";
+        } else {
+          path_type = "/odashboard/";
+        }
+        axios
+          .post(
+            "http://localhost:40951/login",
+            this.props.verifyCode["formData"]
+          )
+          .then(function(response) {
+            let token= response.data.jwt            
+            let ID = (jwt_decode(String(token))).uid;
+            console.log(path_type +ID )
+
+            Cookies.remove("token", {
+            });
+            Cookies.remove("type");
+            Cookies.set('token',token)
+
+            Cookies.set('type',path_type)
+             thisprops.history.push({
+              pathname: path_type + ID ,
+            });
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
     } else {
+      //display error message
       if (!this.state.errmsg) {
         this.toggleErrmMsg();
       }

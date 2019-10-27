@@ -1,57 +1,61 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Modal, ModalHeader } from "reactstrap";
-import { Button } from "react-bootstrap";
 import Verify from "./Verify";
 import Header from "../Header";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
 import logo from "../../logo.png";
-import head from "../Login.png";
 
+
+//Reset password (parent) component for login page.
 export default class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      verifymodal: false,
-   
+      formData: {},
+      verifymodal: false, //state used to show or hide verify code modal form
+      errmsg: "" //stores the errr message to display
     };
     this.toggleVerify = this.toggleVerify.bind(this);
   }
- 
+
+  //function to toggle verify modal state and update the formdata state 
   toggleVerify(data) {
     this.setState({ verifymodal: !this.state.verifymodal });
     this.setState({ formData: data });
   }
 
   render() {
-
     return (
       <React.Fragment>
-      <Reset toggleVerify={this.toggleVerify} type={this.props.location.state.type}  history={this.props.history}/>
-      <Modal isOpen={this.state.verifymodal}>
-      <ModalHeader>Verify</ModalHeader>
-      <Verify
-        type={this.state.type}
-        toggleVerify={this.toggleVerify}
-        verifyCode={this.state.formData}
-        history={this.props.history}
-      />
+        {/*Displaying the reset component that contains the reset form*/}
+        <Reset
+          toggleVerify={this.toggleVerify}
+          type={this.props.location.state.type}
+          history={this.props.history}
+        />
 
-    </Modal>
-    </React.Fragment>
-    )
-  
-  
-  }}
-  class Reset extends Component {
+                {/*Displaying the verify account component */}
+
+        <Modal isOpen={this.state.verifymodal}>
+          <ModalHeader>Verify</ModalHeader>
+          <Verify
+            type={this.state.type}
+            toggleVerify={this.toggleVerify}
+            verifyCode={this.state.formData}
+            history={this.props.history}
+          />
+        </Modal>
+      </React.Fragment>
+    );
+  }
+}
+
+//the reset password child component
+class Reset extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      //formadata is used to store the input values of the user
       formData: {
         type: this.props.type,
         formname: "reset",
@@ -60,21 +64,24 @@ export default class ResetPassword extends Component {
         repeat_new_password: "",
         Verified: "false"
       },
-    
+      //state used for password validation
       passreq: false
     };
-  
   }
+
+  //funtion for changing passreq state
   togglereq = () => {
     this.setState({
       passreq: true
     });
-  }
+  };
 
   render() {
-    const lc = /[a-z]/g;
-    const uc = /[A-Z]/g;
-    const num = /[0-9]/g;
+
+   {/*USed for password validation*/}
+    const lc = /[a-z]/g; {/*lowercase*/}
+    const uc = /[A-Z]/g; {/*upercase*/}
+    const num = /[0-9]/g; {/*number*/}
 
     return (
       <React.Fragment>
@@ -89,8 +96,7 @@ export default class ResetPassword extends Component {
             <div>
               <img src={logo} />
               <h5 className="card-title text-info">Reset Password</h5>
-             
-
+              <div className="text-danger">{this.state.errmsg}</div>
               <form onSubmit={e => this.onSubmit(e, this.state.formData)}>
                 <div className="row">
                   <div className="col p-2">
@@ -112,11 +118,11 @@ export default class ResetPassword extends Component {
                       name="new_password"
                       className="form-control"
                       placeholder="Enter new password"
-                      
                       onChange={this.handleInputChange}
                       onFocus={this.togglereq}
                       required
                     />
+                      {/*Password validation */}
                     {this.state.passreq && (
                       <div className="mt-1">
                         <h5>Password should contain </h5>
@@ -160,16 +166,17 @@ export default class ResetPassword extends Component {
                 </div>
                 <div className="row">
                   <div className="col p-2">
-                  {this.state.formData.new_password !=
-                this.state.formData.repeat_new_password && (
-                <span className="text-danger">Password Does Not Match</span>
-              )}
+                    {this.state.formData.new_password !=
+                      this.state.formData.repeat_new_password && (
+                      <span className="text-danger">
+                        Password Does Not Match
+                      </span>
+                    )}
                     <input
                       type="password"
                       name="repeat_new_password"
                       placeholder="Re-enter new password"
                       className="form-control"
-                    
                       onChange={this.handleInputChange}
                       required
                     />
@@ -184,10 +191,10 @@ export default class ResetPassword extends Component {
                       this.state.formData.repeat_new_password ||
                     this.state.formData.repeat_new_password === "" ||
                     this.state.formData.email === "" ||
-                    this.state.formData.new_password.length <8 ||
-                    this.state.formData.new_password.match(num)===null||
-                    this.state.formData.new_password.match(num)===null||
-                    this.state.formData.new_password.match(lc)===null
+                    this.state.formData.new_password.length < 8 ||
+                    this.state.formData.new_password.match(num) === null ||
+                    this.state.formData.new_password.match(num) === null ||
+                    this.state.formData.new_password.match(lc) === null
                   }
                 />
               </form>
@@ -200,13 +207,12 @@ export default class ResetPassword extends Component {
                 />
               </div>
             </div>
-          
           </div>
         </div>
       </React.Fragment>
     );
   }
-
+//HAndle change function for updating form inout values
   handleInputChange = e => {
     let formData = { ...this.state.formData };
     formData[e.target.name] = e.target.value;
@@ -214,19 +220,31 @@ export default class ResetPassword extends Component {
       formData
     });
   };
+  resetErr() {
+    this.setState({ errmsg: "Account Does Not Exists" });
+  }
 
+  //function to clear error message
+  noresetErr() {
+    this.setState({ errmsg: "" });
+  }
+//on submit function
   onSubmit = (e, formData) => {
     e.preventDefault();
-    const p = this.props;
+
+    const thisprops = this.props;
+    const p = this;
+    //request to backend 
     axios
       .post("http://localhost:40951/reset_password", formData)
       .then(function(response, props) {
-        const code = parseInt(response.data);
+        p.noresetErr();
+        const code = response.data;//store the verification code
         const data = { formData: formData, code: code };
-       
-        p.toggleVerify(data);
+        thisprops.toggleVerify(data);//toggle the modal state to show verification form
       })
       .catch(function(error) {
+        p.resetErr();
         console.log(error);
       });
   };

@@ -1,35 +1,50 @@
 import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
 import Header from "../Header";
 import { Modal, ModalHeader } from "reactstrap";
 import Verify from "./Verify";
-import axios from "axios";
-
+import Login from "./LoginForm";
+import Register from "./RegistrationForm";
+import Cookies from "js-cookie";
 import logo from "../../logo.png";
+import jwt_decode from "jwt-decode";
 
+//Login page parent component
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      verifymodal: false,
+      verifymodal: false, //state used to show hide modal form
       formData: {},
-      showlogin: true,
-      type: true,
-      formtype: "Organization"
+      showlogin: true, //state used to show login/register form
+      type: true, //used to show volunteer/organization forms
+      formtype: "Organization", //maintain the type
+      shouldRender:false
     };
     this.toggleLogin = this.toggleLogin.bind(this);
     this.toggleVerify = this.toggleVerify.bind(this);
-
     this.toggleType = this.toggleType.bind(this);
   }
-
+  componentDidMount() {
+  
+    if (Cookies.get("token")) {
+      console.log('a')
+       window.location.href = Cookies.get("type")+(jwt_decode(Cookies.get("token"))).uid
+       
+    }else{this.setState({ shouldRender: true });}
+  }
+  //function to hide/show verify form
   toggleVerify(data) {
     this.setState({ verifymodal: !this.state.verifymodal });
     this.setState({ formData: data });
   }
+
+  //function to hide/show login/register form
   toggleLogin() {
     this.setState({ showlogin: !this.state.showlogin });
   }
+
+  //function to maintain the user type
   toggleType() {
     this.setState({ type: !this.state.type });
     if (this.state.formtype === "Volunteer") {
@@ -40,8 +55,11 @@ class LoginPage extends React.Component {
   }
 
   render() {
+    const { shouldRender } = this.state;
     return (
+      shouldRender &&
       <React.Fragment>
+        
         <Header />
         <div className="row">
           <div className="backgrounddiv col-8"></div>
@@ -90,7 +108,9 @@ class LoginPage extends React.Component {
               </div>
               {this.state.type && (
                 <div>
+                  {/*Forms for Volunteer type*/}
                   {!this.state.showlogin && (
+                    //*Calling the regiter component
                     <Register
                       type="Volunteer"
                       toggleVerify={this.toggleVerify}
@@ -110,6 +130,8 @@ class LoginPage extends React.Component {
                   )}
 
                   {this.state.showlogin && (
+                    //Calling the login component
+
                     <Login
                       type="Volunteer"
                       toggleVerify={this.toggleVerify}
@@ -130,9 +152,12 @@ class LoginPage extends React.Component {
                 </div>
               )}
 
+              {/*Forms for Organization type*/}
               {!this.state.type && (
                 <div>
                   {!this.state.showlogin && (
+                    //Calling the REgister component
+
                     <Register
                       type="Organization"
                       toggleVerify={this.toggleVerify}
@@ -152,6 +177,8 @@ class LoginPage extends React.Component {
                   )}
 
                   {this.state.showlogin && (
+                    //Calling the login component
+
                     <Login
                       type="Organization"
                       toggleVerify={this.toggleVerify}
@@ -172,6 +199,7 @@ class LoginPage extends React.Component {
                 </div>
               )}
             </div>
+            {/*Verify modal form*/}
             <Modal isOpen={this.state.verifymodal}>
               <ModalHeader>Verify</ModalHeader>
               <Verify
@@ -183,313 +211,12 @@ class LoginPage extends React.Component {
             </Modal>
           </div>
         </div>
+         
       </React.Fragment>
+                  
+                  
     );
   }
 }
-
-class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      formData: {
-        type: this.props.type,
-        formname: this.props.type + "login",
-        email: "",
-        password: "",
-        Verified: "false"
-      }
-    };
-  }
-
-  render() {
-    return (
-      <div id="Login_form" className=" mb-3 p-3 ">
-        <h5 className="card-title text-info">
-          {" "}
-          {this.state.formData.type} Login
-        </h5>
-
-        <form
-          className="text-center"
-          onSubmit={e => this.onSubmit(e, this.state.formData)}
-        >
-          <div className="row">
-            <div className="col p-2">
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="Enter email"
-                value={this.state.email}
-                onChange={this.handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col p-2">
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                placeholder="Enter password"
-                value={this.state.password}
-                onChange={this.handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col m-auto ">
-              <input
-                type="submit"
-                className="btn btn-primary "
-                value="Submit"
-              />
-            </div>
-          </div>
-        </form>
-        <Link
-          to={{
-            pathname: "/volunteer/reset",
-            state: { type: this.state.formData.type }
-          }}
-          className="text-center"
-        >
-          Reset Password?
-        </Link>
-      </div>
-    );
-  }
-
-  handleInputChange = e => {
-    let formData = { ...this.state.formData };
-    formData[e.target.name] = e.target.value;
-    this.setState({
-      formData
-    });
-  };
-
-  onSubmit = (e, formData, props) => {
-    e.preventDefault();
-
-    const thisprops = this.props;
-    axios
-      .post("http://localhost:40951/login", formData)
-      .then(function(response) {
-        
-        const code = response.data;
-        const data = { formData: formData, code: code }; //code mailed from backend
-        thisprops.toggleVerify(data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
-}
-
-class Register extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      formData: {
-        type: this.props.type,
-        formname: this.props.type + "Register",
-        Firstname: "",
-        Lastname: "",
-        Organization_name: "",
-        Email: "",
-        Password: "",
-        City: "",
-        State: "",
-        Verified: "false",
-        passreq: false
-      }
-    };
-  }
-
-  render() {
-    const lc = /[a-z]/g;
-    const uc = /[A-Z]/g;
-    const num = /[0-9]/g;
-
-    return (
-      <div id="RegisterForm" className="  mb-3 p-4 ">
-        <form
-          className="text-center"
-          onSubmit={e => this.onSubmit(e, this.state.formData)}
-        >
-          <h5 className="card-title text-info">
-            {" "}
-            {this.state.formData.type} Registrataion
-          </h5>
-          {this.state.formData.type === "Volunteer" && (
-            <div className="row">
-              <div className="col p-2">
-                <input
-                  type="text"
-                  name="Firstname"
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  placeholder="First name"
-                  required
-                />
-              </div>
-              <div className="col p-2">
-                <input
-                  type="text"
-                  name="Lastname"
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  placeholder="Last name"
-                  required
-                />
-              </div>
-            </div>
-          )}
-          {this.state.formData.type === "Organization" && (
-            <div className="row">
-              <div className="col p-2">
-                <input
-                  type="text"
-                  name="Organization_name"
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  placeholder="Organisation name"
-                  required
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="row">
-            <div className="col p-2">
-              <input
-                type="email"
-                name="Email"
-                onChange={this.handleInputChange}
-                className="form-control"
-                placeholder="Email"
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className=" col p-2">
-              <input
-                type="password"
-                name="Password"
-                onChange={this.handleInputChange}
-                className="form-control"
-                placeholder="Password"
-                required
-                onFocus={this.togglereq}
-              />
-              {this.state.passreq && (
-                <div className='mt-1'>
-                  <h5>Password should contain </h5>
-                  <ul>
-                    {this.state.formData.Password.length >= 8 ? (
-                      <li className="text-success">
-                        more than or equal to 8 characters
-                      </li>
-                    ) : (
-                      <li className="text-danger">
-                        more than or equal to 8 characters
-                      </li>
-                    )}
-                    {this.state.formData.Password.match(num) ? (
-                      <li className="text-success">a number</li>
-                    ) : (
-                      <li className="text-danger">a number</li>
-                    )}
-                    {this.state.formData.Password.match(uc) ? (
-                      <li className="text-success">a character in uppercase</li>
-                    ) : (
-                      <li className="text-danger">a character in uppercase</li>
-                    )}
-                    {this.state.formData.Password.match(lc) ? (
-                      <li className="text-success">a character in lowercase</li>
-                    ) : (
-                      <li className="text-danger">a character in lowercase</li>
-                    )}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="row">
-            <div className=" col p-2">
-              <input
-                type="text"
-                name="City"
-                onChange={this.handleInputChange}
-                className="form-control"
-                placeholder="City"
-                required
-              />
-            </div>
-            <div className=" col p-2">
-              <input
-                type="text"
-                name="State"
-                onChange={this.handleInputChange}
-                className="form-control"
-                placeholder="State"
-                required
-              />
-            </div>
-          </div>
-
-          <input
-            type="submit"
-            className="btn btn-primary m-1"
-            value="Submit"
-            disabled={
-              this.state.formData.Password.length <8 ||
-              this.state.formData.Password.match(num)===null||
-              this.state.formData.Password.match(num)===null||
-              this.state.formData.Password.match(lc)===null
-            }
-            
-          />
-        </form>
-      </div>
-    );
-  }
-
-  handleInputChange = e => {
-    let formData = { ...this.state.formData };
-    formData[e.target.name] = e.target.value;
-    this.setState({
-      formData
-    });
-  };
-  togglereq = () => {
-    this.setState({
-      passreq: true
-    });
-  };
-
-  onSubmit = (e, formData, props) => {
-    e.preventDefault();
-    const thisprops = this.props;
-    axios
-      .post("http://localhost:40951/register", formData)
-      .then(function(response) {
-        console.log(response)
-        const code =parseInt(response.data.verification_token); //code mailed from backend
-        const data = { formData: formData, code: code };
-        thisprops.toggleVerify(data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
-}
-
-
-
 
 export default LoginPage;

@@ -15,13 +15,14 @@ class EventCreate extends Component {
       formData: {
         EventName: "",
         Description: "",
-        OrganizationName: "Milan",
-        OrganizationId: "1",
+        OrganizationName: "",
+        OrganizationId: "",
         StreetNumber: "",
         StreetName: "",
         City: "",
         State: "",
         ZIP: "",
+        date :'',
         StartTime: "",
         EndTime: ""
       }
@@ -163,7 +164,7 @@ class EventCreate extends Component {
               <label htmlFor="date" className="  col-2">
               Date:
             </label>
-            <input type="date" className='form-control  col-4' name="date" />
+            <input type="date" id="date" onChange={this.handleInputChange} className='form-control  col-4' name="date" />
             </div>
             
             <div className="form-group row p-4">
@@ -200,7 +201,7 @@ class EventCreate extends Component {
     console.log(formData);
     axios
       .post(
-        "http://localhost:40951/event/" + formData["OrganizationId"] + "/",
+        "http://localhost:40951/event/" + this.props.ID + "/",
         formData
       )
       .then(function(response, props) {

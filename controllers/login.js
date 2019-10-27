@@ -110,11 +110,12 @@ exports.login = function(req, res) {
 
 exports.register = function(req, res) {
     let user_info = req.body;
-    console.log(user_info);
+   
 
     // bcrypt.hash(user_info.Password, 8, function(err, hash) {
     //     user_info.Password = hash;
     // });
+    console.log(user_info.Verified);
 
     let table;
     if (user_info.type === "Volunteer") {
@@ -127,6 +128,7 @@ exports.register = function(req, res) {
     if (user_info.Verified === "false") {
         // Create account
         let token = getToken();
+       
 
         let query = "SELECT CASE WHEN EXISTS (SELECT EMAIL FROM " + table + " WHERE EMAIL = ?) THEN 1 ELSE 0 END AS \"exists\";";
         g.query(query, [user_info.Email], function(result, fields) {
@@ -166,6 +168,7 @@ exports.register = function(req, res) {
             }
         });
     } else {
+        console.log('else');
         // Verify
         g.query("UPDATE " + table + " SET VERIFIED = TRUE WHERE EMAIL = ?;", [user_info.Email], function(result, fields) {
             res.status(200).send("Account Created");
@@ -243,30 +246,38 @@ exports.register = function(req, res) {
 exports.reset = function(req, res) {
     let user_info = req.body;
 
+    let table;
+    if (user_info.type === "Volunteer") {
+        table = "VOLUNTEER_TAB";
+    } else {
+        table = "ORGANIZER_TAB";
+    }
+
     if (user_info.Verified === "false") {
         let token = getToken();
 
-        const message = {
-            from: "Connect Hour <connecthourofficial@gmail.com>",
-            to: user_info.email,
-            subject: "Password change",
-            text: "Your token to reset your password is: " + token
-        }
+        g.query("SELECT * FROM " + table + " WHERE EMAIL = ?", [user_info.email], function(result, fields) {
+            if (result.length > 0) {
+                const message = {
+                    from: "Connect Hour <connecthourofficial@gmail.com>",
+                    to: user_info.email,
+                    subject: "Password change",
+                    text: "Your token to reset your password is: " + token
+                }
 
-        g.transport.sendMail(message, function(err, info) {
-            if (err) throw err;
-            console.log(info);
+                g.transport.sendMail(message, function(err, info) {
+                    if (err) throw err;
+                    console.log(info);
+                });
+
+                res.send("" + token);
+            } else {
+                
+                res.status(401).send("Account does not exist");
+            }
         });
-
-        res.send("" + token);
     } else {
         bcrypt.hash(user_info.new_password, 8, function(err, hash) {
-            let table;
-            if (user_info.type === "Volunteer") {
-                table = "VOLUNTEER_TAB";
-            } else {
-                table = "ORGANIZER_TAB";
-            }
     
             let query = "UPDATE " + table + " SET PASSWORD = ? WHERE EMAIL = ?;";
             g.query(query, [hash, user_info.email], function(err, result, fields) {

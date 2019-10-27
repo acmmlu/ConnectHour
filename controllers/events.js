@@ -9,7 +9,7 @@ exports.findById = function(req, res) {
 
             let query = 'SELECT E.ID AS "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", ' +
                 '(SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
-                'CONCAT(E.STREETNUMBER, " ", E.STREETNAME, ", " E.CITY, ", " E.STATE, " ", E.ZIP) AS "Location", ' +
+                'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' + 
                 'E.START AS "StartTime", E.END AS "EndTime" FROM EVENT E WHERE E.ID = ?;';
             connection.execute(query, [event_id], function(err, result, fields) {
                 if (err) throw err;
@@ -38,9 +38,18 @@ exports.get_events = function(req, res) {
 
             let query = 'SELECT E.ID AS "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", ' +
                 '(SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
-                'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' + 
+                'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "ZIP", ' + 
                 'E.START AS "StartTime", E.END AS "EndTime" FROM EVENT E WHERE E.ORGANIZER = ?;';
             connection.execute(query, [org_id], function(err, result, fields) {
+                try {
+                    result = result.sort(function(a, b) {
+                        a = new Date(a["StartTime"])
+                        b = new Date(b["StartTime"])
+                        return a > b ? 1 : -1
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
                 res.send(result);
             });
         });
@@ -55,10 +64,19 @@ exports.get_registered = function(req, res) {
 
     let query = 'SELECT E.ID as "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", ' +
         '(SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
-        'CONCAT(E.STREETNUMBER, " ", E.STREETNAME, ", ", E.CITY, ", ", E.STATE, " ", E.ZIP) AS "Location", ' +
+        'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' + 
         'E.START AS "StartTime", E.END AS "EndTime" FROM EVENT E INNER JOIN ATTENDING A ON ' +
         'E.ID = A.EVENTID WHERE A.VOLUNTEERID = ?';
     g.query(query, [vid], function(result, fields) {
+        try {
+            result = result.sort(function(a, b) {
+                a = new Date(a["StartTime"])
+                b = new Date(b["StartTime"])
+                return a > b ? 1 : -1
+            })
+        } catch (error) {
+            console.log(error);
+        }
         res.send(result);  
     });
 };
@@ -82,8 +100,8 @@ exports.create_event = function(req, res) {
                 event.City,
                 event.State,
                 event.ZIP,
-                event.StartTime,
-                event.EndTime
+                event.date + " " + event.StartTime,
+                event.date + " " + event.EndTime
             ];
             connection.execute(query, params, function(err, result, fields) {
                 if (err) throw err;
@@ -111,8 +129,8 @@ exports.edit_event = function(req, res) {
         evt.City,
         evt.State,
         evt.ZIP,
-        evt.StartTime,
-        evt.EndTime,
+        evt.date + " " + evt.StartTime,
+        evt.date + " " + evt.EndTime,
         req.params.organizer,
         req.params.id
     ];

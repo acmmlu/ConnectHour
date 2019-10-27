@@ -1,72 +1,62 @@
 import React from "react";
-import Events from "./EventsVol";
 import axios from "axios";
+import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
+import Registered from './Registered'
+import Searched from './Search'
 
-import EventEdit from "../Organization/EventEdit";
-import { Animated } from "react-animated-css";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  closeButton
-} from "reactstrap";
-import VolLayout from "./VolLayout";
-import { message } from "antd";
 
-const block1 = {
-  cursor: "pointer"
-};
-
+//Component for Events page for Volunteer
 class EventsVol extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      EventsList: [
-      
-      ],
-      RegisteredEvents: [
-    
-      ],
+      EventsList: [],
+      RegisteredEvents: [],
       showDetails: false,
-      errmsg: "",
-      showFormId: "",
-      name:''
+      errmsg: "",// storews the error message
+      showFormId: "",//stores the event id
+      name: ""
     };
     this.showForm = this.showForm.bind(this);
     this.showFormReset = this.showFormReset.bind(this);
     this.DisplayEvents = this.DisplayEvents.bind(this);
     this.ClearDisplay = this.ClearDisplay.bind(this);
   }
-
+//function called on mount
   componentDidMount() {
-    const p=this
-    let RegisteredEvents=this.state.RegisteredEvents
+    if (Cookies.get("token") && Cookies.get("type")==='/vdashboard/') {
+     const ID= (jwt_decode(Cookies.get("token"))).uid
+    const p = this;
+    let RegisteredEvents = this.state.RegisteredEvents;
     axios
-      .get("http://localhost:40951/event/volunteer/1")
+      .get("http://localhost:40951/event/volunteer/" + ID)
       .then(function(response) {
-        console.log(response.data)
-        p.setState({ RegisteredEvents:response.data });
-        console.log(RegisteredEvents)
+        p.setState({ RegisteredEvents: response.data });
       })
       .catch(function(error) {
         console.log(error);
       });
+    }
+    else{
+       this.props.history.push("/");
+    }
   }
 
-  showForm = (e) => {
-   
+  //shows the event forms
+  showForm = e => {
     this.setState({ showFormId: e.target.id });
-    this.setState({name:e.target.name})
-   
+    this.setState({ name: e.target.name });
   };
+
+  //hides the event form
   showFormReset() {
     this.setState({ showFormId: "" });
   }
+
+  //Shpw search results
   DisplayEvents(Events) {
     this.state.EventsList = Events;
-
     this.setState({
       EventsList: this.state.EventsList
     });
@@ -76,6 +66,8 @@ class EventsVol extends React.Component {
       this.setState({ errmsg: "" });
     }
   }
+
+  //clear search results
   ClearDisplay() {
     this.setState({
       EventsList: [],
@@ -90,7 +82,6 @@ class EventsVol extends React.Component {
             <SearchEvents
               DisplayEvents={this.DisplayEvents}
               ClearDisplay={this.ClearDisplay}
-              
             />
           </div>
         </div>
@@ -100,6 +91,7 @@ class EventsVol extends React.Component {
               <p>{this.state.errmsg}</p>{" "}
             </div>
             {this.state.EventsList.map(event => (
+              //calll the searched component
               <Searched
                 event={event}
                 key={event.id}
@@ -107,23 +99,26 @@ class EventsVol extends React.Component {
                 showForm={this.showForm}
                 showFormReset={this.showFormReset}
                 name={this.state.name}
+                ID={(jwt_decode(Cookies.get("token"))).uid}
               ></Searched>
             ))}
           </div>
 
-          <div className="DisplayRegisteredEvents col-3 shadow p-3 mb-5 bg-white rounded card container text-center float-right">
-            <div className="display-4">Registered Events </div>
-
-            {this.state.RegisteredEvents.map(event => (
-              <Registered
-                event={event}
-                key={event.id}
-                showFormId={this.state.showFormId}
-                showForm={this.showForm}
-                showFormReset={this.showFormReset}
-                name={this.state.name}
-              />
-            ))}
+          <div className=" col-3  Registered shadow  p-3 mb-5 bg-white rounded card container text-center float-right">
+            <div className="display-4 ">Registered Events </div>
+            <div className="RegisteredEvents">
+              {this.state.RegisteredEvents.map(event => (
+                //call the registered component
+                <Registered
+                  event={event}
+                  key={event.id}
+                  showFormId={this.state.showFormId}
+                  showForm={this.showForm}
+                  showFormReset={this.showFormReset}
+                  name={this.state.name}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </React.Fragment>
@@ -131,65 +126,8 @@ class EventsVol extends React.Component {
   }
 }
 
-class Searched extends React.Component {
-  render() {
-    return (
-      <div className="card text-center shadow p-3 mb-5 bg-white rounded ">
-        <h5 className="card-title">{this.props.event.EventName}</h5>
-        <span>{this.props.event.date}</span>
-        <hr />
-        <p className="card-text">{this.props.event.Description}</p>
-        <input
-          className="m-auto btn btn-info col-3"
-          id={this.props.event.id}
-          onClick={this.props.showForm}
-          value="Details"
-          name='Searched'
-          type="button"
-        />
-        <Modal isOpen={this.props.showFormId == this.props.event.id && this.props.name==='Searched'}>
-          <ShowEventDetails
-            eventdata={this.props.event}
-            showFormReset={this.props.showFormReset}
-            reg={true}
-          />
-        </Modal>
-      </div>
-    );
-  }
-}
 
-class Registered extends React.Component {
-  
-  render() {
-    console.log(this.props)
-    return (
-      <div className=" text-center card p-3 mb-5 bg-white rounded ">
-        <h5 className="card-title">{this.props.event.EventName}</h5>
-        <span>{this.props.event.date}</span>
-        <hr />
-        <p className="card-text">{this.props.event.Description}</p>
-        <input
-          className="m-auto btn btn-info col-3"
-          id={this.props.event.id}
-          name='Registered'
-          onClick={this.props.showForm}
-          value="Details"
-          type="button"
-        />
-
-        <Modal isOpen={this.props.showFormId == this.props.event.id && this.props.name==='Registered'}>
-          <ShowEventDetails
-            eventdata={this.props.event}
-            showFormReset={this.props.showFormReset}
-            reg={false}
-          />
-        </Modal>
-      </div>
-    );
-  }
-}
-
+//compontn for seacrh events form
 class SearchEvents extends React.Component {
   constructor(props) {
     super(props);
@@ -234,7 +172,7 @@ class SearchEvents extends React.Component {
               placeholder="City"
               onChange={this.handleInputChange} //http://asohafseofj/search?q=searchstring&date=aoehifaowjs&city=aiwuehofoawejidf
             /> */}
-{/* 
+            {/* 
             <input
               className="form-control m-2 mr-sm-2 shadow-sm"
               type="text"
@@ -254,7 +192,6 @@ class SearchEvents extends React.Component {
               type="button"
               onClick={this.props.ClearDisplay}
             />
-          
           </form>
         </div>
       </React.Fragment>
@@ -263,7 +200,7 @@ class SearchEvents extends React.Component {
 
   onSubmit = (e, formData) => {
     e.preventDefault();
-console.log(formData)
+    console.log(formData);
     const p = this.props;
     axios
       .get(
@@ -286,82 +223,6 @@ console.log(formData)
   };
 }
 
-class ShowEventDetails extends React.Component {
-  constructor(props){
-    super(props)
-        this.state={
-          formData:this.props.eventdata
-    
-        }
-      }
-  render() {
-    
-    const data = this.props.eventdata;
-    return (
-      
-      <React.Fragment>
-        <div className="showDetails ">
-          <form className="EventCreate  text-center" onSubmit={e => this.onSubmit(e)}>
-    
-            <div className="form-group  bg-info card row p-4">
-              
-              <span className=" pt-2 display-4 text-center "> {data.EventName}</span>
-            </div>
-
-            <div className="form-group   text-center  ">
-              
-              {data.Description}
-            </div>
-            <hr/>
 
 
-<div className='text-center'>  Address: {data.Location}
-  </div>
-          
-           
-            <hr/>
-            <div className="form-group rowtext-center">
-            
-              <span className=" pl-4 col-3"> On {data.date}</span>
-              <span className="col-3 "> From {data.StartTime} Hours  to {data.EndTime} Hours</span>
-              
-            </div>
-            <div className='m-auto text-center'>
-            {this.props.reg &&<input
-              className=" btn btn-success m-2"
-              value="Register"
-              type="submit"
-            />}
-            <input
-              className="btn btn-danger m-2"
-              value="Cancel"
-              type="button"
-              onClick={this.props.showFormReset}
-            /></div>
-         
-       
-          </form>
-        </div>
-      </React.Fragment>
-    );
-   
-  }
-  onSubmit = (e) => {
-    e.preventDefault();
-    console.log(this.state.formData);
-    const formData=this.state.formData
-    axios
-      .post(
-        "http://localhost:40951/event/register/1/"+formData['id'] ,
-        formData
-      )
-      .then(function(response, props) {
-        console.log(response);
-        
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
-}
 export default EventsVol;

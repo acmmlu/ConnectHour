@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:40951/",
+  "engines": {
+    "node": "12.11.1"
+  },
   "dependencies": {
     "@devexpress/dx-react-core": "^2.1.2",
     "@devexpress/dx-react-scheduler": "^2.1.2",

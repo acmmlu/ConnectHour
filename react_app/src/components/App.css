@@ -45,3 +45,9 @@ width: 100%;
 }
 
 
+.RegisteredEvents{
+  overflow: scroll;
+}
+.Registered{
+height: 700px;
+}

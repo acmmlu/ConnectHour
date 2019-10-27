@@ -6,7 +6,6 @@ import Events from './components/Dashboard/Organization/Events'
 import './components/App.css'
 
 
-
 const App = () => <Main />;
 const App2=()=> <EventsVol/>
 const App3=()=><Events/>

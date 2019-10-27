@@ -1,14 +1,10 @@
 const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
+const url = require('url');
+
 
 // Create a connection to DB
-exports.pool = mysql.createPool({
-    connectionLimit: 100,
-    user: "p565f19_lalovett",
-    host: "db.sice.indiana.edu",
-    password: "my+sql=p565f19_lalovett",
-    database: "p565f19_lalovett"
-});
+exports.pool = mysql.createPool(process.env.DATABASE_URL);
 
 exports.transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -16,7 +12,7 @@ exports.transport = nodemailer.createTransport({
     secure: false,
     auth: {
         user: "connecthourofficial@gmail.com",
-        pass: "P565Group2"
+        pass: process.env.GMAIL_PASS
     }
 });
 

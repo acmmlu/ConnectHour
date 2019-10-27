@@ -47,7 +47,7 @@ class EventEdit extends React.Component {
     const starttime=formData.StartTime
 
 
-
+console.log(formData)
     return (
       <React.Fragment>
         <div className=' EditForm' >
@@ -161,6 +161,7 @@ class EventEdit extends React.Component {
               className='form-control col-4'
               onChange={this.handleInputChange}
               name="date"
+              id='date'
               value={formData.date}
             />
             </div>
@@ -172,7 +173,7 @@ class EventEdit extends React.Component {
 
                     </label>
                     <div>
-                    <TimePicker  onChange={this.onStartTime} defaultValue={moment(starttime, 'HH:mm:ss')} />   
+                    <TimePicker  onChange={this.onStartTime} defaultValue={moment('13:30', 'HH:mm:ss')} />   
 
                     </div>
               <label htmlFor="EndTime" className="col-2">
@@ -210,7 +211,7 @@ class EventEdit extends React.Component {
 
     const f=this.state.formData
     axios
-      .put("http://localhost:40951/event/1/"+f["id"] , f)
+      .put("http://localhost:40951/event/"+this.props.ID+"/"+f["id"] , f)
       .then(function(response, props) {
         console.log(response)
         p.openEditReset()
