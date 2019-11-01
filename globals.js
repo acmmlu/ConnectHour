@@ -11,8 +11,11 @@ exports.transport = nodemailer.createTransport({
     port: 587,
     secure: false,
     auth: {
-        user: "connecthourofficial@gmail.com",
-        pass: process.env.GMAIL_PASS
+        type: 'oauth2',
+        user: 'connecthourofficial@gmail.com',
+        clientId: '926515268553-702nh6okk23jl79j8dkikfe2sliopt1r.apps.googleusercontent.com',
+        clientSecret: 'jNlAfC11q9dPa1gm-Ofqq9h9',
+        refreshToken: '1//04_JmqiS7Xo-eCgYIARAAGAQSNwF-L9IrUhUUSvzFm8GF4HahCYbZxWcW0wM5EHjcFFHIz783TQKMbNIg0pxTE-CoTaqivC5Hdbo',
     }
 });
 
