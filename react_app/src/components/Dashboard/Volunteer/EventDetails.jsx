@@ -31,7 +31,7 @@ class ShowEventDetails extends React.Component {
               <div className="form-group   text-center  ">{data.Description}</div>
               <hr />
   
-              <div className="text-center"> Address: {data.Location}</div>
+              <div className="text-center"> Address: {data.City}</div>
   
               <hr />
               <div className="form-group rowtext-center">

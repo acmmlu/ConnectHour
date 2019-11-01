@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import Registered from './Registered'
+import { TimePicker } from 'antd';
 import Searched from './Search'
 
 
@@ -66,6 +67,7 @@ class EventsVol extends React.Component {
       this.setState({ errmsg: "" });
     }
   }
+
 
   //clear search results
   ClearDisplay() {
@@ -135,7 +137,8 @@ class SearchEvents extends React.Component {
       formData: {
         SearchString: "",
         city: "",
-        date: ""
+        date: "",
+        time:''
       }
     };
   }
@@ -147,6 +150,13 @@ class SearchEvents extends React.Component {
       formData
     });
   };
+  filterTime(n, time) {
+    let formData = { ...this.state.formData };
+  formData['time']=time
+  this.setState({
+   formData
+  })
+  }
 
   render() {
     return (
@@ -165,21 +175,20 @@ class SearchEvents extends React.Component {
               onChange={this.handleInputChange}
             />
 
-            {/* <input
+            <input
               className="form-control m-2 mr-sm-2 shadow-sm"
               type="text"
               name="city"
               placeholder="City"
               onChange={this.handleInputChange} //http://asohafseofj/search?q=searchstring&date=aoehifaowjs&city=aiwuehofoawejidf
-            /> */}
-            {/* 
-            <input
-              className="form-control m-2 mr-sm-2 shadow-sm"
-              type="text"
-              name="date"
-              placeholder="Date"
-              onChange={this.handleInputChange}
-            /> */}
+            />
+            
+          
+            <div className="form-group row ">
+             {/* <TimePicker  format='HH:mm' onChange={this.filterTime}  required/>   */}
+             <input type="date" id="date" onChange={this.handleInputChange} className='form-control  col-4' name="date" />
+
+             </div>
             <button
               className="btn btn-outline-success my-2 my-sm-0"
               type="submit"
@@ -206,9 +215,9 @@ class SearchEvents extends React.Component {
       .get(
         "http://localhost:40951/search?q=" +
           formData["SearchString"] +
-          "&date=" +
-          formData["city"] +
           "&city=" +
+          formData["city"] +
+          "&date=" +
           formData["date"]
       )
       .then(function(response, props) {

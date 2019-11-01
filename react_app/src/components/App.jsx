@@ -4,6 +4,7 @@ import NotFound from "./Homepage/NotFound";
 import ResetPassword from "./Homepage/ResetPassword";
 import OrgDashboard from "./Dashboard/Organization/OrgDashboard";
 import VolDashboard from "./Dashboard/Volunteer/VolDashboard";
+import ActivityTracking from './Dashboard/Volunteer/ActivityTracking'
 import { createBrowserHistory } from "history";
 import AboutUs from "./Homepage/AboutUs";
 
@@ -13,6 +14,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import OrgProfile from "./Dashboard/Organization/OrgProfile";
 const history = createBrowserHistory();
 
 class Main extends React.Component {
@@ -46,6 +48,16 @@ class Main extends React.Component {
                 exact
                 path="/vdashboard/:volunteerID"
                 render={props => <VolDashboard {...props} />}
+              />
+              <Route
+                exact
+                path="/vdashboard/activity/:volunteerID"
+                render={props => <ActivityTracking {...props} />}
+              />
+                <Route
+                exact
+                path="/odashboard/profile/:organizationID"
+                render={props => <OrgProfile {...props} />}
               />
               <Route
                 exact

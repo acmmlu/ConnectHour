@@ -27,6 +27,7 @@ class OrgLayout extends React.Component {
     );
   }
   handleLogout = () => {
+    console.log(Cookies.get());
     Cookies.remove("token");
     Cookies.remove("type");
     console.log(Cookies.get());

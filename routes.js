@@ -13,10 +13,14 @@ module.exports = function(app) {
     app.get('/event/:id', events.findById);
     app.get('/event/organizer/:organizer', events.get_events);
     app.get('/event/volunteer/:volunteer', events.get_registered)
+    app.get('/event/organizer/registered/:id', events.get_registered_volunteers)
+    app.get('/event/activity/:volunteer', events.activityTracking)
     app.post('/event/:organizer', events.create_event);
     app.post('/event/register/:volunteer/:id', events.register);
     app.post('/event/unregister/:volunteer/:id', events.unregister);
     app.put('/event/:organizer/:id', events.edit_event);
+    app.delete('/event/:organizer/:id', events.delete_event);
+
 
     // Profile data routes
     app.get('/volunteer/:id', users.volunteerById);

@@ -28,7 +28,6 @@ class LoginPage extends React.Component {
   componentDidMount() {
   
     if (Cookies.get("token")) {
-      console.log('a')
        window.location.href = Cookies.get("type")+(jwt_decode(Cookies.get("token"))).uid
        
     }else{this.setState({ shouldRender: true });}

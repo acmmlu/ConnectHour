@@ -45,9 +45,6 @@ class EventEdit extends React.Component {
     const formData = this.state.formData;
     const endtime=formData.EndTime
     const starttime=formData.StartTime
-
-
-console.log(formData)
     return (
       <React.Fragment>
         <div className=' EditForm' >
@@ -156,14 +153,16 @@ console.log(formData)
               /> <label htmlFor="date" className=" pt-2 col-2">
               Date:  
             </label>
-            <input
-              type="date"
-              className='form-control col-4'
-              onChange={this.handleInputChange}
-              name="date"
-              id='date'
-              value={formData.date}
-            />
+             <input
+                type="date"
+                className="form-control col-5"
+                onChange={this.handleInputChange}
+                name="date"
+                id="date"
+                defaultValue={moment(this.state.formData.StartTime).format(
+                  "YYYY-MM-DD"
+                )}
+              />
             </div>
            
            
@@ -173,14 +172,27 @@ console.log(formData)
 
                     </label>
                     <div>
-                    <TimePicker  onChange={this.onStartTime} defaultValue={moment('13:30', 'HH:mm:ss')} />   
-
+                    <TimePicker
+                  format="HH:mm"
+                  defaultValue={moment(
+                    moment(this.state.formData.StartTime).format("HH:mm"),
+                    "HH:mm"
+                  )}
+                  onChange={this.onStartTime}
+                />
                     </div>
               <label htmlFor="EndTime" className="col-2">
                 End Time:
               </label>
               <div >
-              <TimePicker  onChange={this.onEndTime} defaultValue={moment('13:30', 'HH:mm:ss')} />   
+              <TimePicker
+                  format="HH:mm"
+                  onChange={this.onEndTime}
+                  defaultValue={moment(
+                    moment(this.state.formData.EndTime).format("HH:mm"),
+                    "HH:mm"
+                  )}
+                />
               </div>
             </div>
 
@@ -208,7 +220,6 @@ console.log(formData)
     e.preventDefault();
     console.log(formData);
     const p=this.props       
-
     const f=this.state.formData
     axios
       .put("http://localhost:40951/event/"+this.props.ID+"/"+f["id"] , f)

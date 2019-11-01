@@ -81,6 +81,19 @@ exports.get_registered = function(req, res) {
     });
 };
 
+exports.get_registered_volunteers=function(req,res){
+    let eid = req.params.id;
+    let query ='SELECT V.FIRST_NAME AS "FirstName", V.LAST_NAME AS "LastName", V.EMAIL AS "Email"'+
+    'FROM VOLUNTEER_TAB V INNER JOIN ATTENDING A ON A.VOLUNTEERID=V.ID WHERE A.EVENTID=?'
+    try {
+        g.query(query, [eid], function(result, fields) {
+            res.send(result);  
+        });
+        } catch (error) {
+            console.log(error);
+        }
+}
+
 exports.create_event = function(req, res) {
     try {
         let event = req.body;
@@ -105,6 +118,7 @@ exports.create_event = function(req, res) {
             ];
             connection.execute(query, params, function(err, result, fields) {
                 if (err) throw err;
+                console.log(req.body)
                 res.send("Event Created");
             });
            
@@ -135,6 +149,7 @@ exports.edit_event = function(req, res) {
         req.params.id
     ];
     g.query(query, params, function(result, fields) {
+        console.log(req.body)
         res.send(req.body);
     });
 };
@@ -151,6 +166,24 @@ exports.register = function(req, res) {
     }
 };
 
+exports.delete_event = function(req,res){
+    console.log(req.params)
+    let query_1 = 'DELETE FROM ATTENDING WHERE EVENTID = ?;';
+    let params_1 = [req.params.id];
+    let query_2 = 'DELETE FROM EVENT WHERE ORGANIZER = ? AND ID = ?;';
+    let params_2 = [req.params.organizer, req.params.id];
+    try {
+        g.query(query_1,params_1, function(err,result) {
+            g.query(query_2,params_2, function(err,result) {
+                res.send("Event Deleted");
+            });
+        });
+    } catch (error) {
+        res.send(error);
+    }
+
+}
+
 exports.unregister = function(req, res) {
     let query = 'DELETE FROM ATTENDING WHERE VOLUNTEERID = ? AND EVENTID = ?;';
     let params = [req.params.volunteer, req.params.id];
@@ -163,3 +196,36 @@ exports.unregister = function(req, res) {
         res.send("not registered for this event");
     }
 };
+
+
+exports.activityTracking = function(req,res){
+   try{
+       let vol_id = req.params.volunteer;
+       console.log(vol_id)
+       g.pool.getConnection(function(err, connection){
+           if (err) throw err;
+           let query = 'SELECT E.NAME AS "EventName", E.DESCRIPTION AS "Description", E.ORGNAME AS "OrganizationName",' +
+           'E.STREETNUMBER AS "Streetnumber", E.STREETNAME AS "Streetname", E.CITY AS "City",'+
+           'E.STATE AS "State", E.ZIP AS "ZIP", E.START AS "StartTime", E.END AS "EndTime"' +
+           'FROM EVENT E INNER JOIN ATTENDING A ON E.ID=A.EVENTID WHERE A.VOLUNTEERID=?';
+          
+           connection.execute(query, [vol_id], function(err,result,fields) {
+               if (err) throw err;
+               
+               let to_day = new Date();
+               try {
+                   result = result.filter(history =>{
+                       return (new Date(history["EndTime"])).getTime() < to_day.getTime()
+       
+                   })
+                 
+                   res.send(result);
+               } catch(error) {
+                   console.log("event with id " + event_id + " does not exist");
+               }
+           });
+       });
+   }
+   catch(error){
+   }
+}

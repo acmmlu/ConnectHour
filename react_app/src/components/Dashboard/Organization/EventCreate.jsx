@@ -3,10 +3,12 @@ import axios from "axios";
 import { TimePicker } from 'antd';
 import moment, { min } from 'moment';
 import 'antd/dist/antd.css';
+
+
+import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
+
 const format = 'HH:mm';
-
-
-
 
 class EventCreate extends Component {
   constructor(props) {
@@ -16,7 +18,7 @@ class EventCreate extends Component {
         EventName: "",
         Description: "",
         OrganizationName: "",
-        OrganizationId: "",
+        OrganizationId: this.props.ID ,
         StreetNumber: "",
         StreetName: "",
         City: "",
@@ -33,6 +35,7 @@ class EventCreate extends Component {
   }
 
   onStartTime(n, time) {
+
     console.log(time)
     let formData = { ...this.state.formData };
     formData['StartTime']=time
@@ -42,6 +45,7 @@ class EventCreate extends Component {
     console.log(this.state.formData)
   }
     onEndTime(n, time) {
+      console.log(time)
       let formData = { ...this.state.formData };
     formData['EndTime']=time
     this.setState({
@@ -60,6 +64,7 @@ class EventCreate extends Component {
   };
 
   render() {
+
     return (
       <React.Fragment>
         <div >
@@ -87,7 +92,7 @@ class EventCreate extends Component {
                 className="form-control pr-3 col-4"
                 onChange={this.handleInputChange}
                 name="Description"
-                id="description"
+                id="Description"
                 rows="3"
                 required
               ></textarea>
@@ -113,7 +118,7 @@ class EventCreate extends Component {
                 type="text"
                 onChange={this.handleInputChange}
                 className="form-control col-4"
-                name="StreetNumber"
+                name="StreetName"
                 id="StreetName"
                 placeholder="Enter Street Name"
                 required
@@ -129,7 +134,7 @@ class EventCreate extends Component {
                 onChange={this.handleInputChange}
                 className="form-control col-4"
                 name="City"
-                id="StreetName"
+                id="City"
                 placeholder="Enter City"
                 required
               />
@@ -173,14 +178,14 @@ class EventCreate extends Component {
 
                     </label>
                     <div>
-                    <TimePicker  onChange={this.onStartTime} defaultValue={moment('13:30', 'HH:mm')} />   
+                    <TimePicker  format='HH:mm' onChange={this.onStartTime}  required/>   
 
                     </div>
               <label htmlFor="EndTime" className="col-2">
                 End Time:
               </label>
               <div >
-              <TimePicker  onChange={this.onEndTime} defaultValue={moment('13:30', 'HH:mm')} />   
+              <TimePicker  format='HH:mm' onChange={this.onEndTime} required />   
               </div>
             </div>
 
@@ -201,13 +206,15 @@ class EventCreate extends Component {
     console.log(formData);
     axios
       .post(
-        "http://localhost:40951/event/" + this.props.ID + "/",
+        "http://localhost:40951/event/" + (jwt_decode(Cookies.get("token"))).uid + "/",
         formData
       )
       .then(function(response, props) {
         console.log("success");
         p.addEvent(formData);
         p.toggleCreateForm();
+        console.log('server',response)
+        window.location.reload()
       })
       .catch(function(error) {
         console.log(error);

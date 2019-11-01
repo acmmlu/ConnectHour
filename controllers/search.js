@@ -13,13 +13,13 @@ exports.search = function(req, res) {
         
         for (let param of Object.keys(req.query)) {
             if (param === "date") {
-                //let date = new Date(req.query[param]);
-                result.filter(function(row) {
+                result = result.filter(function(row) {
                     return row["StartTime"].includes(req.query[param]) || row["EndTime"].includes(req.query[param]);
                 });
             }
             if (param === "city") {
                 result = result.filter(function(row) {
+                    console.log(row);
                     return row["City"].includes(req.query[param]);
                 });
             }
