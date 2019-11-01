@@ -31,7 +31,7 @@ class EventsVol extends React.Component {
     const p = this;
     let RegisteredEvents = this.state.RegisteredEvents;
     axios
-      .get("http://localhost:40951/event/volunteer/" + ID)
+      .get("/event/volunteer/" + ID)
       .then(function(response) {
         p.setState({ RegisteredEvents: response.data });
       })
@@ -213,7 +213,7 @@ class SearchEvents extends React.Component {
     const p = this.props;
     axios
       .get(
-        "http://localhost:40951/search?q=" +
+        "/search?q=" +
           formData["SearchString"] +
           "&city=" +
           formData["city"] +

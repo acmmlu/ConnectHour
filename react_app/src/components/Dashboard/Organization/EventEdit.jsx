@@ -222,7 +222,7 @@ class EventEdit extends React.Component {
     const p=this.props       
     const f=this.state.formData
     axios
-      .put("http://localhost:40951/event/"+this.props.ID+"/"+f["id"] , f)
+      .put("/event/"+this.props.ID+"/"+f["id"] , f)
       .then(function(response, props) {
         console.log(response)
         p.openEditReset()
