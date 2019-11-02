@@ -22,7 +22,7 @@ exports.transport = nodemailer.createTransport({
         type: 'OAuth2',
         user: 'connecthourofficial@gmail.com',
         clientId: '926515268553-702nh6okk23jl79j8dkikfe2sliopt1r.apps.googleusercontent.com',
-        clientSecret: 'jNlAfC11q9dPa1gm-Ofqq9h9',
+        clientSecret: 'Qac7luflpuLEsAOeRtoDIIwB',
         refreshToken: '1//04_JmqiS7Xo-eCgYIARAAGAQSNwF-L9IrUhUUSvzFm8GF4HahCYbZxWcW0wM5EHjcFFHIz783TQKMbNIg0pxTE-CoTaqivC5Hdbo',
         accessToken: oauth2Client.getAccessToken(),
         expires: (new Date()).getTime()
