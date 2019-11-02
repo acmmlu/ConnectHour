@@ -7,9 +7,7 @@ const url = require('url');
 exports.pool = mysql.createPool(process.env.DATABASE_URL);
 
 exports.transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
         type: 'oauth2',
         user: 'connecthourofficial@gmail.com',
