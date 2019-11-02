@@ -6,7 +6,7 @@ const {google} = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
 const oauth2Client = new OAuth2(
     '926515268553-702nh6okk23jl79j8dkikfe2sliopt1r.apps.googleusercontent.com',
-    'jNlAfC11q9dPa1gm-Ofqq9h9',
+    'Qac7luflpuLEsAOeRtoDIIwB',
     'https://developers.google.com/oauthplayground'
 );
 oauth2Client.setCredentials({
@@ -23,7 +23,7 @@ exports.transport = nodemailer.createTransport({
         user: 'connecthourofficial@gmail.com',
         clientId: '926515268553-702nh6okk23jl79j8dkikfe2sliopt1r.apps.googleusercontent.com',
         clientSecret: 'Qac7luflpuLEsAOeRtoDIIwB',
-        refreshToken: '1//04_JmqiS7Xo-eCgYIARAAGAQSNwF-L9IrUhUUSvzFm8GF4HahCYbZxWcW0wM5EHjcFFHIz783TQKMbNIg0pxTE-CoTaqivC5Hdbo',
+        refreshToken: '1//0433TPgll2PSfCgYIARAAGAQSNwF-L9IrMf02mVHpE3HGWG_ilxyMFZYhrTT5MVPjs0jWni8ip4VBmy96OEAwUde1DvpUEbmzX_Y',
         accessToken: oauth2Client.getAccessToken(),
         expires: (new Date()).getTime()
     }
