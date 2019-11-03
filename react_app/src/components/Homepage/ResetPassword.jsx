@@ -236,7 +236,7 @@ class Reset extends Component {
     const p = this;
     //request to backend 
     axios
-      .post("http://localhost:40951/reset_password", formData)
+      .post("/reset_password", formData)
       .then(function(response, props) {
         p.noresetErr();
         const code = response.data;//store the verification code

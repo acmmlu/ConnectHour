@@ -18,7 +18,7 @@ class ActivityTracking extends React.Component {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       axios
-        .get("http://localhost:40951/event/activity/" + ID)
+        .get("/event/activity/" + ID)
         .then(function(response) {
           console.log(response);
           p.setState({ activityData: response.data });

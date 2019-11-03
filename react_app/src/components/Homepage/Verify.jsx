@@ -96,7 +96,7 @@ class Verify extends React.Component {
       if (fname === "VolunteerRegister" || fname === "OrganizationRegister") {
         axios
           .post(
-            "http://localhost:40951/register",
+            "/register",
             this.props.verifyCode["formData"]
           )
           .then(function(response) {
@@ -116,7 +116,7 @@ class Verify extends React.Component {
       ) {
         axios
           .post(
-            "http://localhost:40951/reset_password",
+            "/reset_password",
             this.props.verifyCode["formData"]
           )
           .then(function(response) {
@@ -142,7 +142,7 @@ class Verify extends React.Component {
         }
         axios
           .post(
-            "http://localhost:40951/login",
+            "/login",
             this.props.verifyCode["formData"]
           )
           .then(function(response) {

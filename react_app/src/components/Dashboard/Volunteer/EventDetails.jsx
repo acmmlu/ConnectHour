@@ -68,7 +68,7 @@ class ShowEventDetails extends React.Component {
       const formData = this.state.formData;
       axios
         .post(
-          "http://localhost:40951/event/register/" +
+          "/event/register/" +
           (jwt_decode(Cookies.get("token"))).uid +
             "/" +
             formData["id"],

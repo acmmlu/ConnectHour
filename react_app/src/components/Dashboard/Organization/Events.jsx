@@ -42,7 +42,7 @@ class Events extends Component {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       axios
-        .get("http://localhost:40951/event/organizer/" + ID)
+        .get("/event/organizer/" + ID)
         .then(function(response) {
           p.setState({ eventList: response.data });
         })
@@ -212,7 +212,7 @@ class Event extends Component {
     console.log('in');
     axios
     .get(
-      "http://localhost:40951/event/organizer/registered/" +
+      "/event/organizer/registered/" +
         e.target.id
     )
     .then(function(response) {
@@ -227,7 +227,7 @@ class Event extends Component {
     let eventid = e.target.id;
     axios
       .delete(
-        "http://localhost:40951/event/" +
+        "/event/" +
           jwt_decode(Cookies.get("token")).uid +
           "/" +
           eventid
