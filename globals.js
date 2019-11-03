@@ -5,7 +5,7 @@ const {google} = require('googleapis');
 
 const OAuth2 = google.auth.OAuth2;
 const oauth2Client = new OAuth2(
-    'http://926515268553-bb97lrsb78c4d3ms5auuuu33sq6vdr2i.apps.googleusercontent.com',
+    '926515268553-bb97lrsb78c4d3ms5auuuu33sq6vdr2i.apps.googleusercontent.com',
     'HrETbf3xcyhGLU-R4pH_ma9b',
     'https://developers.google.com/oauthplayground'
 );
