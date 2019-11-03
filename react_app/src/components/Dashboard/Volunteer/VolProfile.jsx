@@ -32,7 +32,7 @@ class VolProfile extends React.Component {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       axios
-        .get("http://localhost:40951/volunteer/" + ID)
+        .get("/volunteer/" + ID)
         .then(function(response) {
           p.setState({ formData: response.data });
           console.log(p.state.formData, response);
@@ -241,7 +241,7 @@ class VolProfile extends React.Component {
       console.log(formData);
       const p = this.props;
       axios
-        .put("http://localhost:40951/volunteer/" + ID, formData)
+        .put("/volunteer/" + ID, formData)
         .then(function(response, props) {
           console.log(response);
            window.location.reload();

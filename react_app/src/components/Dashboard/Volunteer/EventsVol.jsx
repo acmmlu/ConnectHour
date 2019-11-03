@@ -211,14 +211,30 @@ class SearchEvents extends React.Component {
     e.preventDefault();
     console.log(formData);
     const p = this.props;
+
+    let first = true;
+    let path = '/search'
+    for (let key of Object.keys(formData)) {
+      if (formData[key]) {
+        if (first) {
+          path += '?';
+          first = false;
+        } else {
+          path += '&';
+        }
+        
+        path += formData[key];
+      }
+    }
     axios
       .get(
-        "/search?q=" +
-          formData["SearchString"] +
-          "&city=" +
-          formData["city"] +
-          "&date=" +
-          formData["date"]
+        // "?q=" +
+        //   formData["SearchString"] +
+        //   "&city=" +
+        //   formData["city"] +
+        //   "&date=" +
+        //   formData["date"]
+        path
       )
       .then(function(response, props) {
         console.log(response);
