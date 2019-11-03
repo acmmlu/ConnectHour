@@ -23,8 +23,10 @@ module.exports = function(app) {
 
 
     // Profile data routes
-    app.get('/volunteer/:id', users.volunteerById);
-    app.get('/organizer/:id', users.organizerById);
+    app.get('/volunteer/:volunteer', users.volunteerById);
+    app.put('/volunteer/:volunteer', users.edit_volProfile);
+    app.get('/organizer/:organizer', users.organizerById);
+    app.put('/organizer/:organizer', users.edit_orgProfile);
 
     // Search routes
     app.get('/search', search.search);

@@ -1,4 +1,4 @@
-/* 
+
   a{
     color: inherit;
   }
@@ -22,8 +22,8 @@
     padding: 2.5rem;
   }
   
-  .flex-nav {
-    padding-left: 270px;
-    background: #fff;
+  .navtop{
+  
+ margin-left: 256px;
+  
   }
-  */

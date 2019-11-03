@@ -15,7 +15,7 @@ class Events extends Component {
     this.state = {
       showForm: false,
       eventList: [],
-      //registered_vol:[],
+      
       editFormId: ""
     };
     this.addEvent = this.addEvent.bind(this);
@@ -37,16 +37,14 @@ class Events extends Component {
   }
 
   componentDidMount = () => {
-    console.log(Cookies.get());
 
     if (Cookies.get("token") && Cookies.get("type") === "/odashboard/") {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       axios
-        .get("/event/organizer/" + ID)
+        .get("http://localhost:40951/event/organizer/" + ID)
         .then(function(response) {
           p.setState({ eventList: response.data });
-          console.log(p.state.eventList);
         })
         .catch(function(error) {
           console.log(error);
@@ -116,7 +114,13 @@ class Events extends Component {
 }
 
 class Event extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+    registered_vol:[]
+    };
+    this.getRegisteredVolunteers = this.getRegisteredVolunteers.bind(this);
+  }
   render() {
     
 
@@ -154,13 +158,14 @@ class Event extends Component {
         )}
         <hr />
 
-        {/* <div className="accordion" id={this.props.event.id}>
+        <div className="accordion"   id={this.props.event.id}>
           <div>
             <div id="headingOne">
               <button
-                className="btn text-dark"
+                className="btn text-dark text-weight-bold"
                 type="button"
                 id={this.props.event.id}
+                onClick={this.getRegisteredVolunteers} 
                 data-toggle="collapse"
                 data-target={"#collapse" + this.props.event.id}
                 aria-expanded="true"
@@ -174,41 +179,55 @@ class Event extends Component {
             <div
               id={"collapse" + this.props.event.id}
               className="collapse "
-              onClick={this.getRegisteredVolunteers}
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
-            >{
+            >
+            {
               this.state.registered_vol.map(vol => (
-              <p>{vol.FirstName}</p>
-            ))}
+                <ol>
+                  <hr/>
+                <li><div className='text-center m-auto'>
+                <div>  
+              <span>Name: </span>{vol.FirstName} {vol.LastName} 
+              </div>
+              <div > 
+              <span>Email: </span>{vol.Email} 
+              </div>
+              <hr/>
+              </div></li>
+              </ol>
+            )) 
+            }
              
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     );
   }
 
-  // getRegisteredVolunteers = (eventid) => {
-  //   let thisstate=this
-  //   axios
-  //   .get(
-  //     "/event/organizer/registered/" +
-  //       eventid
-  //   )
-  //   .then(function(response, props) {
-  //    thisstate.setState({registered_vol:response.data})
-  //   })
-  //   .catch(function(error) {
-  //     console.log(error);
-  //   });
-  // };
+  getRegisteredVolunteers = (e) => {
+    let thisstate=this
+    
+    console.log('in');
+    axios
+    .get(
+      "http://localhost:40951/event/organizer/registered/" +
+        e.target.id
+    )
+    .then(function(response) {
+     thisstate.setState({registered_vol:response.data})
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  };
 
   deleteEvent = e => {
     let eventid = e.target.id;
     axios
       .delete(
-        "/event/" +
+        "http://localhost:40951/event/" +
           jwt_decode(Cookies.get("token")).uid +
           "/" +
           eventid

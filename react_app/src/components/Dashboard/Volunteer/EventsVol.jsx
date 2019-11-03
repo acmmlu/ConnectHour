@@ -3,7 +3,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import Registered from './Registered'
-import { TimePicker } from 'antd';
 import Searched from './Search'
 
 
@@ -15,7 +14,7 @@ class EventsVol extends React.Component {
       EventsList: [],
       RegisteredEvents: [],
       showDetails: false,
-      errmsg: "",// storews the error message
+      errmsg: "Search Events",// storews the error message
       showFormId: "",//stores the event id
       name: ""
     };
@@ -31,7 +30,7 @@ class EventsVol extends React.Component {
     const p = this;
     let RegisteredEvents = this.state.RegisteredEvents;
     axios
-      .get("/event/volunteer/" + ID)
+      .get("http://localhost:40951/event/volunteer/" + ID)
       .then(function(response) {
         p.setState({ RegisteredEvents: response.data });
       })
@@ -79,6 +78,8 @@ class EventsVol extends React.Component {
   render() {
     return (
       <React.Fragment>
+       
+        <div className="row EventsVol">
         <div className="row  container text-center">
           <div className=" mt-2 mb-2  container">
             <SearchEvents
@@ -87,7 +88,6 @@ class EventsVol extends React.Component {
             />
           </div>
         </div>
-        <div className="row">
           <div className="DisplayEvents container  col-6">
             <div className="display-4 text-center">
               <p>{this.state.errmsg}</p>{" "}
@@ -161,7 +161,7 @@ class SearchEvents extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="ml-5">
+        <div className="ml-5 topdist">
           <form
             className="form-inline my-2 my-lg-0 ml-5"
             onSubmit={e => this.onSubmit(e, this.state.formData)}
@@ -186,11 +186,11 @@ class SearchEvents extends React.Component {
           
             <div className="form-group row ">
              {/* <TimePicker  format='HH:mm' onChange={this.filterTime}  required/>   */}
-             <input type="date" id="date" onChange={this.handleInputChange} className='form-control  col-4' name="date" />
+             <input type="date" id="date" onChange={this.handleInputChange} className='form-control col-10 m-1' name="date" />
 
              </div>
             <button
-              className="btn btn-outline-success my-2 my-sm-0"
+              className="btn btn-outline-success ml-4 my-sm-0"
               type="submit"
             >
               Search
@@ -213,7 +213,7 @@ class SearchEvents extends React.Component {
     const p = this.props;
     axios
       .get(
-        "/search?q=" +
+        "http://localhost:40951/search?q=" +
           formData["SearchString"] +
           "&city=" +
           formData["city"] +

@@ -206,7 +206,7 @@ class EventCreate extends Component {
     console.log(formData);
     axios
       .post(
-        "/event/" + (jwt_decode(Cookies.get("token"))).uid + "/",
+        "http://localhost:40951/event/" + (jwt_decode(Cookies.get("token"))).uid + "/",
         formData
       )
       .then(function(response, props) {

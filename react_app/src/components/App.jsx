@@ -15,6 +15,8 @@ import {
   Redirect
 } from "react-router-dom";
 import OrgProfile from "./Dashboard/Organization/OrgProfile";
+import VolProfile from "./Dashboard/Volunteer/VolProfile";
+
 const history = createBrowserHistory();
 
 class Main extends React.Component {
@@ -51,13 +53,18 @@ class Main extends React.Component {
               />
               <Route
                 exact
-                path="/vdashboard/activity/:volunteerID"
+                path="/vdashboard/:volunteerID/activity"
                 render={props => <ActivityTracking {...props} />}
               />
                 <Route
                 exact
-                path="/odashboard/profile/:organizationID"
+                path="/odashboard/:organizationID/profile"
                 render={props => <OrgProfile {...props} />}
+              />
+               <Route
+                exact
+                path="/vdashboard/:volunteerID/profile"
+                render={props => <VolProfile {...props} />}
               />
               <Route
                 exact

@@ -119,18 +119,17 @@ exports.register = function(req, res) {
 
     let table;
     if (user_info.type === "Volunteer") {
-        table = "VOLUNTEER_TAB";
+        table = "VOLUNTEER";
     } else {
-        table = "ORGANIZER_TAB";
+        table = "ORGANIZER";
     }
-    
 
     if (user_info.Verified === "false") {
         // Create account
         let token = getToken();
        
 
-        let query = "SELECT CASE WHEN EXISTS (SELECT EMAIL FROM " + table + " WHERE EMAIL = ?) THEN 1 ELSE 0 END AS \"exists\";";
+        let query = "SELECT CASE WHEN EXISTS (SELECT EMAIL FROM " + table + "_TAB WHERE EMAIL = ?) THEN 1 ELSE 0 END AS \"exists\";";
         g.query(query, [user_info.Email], function(result, fields) {
 
             if (result[0]["exists"]) {
@@ -147,21 +146,31 @@ exports.register = function(req, res) {
                     }
                     
                     // Create db entry
-                    if (table === "VOLUNTEER_TAB") { // Volunteer
+                    if (table === "VOLUNTEER") { // Volunteer
                         let vals = [user_info.Firstname, user_info.Lastname, user_info.Email, hash, user_info.City, user_info.State];
-                        let query = "INSERT INTO " + table + "(FIRST_NAME,LAST_NAME,EMAIL,PASSWORD, CITY, STATE) VALUES (?, ?, ?, ?, ?, ?)";
+                        let query = "INSERT INTO " + table + "_TAB(FIRST_NAME,LAST_NAME,EMAIL,PASSWORD, CITY, STATE) VALUES (?, ?, ?, ?, ?, ?)";
                         
                         g.query(query, vals, function(result, fields) {
                             verifyAccount(user_info.Email, token);
-                            res.send(response_object);
+
+                            g.query('SELECT ID FROM '+table+"_TAB WHERE EMAIL = ?", [user_info.Email], function(resul, field) {
+                                g.query('INSERT INTO '+table+'_PROFILE (ID) VALUES (?)', [resul[0].ID], function(resu, fiel) {
+                                    res.send(response_object);
+                                });
+                            });
                         });
                     } else { // Organizer
                         let vals = [user_info.Organization_name, user_info.Email, hash, user_info.City, user_info.State];
-                        let query = "INSERT INTO " + table + "(NAME, EMAIL, PASSWORD, CITY, STATE) VALUES (?, ?, ?, ?, ?)";
+                        let query = "INSERT INTO " + table + "_TAB(NAME, EMAIL, PASSWORD, CITY, STATE) VALUES (?, ?, ?, ?, ?)";
 
                         g.query(query, vals, function(result, fields) {
                             verifyAccount(user_info.Email, token);
-                            res.send(response_object);
+
+                            g.query('SELECT ID FROM '+table+"_TAB WHERE EMAIL = ?", [user_info.Email], function(resul, field) {
+                                g.query('INSERT INTO '+table+'_PROFILE (ID) VALUES (?)', [resul[0].ID], function(resu, fiel) {
+                                    res.send(response_object);
+                                });
+                            });
                         });
                     }
                 });
@@ -170,7 +179,7 @@ exports.register = function(req, res) {
     } else {
         console.log('else');
         // Verify
-        g.query("UPDATE " + table + " SET VERIFIED = TRUE WHERE EMAIL = ?;", [user_info.Email], function(result, fields) {
+        g.query("UPDATE " + table + "_TAB SET VERIFIED = TRUE WHERE EMAIL = ?;", [user_info.Email], function(result, fields) {
             res.status(200).send("Account Created");
         });
     }

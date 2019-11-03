@@ -87,6 +87,7 @@ exports.get_registered_volunteers=function(req,res){
     'FROM VOLUNTEER_TAB V INNER JOIN ATTENDING A ON A.VOLUNTEERID=V.ID WHERE A.EVENTID=?'
     try {
         g.query(query, [eid], function(result, fields) {
+            console.log(result,eid)
             res.send(result);  
         });
         } catch (error) {
@@ -204,7 +205,7 @@ exports.activityTracking = function(req,res){
        console.log(vol_id)
        g.pool.getConnection(function(err, connection){
            if (err) throw err;
-           let query = 'SELECT E.NAME AS "EventName", E.DESCRIPTION AS "Description", E.ORGNAME AS "OrganizationName",' +
+           let query = 'SELECT E.ID as "EventId", E.NAME AS "EventName", E.DESCRIPTION AS "Description", E.ORGNAME AS "OrganizationName",' +
            'E.STREETNUMBER AS "Streetnumber", E.STREETNAME AS "Streetname", E.CITY AS "City",'+
            'E.STATE AS "State", E.ZIP AS "ZIP", E.START AS "StartTime", E.END AS "EndTime"' +
            'FROM EVENT E INNER JOIN ATTENDING A ON E.ID=A.EVENTID WHERE A.VOLUNTEERID=?';

@@ -215,7 +215,7 @@ class Register extends React.Component {
     const p = this;
     //request to backend
     axios
-      .post("register", formData)
+      .post("http://localhost:40951/register", formData)
       .then(function(response) {
         p.noregErr();//clear the error message
         const code = response.data; //code mailed from backend

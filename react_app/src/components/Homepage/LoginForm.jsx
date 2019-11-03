@@ -121,7 +121,7 @@ class Login extends Component {
 
     //request to backend
     axios
-      .post("/login", formData)
+      .post("http://localhost:40951/login", formData)
       .then(function(response) {
         p.nologinErr();//clear the error message
         const code = response.data;
