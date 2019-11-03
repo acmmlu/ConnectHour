@@ -1,7 +1,10 @@
 const g = require('../globals');
 
 exports.search = function(req, res) {
-    let search_str = '%' + req.query.q + '%';
+    let search_str = '%'
+    if (req.query && req.query.q) {
+        search_str = '%' + req.query.q + '%';
+    }
 
     let query = 'SELECT E.ID AS "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", O.NAME AS "OrganizationName", ' +
         'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' + 
