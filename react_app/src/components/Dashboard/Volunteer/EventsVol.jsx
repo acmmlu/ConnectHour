@@ -221,7 +221,7 @@ class SearchEvents extends React.Component {
           path += '&';
         }
         
-        path += formData[key];
+        path += key+"="+formData[key];
       }
     }
     axios
