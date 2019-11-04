@@ -123,14 +123,14 @@ class Login extends Component {
     axios
       .post("/login", formData)
       .then(function(response) {
-        p.nologinErr();//clear the error message
+        p.nologinErr(); //clear the error message
         const code = response.data;
         const data = { formData: formData, code: code }; //code mailed from backend
-        thisprops.toggleVerify(data);//toggle the modal state to show verification form
+        thisprops.toggleVerify(data); //toggle the modal state to show verification form
       })
       .catch(function(error) {
         if (error.response.status === 401) {
-          p.loginErr();//display the error message
+          p.loginErr(); //display the error message
         }
       });
   };

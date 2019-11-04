@@ -5,7 +5,6 @@ import Verify from "./Verify";
 import Header from "../Header";
 import logo from "../../logo.png";
 
-
 //Reset password (parent) component for login page.
 export default class ResetPassword extends Component {
   constructor(props) {
@@ -18,7 +17,7 @@ export default class ResetPassword extends Component {
     this.toggleVerify = this.toggleVerify.bind(this);
   }
 
-  //function to toggle verify modal state and update the formdata state 
+  //function to toggle verify modal state and update the formdata state
   toggleVerify(data) {
     this.setState({ verifymodal: !this.state.verifymodal });
     this.setState({ formData: data });
@@ -34,7 +33,7 @@ export default class ResetPassword extends Component {
           history={this.props.history}
         />
 
-                {/*Displaying the verify account component */}
+        {/*Displaying the verify account component */}
 
         <Modal isOpen={this.state.verifymodal}>
           <ModalHeader>Verify</ModalHeader>
@@ -77,11 +76,21 @@ class Reset extends Component {
   };
 
   render() {
-
-   {/*USed for password validation*/}
-    const lc = /[a-z]/g; {/*lowercase*/}
-    const uc = /[A-Z]/g; {/*upercase*/}
-    const num = /[0-9]/g; {/*number*/}
+    {
+      /*USed for password validation*/
+    }
+    const lc = /[a-z]/g;
+    {
+      /*lowercase*/
+    }
+    const uc = /[A-Z]/g;
+    {
+      /*upercase*/
+    }
+    const num = /[0-9]/g;
+    {
+      /*number*/
+    }
 
     return (
       <React.Fragment>
@@ -122,7 +131,7 @@ class Reset extends Component {
                       onFocus={this.togglereq}
                       required
                     />
-                      {/*Password validation */}
+                    {/*Password validation */}
                     {this.state.passreq && (
                       <div className="mt-1">
                         <h5>Password should contain </h5>
@@ -212,7 +221,7 @@ class Reset extends Component {
       </React.Fragment>
     );
   }
-//HAndle change function for updating form inout values
+  //HAndle change function for updating form inout values
   handleInputChange = e => {
     let formData = { ...this.state.formData };
     formData[e.target.name] = e.target.value;
@@ -228,20 +237,20 @@ class Reset extends Component {
   noresetErr() {
     this.setState({ errmsg: "" });
   }
-//on submit function
+  //on submit function
   onSubmit = (e, formData) => {
     e.preventDefault();
 
     const thisprops = this.props;
     const p = this;
-    //request to backend 
+    //request to backend
     axios
       .post("/reset_password", formData)
       .then(function(response, props) {
         p.noresetErr();
-        const code = response.data;//store the verification code
+        const code = response.data; //store the verification code
         const data = { formData: formData, code: code };
-        thisprops.toggleVerify(data);//toggle the modal state to show verification form
+        thisprops.toggleVerify(data); //toggle the modal state to show verification form
       })
       .catch(function(error) {
         p.resetErr();

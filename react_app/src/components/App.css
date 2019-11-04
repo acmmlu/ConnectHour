@@ -1,10 +1,9 @@
 .login-container {
   padding: 70px 0;
   text-align: center;
-  
 }
-.backgrounddiv{
-  background: url('./background2.jpeg') no-repeat top center fixed;
+.backgrounddiv {
+  background: url("./background2.jpeg") no-repeat top center fixed;
   background-size: 100%;
   position: absolute;
   width: 100%;
@@ -14,10 +13,13 @@
   right: 0;
   bottom: 0;
   z-index: -1;
- background-position:center;
- overflow : hidden;
-
-  
+  background-position: center;
+  overflow: hidden;
+}
+.navbarName {
+  font-weight: 900;
+  font: 25px Impact, fantasy;
+  font-stretch: ultra-expanded;
 }
 .reset-container {
   padding: 70px 0;
@@ -32,30 +34,65 @@
   margin: auto;
 }
 
-.EventCreate{
+.EventCreate {
   position: absolute;
-z-index: 2;
-background-color: white ;
-width: 100%;
- top:0;
+  z-index: 2;
+  background-color: white;
+  width: 100%;
+  top: 0;
 }
 
-.displaynone{
+.displaynone {
   display: none;
 }
 
-
-.RegisteredEvents{
-  overflow: scroll;
+.RegisteredEvents {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
-.Registered{
-height: 700px;
+.Registered {
+  height: 700px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.EventsVol{
-  padding-left: 270px;}
-  
-.activity{
-    padding-left: 270px;}
-.volprofile{
-      padding-left: 270px;} 
+.EventsVol {
+  padding-left: 270px;
+}
+
+.activity {
+  padding-left: 270px;
+}
+.volprofile {
+  padding-left: 270px;
+}
+
+.searched {
+  min-height: 200px;
+}
+
+.Events {
+  padding-left: 200px;
+}
+
+.activeClass {
+  color: #17a2b8;
+}
+.pnotfound {
+  background: url("./background2.jpeg") no-repeat top center fixed;
+  background-size: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-position: center;
+  overflow: hidden;
+}
+
+.notfound{
+  top:350px
+}

@@ -7,8 +7,7 @@ import './components/App.css'
 
 
 const App = () => <Main />;
-const App2=()=> <EventsVol/>
-const App3=()=><Events/>
+
 
 
 

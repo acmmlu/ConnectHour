@@ -1,14 +1,13 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import axios from "axios";
-import { TimePicker } from 'antd';
-import moment, { min } from 'moment';
-import 'antd/dist/antd.css';
-
+import { TimePicker } from "antd";
+import moment, { min } from "moment";
+import "antd/dist/antd.css";
 
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 
-const format = 'HH:mm';
+const format = "HH:mm";
 
 class EventCreate extends Component {
   constructor(props) {
@@ -18,78 +17,71 @@ class EventCreate extends Component {
         EventName: "",
         Description: "",
         OrganizationName: "",
-        OrganizationId: this.props.ID ,
+        OrganizationId: this.props.ID,
         StreetNumber: "",
         StreetName: "",
         City: "",
         State: "",
         ZIP: "",
-        date :'',
+        date: "",
         StartTime: "",
         EndTime: ""
       }
-    }
-    this.onEndTime=this.onEndTime.bind(this)
-    this.onStartTime=this.onStartTime.bind(this)
-
+    };
+    this.onEndTime = this.onEndTime.bind(this);
+    this.onStartTime = this.onStartTime.bind(this);
   }
 
   onStartTime(n, time) {
-
-    console.log(time)
+    console.log(time);
     let formData = { ...this.state.formData };
-    formData['StartTime']=time
+    formData["StartTime"] = time;
     this.setState({
-     formData
-    })
-    console.log(this.state.formData)
+      formData
+    });
+    console.log(this.state.formData);
   }
-    onEndTime(n, time) {
-      console.log(time)
-      let formData = { ...this.state.formData };
-    formData['EndTime']=time
+  onEndTime(n, time) {
+    console.log(time);
+    let formData = { ...this.state.formData };
+    formData["EndTime"] = time;
     this.setState({
-     formData
-    })
-    }
+      formData
+    });
+  }
 
   handleInputChange = e => {
     let formData = { ...this.state.formData };
     formData[e.target.name] = e.target.value;
     this.setState({
       formData
-    })
-    
-    
+    });
   };
 
   render() {
-
     return (
       <React.Fragment>
-        <div >
+        <div>
           <form
-            className="card  m-2 shadow p-3 mb-5 bg-white rounded "
+            className="card  "
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
-            <div className="form-group row p-4">
-              <label htmlFor="EventName" className=" pt-2 col-2">
-                Event Name:
-              </label>
+            <div className="form-group row pl-4 pr-4 pt-1 text-center">
+              <label htmlFor="EventName">Event Name:</label>
               <input
                 type="text"
                 name="EventName"
                 onChange={this.handleInputChange}
-                className="form-control col-4"
+                className="form-control "
                 id="EventName"
                 placeholder="Enter Event Name"
                 required
               />
-              <label htmlFor="description" className=" pt-2 col-2">
-                Event Description
-              </label>
+            </div>
+            <div className="form-group row pl-4 pr-4 text-center">
+              <label htmlFor="description">Event Description:</label>
               <textarea
-                className="form-control pr-3 col-4"
+                className="form-control pr-3 "
                 onChange={this.handleInputChange}
                 name="Description"
                 id="Description"
@@ -98,26 +90,23 @@ class EventCreate extends Component {
               ></textarea>
             </div>
 
-            <div className="form-group row p-4">
-              <label htmlFor="StreetNumber" className=" pt-2 col-2">
-                Street Number:
-              </label>
+            <div className="form-group row pl-4 pr-4 text-center">
+              <label htmlFor="StreetNumber">Street Number:</label>
               <input
                 type="text"
                 onChange={this.handleInputChange}
-                className="form-control col-4"
+                className="form-control "
                 name="StreetNumber"
                 id="StreetNumber"
                 placeholder="Enter Street Number"
               />
-
-              <label htmlFor="StreetName" className=" pt-2 col-2">
-                Street Name:
-              </label>
+            </div>
+            <div className="form-group row pl-4 pr-4 text-center">
+              <label htmlFor="StreetName">Street Name:</label>
               <input
                 type="text"
                 onChange={this.handleInputChange}
-                className="form-control col-4"
+                className="form-control "
                 name="StreetName"
                 id="StreetName"
                 placeholder="Enter Street Name"
@@ -166,31 +155,49 @@ class EventCreate extends Component {
                 placeholder="Enter ZIP"
                 required
               />
-              <label htmlFor="date" className="  col-2">
-              Date:
-            </label>
-            <input type="date" id="date" onChange={this.handleInputChange} className='form-control  col-4' name="date" />
+              <label htmlFor="date" className="  pt-2 col-2">
+                Date:
+              </label>
+              <input
+                type="date"
+                id="date"
+                onChange={this.handleInputChange}
+                className="form-control  col-4"
+                name="date"
+              />
             </div>
-            
+
             <div className="form-group row p-4">
-              <label htmlFor="StartTime" className=" pt-2 col-2">
+              <label htmlFor="StartTime" className="  col-2">
                 Start Time:
-
-                    </label>
-                    <div>
-                    <TimePicker  format='HH:mm' onChange={this.onStartTime}  required/>   
-
-                    </div>
+              </label>
+              <div>
+                <TimePicker
+                  format="HH:mm"
+                  onChange={this.onStartTime}
+                  required
+                />
+              </div>
               <label htmlFor="EndTime" className="col-2">
                 End Time:
               </label>
-              <div >
-              <TimePicker  format='HH:mm' onChange={this.onEndTime} required />   
+              <div>
+                <TimePicker format="HH:mm" onChange={this.onEndTime} required />
               </div>
             </div>
 
-            <div className="p-2 text-center">
-              <input type="submit" className="btn btn-info " value="Submit" />
+            <div className=" text-center m-2">
+              <span className=" m-2 ">
+                <input type="submit" className="btn btn-info " value="Submit" />
+              </span>
+              <span className=" m-2 ">
+                <input
+                  type="button"
+                  className="btn btn-danger "
+                  onClick={this.props.toggleCreateForm}
+                  value="Close"
+                />
+              </span>
             </div>
           </form>
         </div>
@@ -198,23 +205,23 @@ class EventCreate extends Component {
     );
   }
 
-
   onSubmit = (e, formData) => {
     e.preventDefault();
-;
     const p = this.props;
     console.log(formData);
     axios
       .post(
-        "/event/" + (jwt_decode(Cookies.get("token"))).uid + "/",
+        "/event/" +
+          jwt_decode(Cookies.get("token")).uid +
+          "/",
         formData
       )
       .then(function(response, props) {
         console.log("success");
         p.addEvent(formData);
         p.toggleCreateForm();
-        console.log('server',response)
-        window.location.reload()
+        console.log("server", response);
+        window.location.reload();
       })
       .catch(function(error) {
         console.log(error);

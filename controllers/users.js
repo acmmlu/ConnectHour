@@ -76,8 +76,8 @@ exports.edit_volProfile = function(req, res) {
     let query2 = 'UPDATE VOLUNTEER_TAB SET CITY = ?, STATE = ? WHERE ID = ?';
 
     let params1 = [
-        profile.Description,
         profile.StreetNumber,
+        profile.Description,
         profile.StreetName,
         profile.ZIP,
         req.params.volunteer
@@ -113,8 +113,8 @@ exports.edit_orgProfile = function(req, res) {
     let query2 = 'UPDATE ORGANIZER_TAB SET CITY = ?, STATE = ? WHERE ID = ?';
 
     let params1 = [
-        profile.Description,
         profile.StreetNumber,
+        profile.Description,
         profile.StreetName,
         profile.ZIP,
         req.params.organizer

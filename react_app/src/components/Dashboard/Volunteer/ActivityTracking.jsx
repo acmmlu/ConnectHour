@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { Modal } from "reactstrap";
+import moment, { min } from "moment";
 
 import VolLayout from "./VolLayout";
 
@@ -34,18 +35,17 @@ class ActivityTracking extends React.Component {
     return (
       <>
         <VolLayout />
-        <div className='text-center display-2'> Past Events</div>
-        <div className='row EventsVol'>
-        
-        <div className="  col-8 activity">
-          {this.state.activityData.map(activityData => (
-            //call the registered component
-            <PastEvents
-              activityData={activityData}
-              key={activityData.EventId}
-            />
-          ))}
-        </div>
+        <div className="text-center display-2"> Past Events</div>
+        <div className="row EventsVol">
+          <div className="  col-8 activity">
+            {this.state.activityData.map(activityData => (
+              //call the registered component
+              <PastEvents
+                activityData={activityData}
+                key={activityData.EventId}
+              />
+            ))}
+          </div>
         </div>
       </>
     );
@@ -62,16 +62,16 @@ class PastEvents extends React.Component {
   }
 
   toggleeid(e) {
-    if(e.target.id){
-    this.setState({ eid: e.target.id });
+    if (e.target.id) {
+      this.setState({ eid: e.target.id });
+    } else {
+      this.setState({ eid: "" });
     }
-    else{this.setState({ eid: ''});}
   }
- 
+
   render() {
     return (
       <>
-
         <div className="card text-center shadow p-3 mb-5 bg-white rounded ">
           <h5 className="card-title">{this.props.activityData.EventName}</h5>
           <span>{this.props.activityData.date}</span>
@@ -85,11 +85,10 @@ class PastEvents extends React.Component {
             type="button"
           />
           <Modal isOpen={this.state.eid == this.props.activityData.EventId}>
-             <ShowEventDetails
-        eventdata={this.props.activityData}
-        toggleeid={this.toggleeid}
-
-      /> 
+            <ShowEventDetails
+              eventdata={this.props.activityData}
+              toggleeid={this.toggleeid}
+            />
           </Modal>
         </div>
       </>
@@ -104,48 +103,54 @@ class ShowEventDetails extends React.Component {
       formData: this.props.eventdata
     };
   }
- 
+
   render() {
     const data = this.props.eventdata;
     const t = new Date(data.StartTime);
+    console.log(data);
     return (
       <React.Fragment>
         <div className="showDetails ">
-         
-            <div className="form-group  bg-info card row p-4">
-              <span className=" pt-2 display-4 text-center ">
-                {" "}
-                {data.EventName}
-              </span>
-            </div>
+          <div className="form-group  bg-info card row p-4">
+            <span className=" pt-2 display-4 text-center ">
+              {" "}
+              {data.EventName}
+            </span>
+          </div>
 
-            <div className="form-group   text-center  ">{data.Description}</div>
-            <hr />
+          <div className="form-group   text-center  ">{data.Description}</div>
+          <hr />
 
-            <div className="text-center"> Address: {data.City}</div>
-
-            <hr />
-            <div className="form-group col-9  m-auto ">
-              <span className=" ">
-                {" "}
-                Date: {t.getUTCMonth()}/{t.getUTCDate()}/{t.getFullYear()}{" "}
-                
-                Starting At- {t.getUTCHours()}:{t.getMinutes()}
-              </span>
-            </div>
-            <div className="m-auto text-center"> <input
-                  className="btn btn-danger m-2"
-                  value="Cancel"
-                  type="button"
-                  onClick={this.props.toggleeid}
-                /></div>
-           
+          <div className="text-center">
+            {" "}
+            <span className="text-weight-bold">Address: </span>
+            {data.Streetnumber}, {data.Streetname}, {data.City}, {data.State},{" "}
+            {data.ZIP}
+          </div>
+          <hr />
+          <div className="form-group col-9  text-center m-auto ">
+            <p>
+              {" "}
+              Date: {moment(this.state.formData.StartTime).format("YYYY-MM-DD")}
+            </p>{" "}
+            <p>
+              Starting At-{" "}
+              {moment(this.state.formData.StartTime).format("HH:mm")}
+            </p>
+          </div>
+          <div className="m-auto text-center">
+            {" "}
+            <input
+              className="btn btn-danger m-2"
+              value="Cancel"
+              type="button"
+              onClick={this.props.toggleeid}
+            />
+          </div>
         </div>
       </React.Fragment>
     );
   }
-
 }
-
 
 export default ActivityTracking;

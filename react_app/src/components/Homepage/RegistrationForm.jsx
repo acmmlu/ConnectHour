@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { Component } from "react";
-import currDom from '../../Config'
+import currDom from "../../Config";
 
-const dom=currDom()
+const dom = currDom();
 //Register child component
 class Register extends React.Component {
   constructor(props) {
@@ -217,13 +217,13 @@ class Register extends React.Component {
     axios
       .post("/register", formData)
       .then(function(response) {
-        p.noregErr();//clear the error message
+        p.noregErr(); //clear the error message
         const code = response.data; //code mailed from backend
         const data = { formData: formData, code: code };
-        thisprops.toggleVerify(data);//toggle the modal state to show verification form
+        thisprops.toggleVerify(data); //toggle the modal state to show verification form
       })
       .catch(function(error) {
-        p.regErr();//show the error message
+        p.regErr(); //show the error message
       });
   };
 }

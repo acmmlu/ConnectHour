@@ -1,9 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { createBrowserHistory } from "history";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
-
 
 const history = createBrowserHistory();
 
@@ -75,7 +74,7 @@ class Verify extends React.Component {
   //on submit function
   onSubmit = e => {
     e.preventDefault();
-    console.log((this.props.verifyCode.code.verification_token));
+    console.log(this.props.verifyCode.code.verification_token);
     //check if the user code and the actual code matches
     if (
       parseInt(this.props.verifyCode.code.verification_token) ===
@@ -142,22 +141,22 @@ class Verify extends React.Component {
         }
         axios
           .post(
-            "/login",
+            "
+            /login",
             this.props.verifyCode["formData"]
           )
           .then(function(response) {
-            let token= response.data.jwt            
-            let ID = (jwt_decode(String(token))).uid;
-            console.log(path_type +ID )
+            let token = response.data.jwt;
+            let ID = jwt_decode(String(token)).uid;
+            console.log(path_type + ID);
 
-            Cookies.remove("token", {
-            });
+            Cookies.remove("token", {});
             Cookies.remove("type");
-            Cookies.set('token',token)
+            Cookies.set("token", token);
 
-            Cookies.set('type',path_type)
-             thisprops.history.push({
-              pathname: path_type + ID ,
+            Cookies.set("type", path_type);
+            thisprops.history.push({
+              pathname: path_type + ID
             });
           })
           .catch(function(error) {

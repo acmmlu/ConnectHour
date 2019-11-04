@@ -3,6 +3,7 @@ import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
 import VolLayout from "./VolLayout";
+import user from "../../user.png";
 
 class VolProfile extends React.Component {
   constructor(props) {
@@ -71,11 +72,11 @@ class VolProfile extends React.Component {
     }
   }
 
-//   populateFields() {
-//     for (let e of document.getElementsByClassName("toggleedit")) {
-//       e.value = this.state.formData[e.id];
-//     }
-//   }
+  //   populateFields() {
+  //     for (let e of document.getElementsByClassName("toggleedit")) {
+  //       e.value = this.state.formData[e.id];
+  //     }
+  //   }
   render() {
     return (
       <>
@@ -85,28 +86,31 @@ class VolProfile extends React.Component {
             <div className="row mb-5" style={{ marginTop: "20px" }}>
               <div className="col-4">
                 <img
-                  src=""
-                  className="img-thumbnail"
+                  src={user}
+                  className="img-thumbnail m-2 shadow p-3 bg-white rounded"
                   style={{ width: "200px", height: "200px" }}
                 />
                 {/* Profile picture here */}
               </div>
               <div className="col-8">
                 <div className="row h-100 align-items-center justify-content-start">
-                  <div className="col-5">
-                    <h5 id="AccountName" className="font-weight-bold">
-                      {this.state.formData.FirstName} {this.state.formData.LastName}
+                  <div className="col-9">
+                    <h5
+                      id="AccountName"
+                      className="text-center m-auto display-4"
+                    >
+                      {this.state.formData.FirstName}{" "}
+                      {this.state.formData.LastName}
                     </h5>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="row pt-3 pb-3 mb-4 justify-content-start bg-light">
+            <div className="row pt-3 pb-3 mb-4 justify-content-start m-2 shadow p-3 bg-white rounded">
               <div className="col-12">
                 <h3 htmlFor="Description">Description</h3>
                 <textarea
                   id="Description"
-                  placeholder="Description"
                   className="form-control toggleedit"
                   onChange={this.handleChange}
                   defaultValue={this.state.formData.Description}
@@ -114,7 +118,7 @@ class VolProfile extends React.Component {
                 />
               </div>
             </div>
-            <div className="row pt-3 mb-2 bg-light d-flex justify-content-center">
+            <div className="row pt-3 mb-2 d-flex justify-content-center card m-2 shadow p-3 mb-5 bg-white rounded ">
               <div className="col">
                 <div className="row mb-5">
                   {" "}
@@ -133,7 +137,6 @@ class VolProfile extends React.Component {
                     <input
                       id="StreetNumber"
                       type="text"
-                      placeholder=""
                       className="form-control toggleedit"
                       onChange={this.handleChange}
                       defaultValue={this.state.formData.StreetNumber}
@@ -147,7 +150,6 @@ class VolProfile extends React.Component {
                     <input
                       id="StreetName"
                       type="text"
-                      placeholder="Address"
                       className="form-control toggleedit"
                       onChange={this.handleChange}
                       defaultValue={this.state.formData.StreetName}
@@ -165,7 +167,6 @@ class VolProfile extends React.Component {
                     <input
                       id="City"
                       type="text"
-                      placeholder="City"
                       className="form-control toggleedit"
                       onChange={this.handleChange}
                       defaultValue={this.state.formData.City}
@@ -179,7 +180,6 @@ class VolProfile extends React.Component {
                     <input
                       id="State"
                       type="text"
-                      placeholder="State"
                       className="form-control toggleedit"
                       defaultValue={this.state.formData.State}
                       onChange={this.handleChange}
@@ -197,31 +197,29 @@ class VolProfile extends React.Component {
                     <input
                       id="ZIP"
                       type="text"
-                      placeholder="Zip Code"
                       className="form-control toggleedit"
                       onChange={this.handleChange}
                       defaultValue={this.state.formData.ZIP}
                       readOnly
                     />
                   </div>
-                  <div className="col-4"></div>
-                  <div className="col-1">
-                    <button
-                      id="submit"
-                      type="submit"
-                      className="btn btn-primary visible"
-                    >
-                      Edit
-                    </button>
-                  </div>
+                </div>
+                <div className="col-1 m-auto">
+                  <button
+                    id="submit"
+                    type="submit"
+                    className="btn pl-4 pr-4 btn-info visible"
+                  >
+                    Edit
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="row pt-3 pb-3 mb-4 justify-content-start bg-light">
+            <div className="row pt-3 pb-3 mb-4 justify-content-start card m-2 shadow p-3 mb-5 bg-white rounded ">
               <div className="col-12">
-                <h3 htmlFor="Description">Contact Info</h3>
+                <h3>Contact Info</h3>
                 <div className="col-5">
-                  <h5 id="AccountEmail">Email:  {this.state.formData.Email}</h5>
+                  <h5 id="AccountEmail">Email: {this.state.formData.Email}</h5>
                 </div>{" "}
               </div>
             </div>
@@ -234,9 +232,7 @@ class VolProfile extends React.Component {
   onSubmit = (e, formData) => {
     e.preventDefault();
     let submit = document.getElementById("submit");
-
     if (submit.innerHTML === "Save") {
-      this.toggleEditMode();
       const ID = jwt_decode(Cookies.get("token")).uid;
       console.log(formData);
       const p = this.props;
@@ -244,7 +240,7 @@ class VolProfile extends React.Component {
         .put("/volunteer/" + ID, formData)
         .then(function(response, props) {
           console.log(response);
-           window.location.reload();
+          window.location.reload();
         })
         .catch(function(error) {
           console.log(error);

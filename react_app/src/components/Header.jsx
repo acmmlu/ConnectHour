@@ -11,12 +11,8 @@ class Header extends React.Component {
 
 <nav className="navbar navbar-expand-lg navbar-light bg-info navbar-fixed-top">
 
-<div className='navbar-brand text-weight-bold'>ConnectHour</div>
+<div className='navbarName'>ConnectHour</div>
 
-
-<Link className="navbar-brand " to='/' >
-  Log in
-</Link>
 
 </nav>
 

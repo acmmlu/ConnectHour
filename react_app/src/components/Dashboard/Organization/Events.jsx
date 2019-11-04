@@ -5,9 +5,11 @@ import { Animated } from "react-animated-css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
-import "../../App.css";
-import moment from 'moment';
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
+import "../../App.css";
+import moment from "moment";
+import { Divider } from "antd";
 
 class Events extends Component {
   constructor(props) {
@@ -15,7 +17,7 @@ class Events extends Component {
     this.state = {
       showForm: false,
       eventList: [],
-      
+
       editFormId: ""
     };
     this.addEvent = this.addEvent.bind(this);
@@ -37,7 +39,6 @@ class Events extends Component {
   }
 
   componentDidMount = () => {
-
     if (Cookies.get("token") && Cookies.get("type") === "/odashboard/") {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
@@ -63,8 +64,13 @@ class Events extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="container col-6 text-center Events">
-          <button onClick={this.toggleCreateForm} className="btn btn-info m-2 ">
+
+        <div className="container text-center Events m-auto ">
+      
+          <button
+            onClick={this.toggleCreateForm}
+            className="btn btn-lg btn-info m-2 "
+          >
             Create Event
           </button>
 
@@ -86,27 +92,22 @@ class Events extends Component {
             </Animated>
           ))}
 
-          <div
-            className={
-              !this.state.showForm
-                ? "EventCreate displaynone"
-                : "EventCreate displayblock"
-            }
-          >
-            <button
-              onClick={this.toggleCreateForm}
-              className="btn btn-danger m-2 "
-            >
-              Close
-            </button>
-            <EventCreate
-              addEvent={this.addEvent}
-              toggleCreateForm={this.toggleCreateForm}
-              ID={
-                Cookies.get("token") ? jwt_decode(Cookies.get("token")).uid : ""
-              }
-            />
-          </div>
+          <Modal isOpen={this.state.showForm}>
+            <ModalHeader>
+              <div className="text-center text-info">Create Event</div>
+            </ModalHeader>
+            <ModalBody>
+              <EventCreate
+                addEvent={this.addEvent}
+                toggleCreateForm={this.toggleCreateForm}
+                ID={
+                  Cookies.get("token")
+                    ? jwt_decode(Cookies.get("token")).uid
+                    : ""
+                }
+              />
+            </ModalBody>
+          </Modal>
         </div>
       </React.Fragment>
     );
@@ -117,38 +118,38 @@ class Event extends Component {
   constructor(props) {
     super(props);
     this.state = {
-    registered_vol:[]
+      registered_vol: []
     };
     this.getRegisteredVolunteers = this.getRegisteredVolunteers.bind(this);
   }
   render() {
-    
-
     return (
       <div className="card m-2 shadow p-3 mb-5 bg-white rounded Eventlist">
         <h5 className="card-title">{this.props.event.EventName}</h5>
-        <span>{moment(this.props.event.StartTime).format('YYYY-MM-DD')}</span>
+        <span>{moment(this.props.event.StartTime).format("YYYY-MM-DD")}</span>
         <hr />
         <p className="card-text">{this.props.event.Description}</p>
-        {this.props.editFormId != this.props.event.id && (
-          <input
-            className="m-auto btn btn-info "
-            id={this.props.event.id}
-            onClick={this.props.openEdit}
-            value="Edit Event"
-            type="button"
-          />
-        )}
+        <div>
+          {this.props.editFormId != this.props.event.id && (
+            <input
+              className="m-auto btn btn-info "
+              id={this.props.event.id}
+              onClick={this.props.openEdit}
+              value="Edit Event"
+              type="button"
+            />
+          )}
 
-        {this.props.editFormId != this.props.event.id && (
-          <input
-            className="m-auto btn btn-danger "
-            id={this.props.event.id}
-            onClick={this.deleteEvent}
-            value="Delete Event"
-            type="button"
-          />
-        )}
+          {this.props.editFormId != this.props.event.id && (
+            <input
+              className="m-2 mt-2 btn btn-danger "
+              id={this.props.event.id}
+              onClick={this.deleteEvent}
+              value="Delete Event"
+              type="button"
+            />
+          )}
+        </div>
         {this.props.editFormId == this.props.event.id && (
           <EventEdit
             eventdata={this.props.event}
@@ -158,14 +159,14 @@ class Event extends Component {
         )}
         <hr />
 
-        <div className="accordion"   id={this.props.event.id}>
+        <div className="accordion" id={this.props.event.id}>
           <div>
             <div id="headingOne">
               <button
-                className="btn text-dark text-weight-bold"
+                className="btn  text-info"
                 type="button"
                 id={this.props.event.id}
-                onClick={this.getRegisteredVolunteers} 
+                onClick={this.getRegisteredVolunteers}
                 data-toggle="collapse"
                 data-target={"#collapse" + this.props.event.id}
                 aria-expanded="true"
@@ -182,23 +183,24 @@ class Event extends Component {
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
             >
-            {
-              this.state.registered_vol.map(vol => (
+              {this.state.registered_vol.map(vol => (
                 <ol>
-                  <hr/>
-                <li><div className='text-center m-auto'>
-                <div>  
-              <span>Name: </span>{vol.FirstName} {vol.LastName} 
-              </div>
-              <div > 
-              <span>Email: </span>{vol.Email} 
-              </div>
-              <hr/>
-              </div></li>
-              </ol>
-            )) 
-            }
-             
+                  <hr />
+                  <li>
+                    <div className="text-center m-auto">
+                      <div>
+                        <span>Name: </span>
+                        {vol.FirstName} {vol.LastName}
+                      </div>
+                      <div>
+                        <span>Email: </span>
+                        {vol.Email}
+                      </div>
+                      <hr />
+                    </div>
+                  </li>
+                </ol>
+              ))}
             </div>
           </div>
         </div>
@@ -206,21 +208,17 @@ class Event extends Component {
     );
   }
 
-  getRegisteredVolunteers = (e) => {
-    let thisstate=this
-    
-    console.log('in');
+  getRegisteredVolunteers = e => {
+    let thisstate = this;
+
     axios
-    .get(
-      "/event/organizer/registered/" +
-        e.target.id
-    )
-    .then(function(response) {
-     thisstate.setState({registered_vol:response.data})
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
+      .get("/event/organizer/registered/" + e.target.id)
+      .then(function(response) {
+        thisstate.setState({ registered_vol: response.data });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   };
 
   deleteEvent = e => {

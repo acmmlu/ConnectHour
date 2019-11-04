@@ -24,8 +24,9 @@ class Main extends React.Component {
     return (
       <div>
         <Router>
+        <React.Fragment>
           <Switch>
-            <React.Fragment>
+         
               <Route
                 exact
                 path="/"
@@ -71,9 +72,10 @@ class Main extends React.Component {
                 path="/aboutus"
                 render={props => <AboutUs {...props} />}
               />
-              {/* <Route  component={NotFound} />  */}
+               <Route  component={NotFound} />  
+              </Switch>
             </React.Fragment>
-          </Switch>
+        
         </Router>
       </div>
     );

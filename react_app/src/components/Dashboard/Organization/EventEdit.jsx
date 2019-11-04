@@ -1,37 +1,36 @@
 import React from "react";
 import axios from "axios";
-import { TimePicker } from 'antd';
-import moment, { min } from 'moment';
-import 'antd/dist/antd.css';
-const format = 'HH:mm';
-
+import { TimePicker } from "antd";
+import moment, { min } from "moment";
+import "antd/dist/antd.css";
+const format = "HH:mm";
 
 class EventEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       formData: this.props.eventdata
-    }
-    this.onEndTime=this.onEndTime.bind(this)
-    this.onStartTime=this.onStartTime.bind(this)
+    };
+    this.onEndTime = this.onEndTime.bind(this);
+    this.onStartTime = this.onStartTime.bind(this);
   }
 
   onStartTime(n, time) {
-    console.log(time)
+    console.log(time);
     let formData = { ...this.state.formData };
-    formData['StartTime']=time
+    formData["StartTime"] = time;
     this.setState({
-     formData
-    })
-    console.log(this.state.formData)
+      formData
+    });
+    console.log(this.state.formData);
   }
-    onEndTime(n, time) {
-      let formData = { ...this.state.formData };
-    formData['EndTime']=time
+  onEndTime(n, time) {
+    let formData = { ...this.state.formData };
+    formData["EndTime"] = time;
     this.setState({
-     formData
-    })
-    }
+      formData
+    });
+  }
   handleInputChange = e => {
     let formData = { ...this.state.formData };
     formData[e.target.name] = e.target.value;
@@ -39,15 +38,14 @@ class EventEdit extends React.Component {
       formData
     });
   };
-  
 
   render() {
     const formData = this.state.formData;
-    const endtime=formData.EndTime
-    const starttime=formData.StartTime
+    const endtime = formData.EndTime;
+    const starttime = formData.StartTime;
     return (
       <React.Fragment>
-        <div className=' EditForm' >
+        <div className=" EditForm">
           <form
             className=""
             onSubmit={e => this.onSubmit(e, this.state.formData)}
@@ -150,12 +148,13 @@ class EventEdit extends React.Component {
                 id="ZIP"
                 placeholder="Enter ZIP"
                 required
-              /> <label htmlFor="date" className=" pt-2 col-2">
-              Date:  
-            </label>
-             <input
+              />{" "}
+              <label htmlFor="date" className=" pt-2 col-2">
+                Date:
+              </label>
+              <input
                 type="date"
-                className="form-control col-5"
+                className="form-control col-4"
                 onChange={this.handleInputChange}
                 name="date"
                 id="date"
@@ -164,15 +163,11 @@ class EventEdit extends React.Component {
                 )}
               />
             </div>
-           
-           
-            <div className="form-group row p-4">
-              <label htmlFor="StartTime" className=" pt-2 col-2">
-                Start Time:
 
-                    </label>
-                    <div>
-                    <TimePicker
+            <div className="form-group row p-4">
+              <label className="  col-2">Start Time:</label>
+              <div className="  col-3">
+                <TimePicker
                   format="HH:mm"
                   defaultValue={moment(
                     moment(this.state.formData.StartTime).format("HH:mm"),
@@ -180,12 +175,10 @@ class EventEdit extends React.Component {
                   )}
                   onChange={this.onStartTime}
                 />
-                    </div>
-              <label htmlFor="EndTime" className="col-2">
-                End Time:
-              </label>
-              <div >
-              <TimePicker
+              </div>
+              <label className=" ml-2 col-2">End Time:</label>
+              <div className="  col-3">
+                <TimePicker
                   format="HH:mm"
                   onChange={this.onEndTime}
                   defaultValue={moment(
@@ -205,34 +198,32 @@ class EventEdit extends React.Component {
               <input
                 className="btn btn-danger m-2"
                 value="Cancel"
-                type='button'
+                type="button"
                 onClick={this.props.openEditReset}
               />
             </div>
           </form>
         </div>
       </React.Fragment>
-   
-   );
+    );
   }
 
   onSubmit = (e, formData) => {
     e.preventDefault();
     console.log(formData);
-    const p=this.props       
-    const f=this.state.formData
+    const p = this.props;
+    const f = this.state.formData;
     axios
-      .put("/event/"+this.props.ID+"/"+f["id"] , f)
+      .put("/event/" + this.props.ID + "/" + f["id"], f)
       .then(function(response, props) {
-        console.log(response)
-        p.openEditReset()
-        window.location.reload()
+        console.log(response);
+        p.openEditReset();
+        window.location.reload();
       })
       .catch(function(error) {
         console.log("error");
       });
   };
 }
-
 
 export default EventEdit;

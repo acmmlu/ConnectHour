@@ -2,9 +2,8 @@ import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
-import Registered from './Registered'
-import Searched from './Search'
-
+import Registered from "./Registered";
+import Searched from "./Search";
 
 //Component for Events page for Volunteer
 class EventsVol extends React.Component {
@@ -14,8 +13,8 @@ class EventsVol extends React.Component {
       EventsList: [],
       RegisteredEvents: [],
       showDetails: false,
-      errmsg: "Search Events",// storews the error message
-      showFormId: "",//stores the event id
+      errmsg: "Search Events", // storews the error message
+      showFormId: "", //stores the event id
       name: ""
     };
     this.showForm = this.showForm.bind(this);
@@ -23,23 +22,22 @@ class EventsVol extends React.Component {
     this.DisplayEvents = this.DisplayEvents.bind(this);
     this.ClearDisplay = this.ClearDisplay.bind(this);
   }
-//function called on mount
+  //function called on mount
   componentDidMount() {
-    if (Cookies.get("token") && Cookies.get("type")==='/vdashboard/') {
-     const ID= (jwt_decode(Cookies.get("token"))).uid
-    const p = this;
-    let RegisteredEvents = this.state.RegisteredEvents;
-    axios
-      .get("/event/volunteer/" + ID)
-      .then(function(response) {
-        p.setState({ RegisteredEvents: response.data });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    }
-    else{
-       this.props.history.push("/");
+    if (Cookies.get("token") && Cookies.get("type") === "/vdashboard/") {
+      const ID = jwt_decode(Cookies.get("token")).uid;
+      const p = this;
+      let RegisteredEvents = this.state.RegisteredEvents;
+      axios
+        .get("/event/volunteer/" + ID)
+        .then(function(response) {
+          p.setState({ RegisteredEvents: response.data });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    } else {
+      this.props.history.push("/");
     }
   }
 
@@ -67,7 +65,6 @@ class EventsVol extends React.Component {
     }
   }
 
-
   //clear search results
   ClearDisplay() {
     this.setState({
@@ -78,16 +75,15 @@ class EventsVol extends React.Component {
   render() {
     return (
       <React.Fragment>
-       
         <div className="row EventsVol">
-        <div className="row  container text-center">
-          <div className=" mt-2 mb-2  container">
-            <SearchEvents
-              DisplayEvents={this.DisplayEvents}
-              ClearDisplay={this.ClearDisplay}
-            />
+          <div className="row  container text-center">
+            <div className=" mt-2 mb-2  container">
+              <SearchEvents
+                DisplayEvents={this.DisplayEvents}
+                ClearDisplay={this.ClearDisplay}
+              />
+            </div>
           </div>
-        </div>
           <div className="DisplayEvents container  col-6">
             <div className="display-4 text-center">
               <p>{this.state.errmsg}</p>{" "}
@@ -101,7 +97,7 @@ class EventsVol extends React.Component {
                 showForm={this.showForm}
                 showFormReset={this.showFormReset}
                 name={this.state.name}
-                ID={(jwt_decode(Cookies.get("token"))).uid}
+                ID={jwt_decode(Cookies.get("token")).uid}
               ></Searched>
             ))}
           </div>
@@ -128,7 +124,6 @@ class EventsVol extends React.Component {
   }
 }
 
-
 //compontn for seacrh events form
 class SearchEvents extends React.Component {
   constructor(props) {
@@ -138,7 +133,7 @@ class SearchEvents extends React.Component {
         SearchString: "",
         city: "",
         date: "",
-        time:''
+        time: ""
       }
     };
   }
@@ -152,10 +147,10 @@ class SearchEvents extends React.Component {
   };
   filterTime(n, time) {
     let formData = { ...this.state.formData };
-  formData['time']=time
-  this.setState({
-   formData
-  })
+    formData["time"] = time;
+    this.setState({
+      formData
+    });
   }
 
   render() {
@@ -176,19 +171,22 @@ class SearchEvents extends React.Component {
             />
 
             <input
-              className="form-control m-2 mr-sm-2 shadow-sm"
+              className="form-control m-2 sm-2 shadow-sm"
               type="text"
               name="city"
               placeholder="City"
               onChange={this.handleInputChange} //http://asohafseofj/search?q=searchstring&date=aoehifaowjs&city=aiwuehofoawejidf
             />
-            
-          
-            <div className="form-group row ">
-             {/* <TimePicker  format='HH:mm' onChange={this.filterTime}  required/>   */}
-             <input type="date" id="date" onChange={this.handleInputChange} className='form-control col-10 m-1' name="date" />
 
-             </div>
+            {/* <TimePicker  format='HH:mm' onChange={this.filterTime}  required/>   */}
+            <input
+              type="date"
+              id="date"
+              onChange={this.handleInputChange}
+              className="form-control m-2 mr-sm-2 shadow-sm"
+              name="date"
+            />
+
             <button
               className="btn btn-outline-success ml-4 my-sm-0"
               type="submit"
@@ -211,7 +209,7 @@ class SearchEvents extends React.Component {
     e.preventDefault();
     console.log(formData);
     const p = this.props;
-
+    
     let first = true;
     let path = '/search'
     for (let key of Object.keys(formData)) {
@@ -247,7 +245,5 @@ class SearchEvents extends React.Component {
       });
   };
 }
-
-
 
 export default EventsVol;
