@@ -141,8 +141,7 @@ class Verify extends React.Component {
         }
         axios
           .post(
-            "
-            /login",
+            "/login",
             this.props.verifyCode["formData"]
           )
           .then(function(response) {
