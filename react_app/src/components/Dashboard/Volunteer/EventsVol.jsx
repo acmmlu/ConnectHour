@@ -11,11 +11,14 @@ class EventsVol extends React.Component {
     super(props);
     this.state = {
       EventsList: [],
+      RecommendedList: [],
       RegisteredEvents: [],
       showDetails: false,
-      errmsg: "Search Events", // storews the error message
+      errmsg: "", // stores the error message
       showFormId: "", //stores the event id
-      name: ""
+      name: "",
+      showRecommended: "True",
+      regeventid: []
     };
     this.showForm = this.showForm.bind(this);
     this.showFormReset = this.showFormReset.bind(this);
@@ -27,15 +30,34 @@ class EventsVol extends React.Component {
     if (Cookies.get("token") && Cookies.get("type") === "/vdashboard/") {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
+      const regeventid = this.state.regeventid;
       let RegisteredEvents = this.state.RegisteredEvents;
       axios
         .get("/event/volunteer/" + ID)
         .then(function(response) {
+          if (response.data.length > 0) {
+            response.data.map(event => regeventid.push(event.id));
+          }
+
           p.setState({ RegisteredEvents: response.data });
         })
         .catch(function(error) {
           console.log(error);
         });
+      axios
+        .get("/recommended/" + ID)
+        .then(function(response) {
+          if (response.data.length > 0 && regeventid.length > 0) {
+            response.data = response.data.filter(function(row) {
+              return !String(row["id"]).includes(
+                regeventid.map(id => String(id))
+              );
+            });
+          }
+
+          p.setState({ RecommendedList: response.data });
+        })
+        .catch(error => console.log(error));
     } else {
       this.props.history.push("/");
     }
@@ -60,8 +82,10 @@ class EventsVol extends React.Component {
     });
     if (this.state.EventsList.length < 1) {
       this.setState({ errmsg: "No Results Found" });
+      this.setState({ showRecommended: "False" });
     } else {
-      this.setState({ errmsg: "" });
+      this.setState({ errmsg: "Search Results" });
+      this.setState({ showRecommended: "False" });
     }
   }
 
@@ -69,12 +93,115 @@ class EventsVol extends React.Component {
   ClearDisplay() {
     this.setState({
       EventsList: [],
-      errmsg: "Search Events"
+      errmsg: ""
     });
+    this.setState({ showRecommended: "True" });
   }
   render() {
     return (
       <React.Fragment>
+        <div className="container justify-content-center">
+          <SearchEvents
+            DisplayEvents={this.DisplayEvents}
+            ClearDisplay={this.ClearDisplay}
+            regeventid={this.state.regeventid}
+          />
+        </div>
+        <div className="container-fluid mt-5">
+          <div className="row">
+            <div className="col">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-9">
+                    <div className="container-fluid">
+                      <div className="row">
+                        {/* Begin Recommended Events */}
+                        {this.state.showRecommended === "True" && (
+                          <div className="col">
+                            <div className="DisplayRecommended container justify-content-left">
+                              <div className="row">
+                                <h4 className="float-left">
+                                  Recommended Events
+                                </h4>
+                              </div>
+                              <div className="row">
+                                {this.state.RecommendedList.map(event => (
+                                  <Searched
+                                    history={this.props.history}
+                                    event={event}
+                                    key={event.id}
+                                    showFormId={this.state.showFormId}
+                                    showForm={this.showForm}
+                                    showFormReset={this.showFormReset}
+                                    name={this.state.name}
+                                    ID={jwt_decode(Cookies.get("token")).uid}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        {/* End Recommended Events */}
+                      </div>
+                      <div className="row">
+                        {/* Begin Search Results */}
+                        {this.state.showRecommended === "False" && (
+                          <div className="col">
+                            <div className="DisplayRecommended container justify-content-left">
+                              <div className="row">
+                                <h4 className="float-left">
+                                  {this.state.errmsg}{" "}
+                                </h4>
+                              </div>
+
+                              <div className="row">
+                                {this.state.EventsList.map(event => (
+                                  <Searched
+                                    event={event}
+                                    history={this.props.history}
+
+                                    key={event.id}
+                                    showFormId={this.state.showFormId}
+                                    showForm={this.showForm}
+                                    showFormReset={this.showFormReset}
+                                    name={this.state.name}
+                                    ID={jwt_decode(Cookies.get("token")).uid}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        {/* End Search Results */}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Registered Events */}
+                  <div className=" col-3  Registered shadow  p-3 mb-5 bg-white rounded card container text-center">
+                    <h3 >Registered Events </h3>
+                    <div className="RegisteredEvents">
+                      {this.state.RegisteredEvents.map(event => (
+                        //call the registered component
+                        <Registered
+                          event={event}
+                          key={event.id}
+                          showFormId={this.state.showFormId}
+                          showForm={this.showForm}
+                          history={this.props.history}
+                          showFormReset={this.showFormReset}
+                          name={this.state.name}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {/* End Registered Events */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/*
         <div className="row EventsVol">
           <div className="row  container text-center">
             <div className=" mt-2 mb-2  container">
@@ -84,7 +211,25 @@ class EventsVol extends React.Component {
               />
             </div>
           </div>
-          <div className="DisplayEvents container  col-6">
+          <div className="DisplayRecommended row container justify-content-center">
+            <div className="row">
+              <h4 className="float-left">Recommended</h4>
+            </div>
+            <div className="row">
+              {this.state.RecommendedList.map(event => (
+                <Searched
+                  event={event}
+                  key={event.id}
+                  showFormId={this.state.showFormId}
+                  showForm={this.showForm}
+                  showFormReset={this.showFormReset}
+                  name={this.state.name}
+                  ID={jwt_decode(Cookies.get("token")).uid}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="DisplayEvents row container  col-6">
             <div className="display-4 text-center">
               <p>{this.state.errmsg}</p>{" "}
             </div>
@@ -117,8 +262,8 @@ class EventsVol extends React.Component {
                 />
               ))}
             </div>
-          </div>
-        </div>
+              </div>
+        </div>*/}
       </React.Fragment>
     );
   }
@@ -207,37 +352,30 @@ class SearchEvents extends React.Component {
 
   onSubmit = (e, formData) => {
     e.preventDefault();
-    console.log(formData);
+
     const p = this.props;
-    
-    let first = true;
-    let path = '/search'
-    for (let key of Object.keys(formData)) {
-      if (formData[key]) {
-        if (first) {
-          path += '?';
-          first = false;
-        } else {
-          path += '&';
-        }
-        
-        path += key+"="+formData[key];
-      }
-    }
+    let regeventid = this.props.regeventid;
     axios
       .get(
-        // "?q=" +
-        //   formData["SearchString"] +
-        //   "&city=" +
-        //   formData["city"] +
-        //   "&date=" +
-        //   formData["date"]
-        path
+        "/search?q=" +
+          formData["SearchString"] +
+          "&city=" +
+          formData["city"] +
+          "&date=" +
+          formData["date"] +
+          "&id=" + jwt_decode(Cookies.get("token")).uid
       )
       .then(function(response, props) {
-        console.log(response);
         let Events = response.data;
 
+        if (Events.length > 0 && regeventid.length > 0) {
+          Events = Events.filter(function(row) {
+            return !String(row["id"]).includes(
+              regeventid.map(id => String(id))
+            );
+          });
+        }
+        
         p.DisplayEvents(Events);
       })
       .catch(function(error) {

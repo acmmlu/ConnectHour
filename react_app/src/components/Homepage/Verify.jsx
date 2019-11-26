@@ -48,20 +48,24 @@ class Verify extends React.Component {
                 />
               </div>
             </div>
-
-            <input
-              type="submit"
-              className="btn btn-primary m-1"
-              value="Submit"
-            />
+            <div className="row justify-content-center">
+              <div className="col-2">
+                <input
+                  type="submit"
+                  className="btn btn-primary "
+                  value="Submit"
+                />
+              </div>
+              <div className="col-2 ">
+                <input
+                  className="btn btn-danger "
+                  type="button"
+                  value="Close"
+                  onClick={this.props.toggleVerify}
+                />
+              </div>
+            </div>
           </form>
-
-          <input
-            className="btn btn-danger m-auto"
-            type="button"
-            value="Close"
-            onClick={this.props.toggleVerify}
-          />
         </div>
       </React.Fragment>
     );
@@ -92,20 +96,20 @@ class Verify extends React.Component {
         this.toggleErrmMsg();
       }
       //enter if redirected from register page
-      if (fname === "VolunteerRegister" || fname === "OrganizationRegister") {
-        axios
-          .post(
-            "/register",
-            this.props.verifyCode["formData"]
-          )
-          .then(function(response) {
-            thisprops.toggleVerify();
-            window.location.reload();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      }
+      // if (fname === "VolunteerRegister" || fname === "OrganizationRegister") {
+      //   axios
+      //     .post(
+      //       "http://localhost:40951/register",
+      //       this.props.verifyCode["formData"]
+      //     )
+      //     .then(function(response) {
+      //       thisprops.toggleVerify();
+      //       window.location.reload();
+      //     })
+      //     .catch(function(error) {
+      //       console.log(error);
+      //     });
+      // }
 
       //enter if redirected from reset page
       if (
@@ -129,7 +133,7 @@ class Verify extends React.Component {
 
       //enter if redirected from login page
       if (
-        fname === "login" ||
+        fname === "Login" ||
         fname === "Organizationlogin" ||
         fname === "login" ||
         fname === "Volunteerlogin"
@@ -148,10 +152,13 @@ class Verify extends React.Component {
             let token = response.data.jwt;
             let ID = jwt_decode(String(token)).uid;
             console.log(path_type + ID);
+            var intSixtyMinutes = new Date(new Date().getTime() + 60 * 60 * 1000);
 
             Cookies.remove("token", {});
             Cookies.remove("type");
-            Cookies.set("token", token);
+            Cookies.set("token", token, {
+              expires: intSixtyMinutes
+          });
 
             Cookies.set("type", path_type);
             thisprops.history.push({

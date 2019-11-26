@@ -10,6 +10,11 @@ class OrgLayout extends React.Component {
   constructor(props) {
     super(props);
   }
+  componentDidMount() {
+    if (Cookies.get("token") && Cookies.get("type") != "/odashboard/") {
+      this.props.history.push("/");
+    }
+  }
   render() {
     return (
       <>
@@ -18,55 +23,69 @@ class OrgLayout extends React.Component {
             ConnectHour
           </span>
         </nav>
-
-        <div className="sidebar-fixed position-fixed">
-          <div className="logo-wrapper waves-effect">
-            <img src={user} className="img-fluid" alt="image" />
+        <div className="wrapper">
+          <div className="sidebar-fixed position-fixed">
+            <div className="logo-wrapper waves-effect">
+              <img src={user} className="img-fluid" alt="image" />
+            </div>
+            {Cookies.get("token") && Cookies.get("type") === "/odashboard/" && (
+              <MDBListGroup className="list-group-flush">
+                <NavLink
+                  exact={true}
+                  to={
+                    "/odashboard/" +
+                    jwt_decode(Cookies.get("token")).uid +
+                    "/profile"
+                  }
+                  activeClassName="activeClass"
+                >
+                  <MDBListGroupItem>
+                    <i className="fas m-1 fa-user-alt"></i>
+                    Profile
+                  </MDBListGroupItem>
+                </NavLink>
+                <NavLink
+                  exact={true}
+                  to={"/odashboard/" + jwt_decode(Cookies.get("token")).uid}
+                  activeClassName="activeClass"
+                >
+                  <MDBListGroupItem>
+                    <i className="fas m-1 fa-calendar-alt"></i>
+                    Events
+                  </MDBListGroupItem>
+                </NavLink>
+                <NavLink
+                  to={
+                    "/odashboard/" +
+                    jwt_decode(Cookies.get("token")).uid +
+                    "/activity"
+                  }
+                  activeClassName="activeClass"
+                >
+                  <MDBListGroupItem>
+                    <i className="fas m-1 fa-history"></i>
+                    Past Events
+                  </MDBListGroupItem>
+                </NavLink>
+                <MDBListGroupItem>
+                  <input
+                    type="button"
+                    className=" btn form-control btn-danger"
+                    onClick={this.handleLogout}
+                    value="Log Out"
+                  />
+                </MDBListGroupItem>
+              </MDBListGroup>
+            )}
           </div>
-          {Cookies.get("token") && Cookies.get("type") === "/odashboard/" && (
-            <MDBListGroup className="list-group-flush">
-              <NavLink
-                exact={true}
-                to={
-                  "/odashboard/" +
-                  jwt_decode(Cookies.get("token")).uid +
-                  "/profile"
-                }
-                activeClassName="activeClass"
-              >
-                <MDBListGroupItem>Profile</MDBListGroupItem>
-              </NavLink>
-              <NavLink
-               exact={true}
-                to={"/odashboard/" + jwt_decode(Cookies.get("token")).uid}
-                activeClassName="activeClass"
-              >
-                <MDBListGroupItem>Events</MDBListGroupItem>
-              </NavLink>
-              {/* <NavLink to={"/odashboard/"+(jwt_decode(Cookies.get("token"))).uid+"/activity"} activeClassName="activeClass">
-                    <MDBListGroupItem>
-                        Past Events
-                    </MDBListGroupItem>
-                </NavLink> */}
-              <MDBListGroupItem>
-                <input
-                  type="button"
-                  className=" btn form-control btn-danger"
-                  onClick={this.handleLogout}
-                  value="Log Out"
-                />
-              </MDBListGroupItem>
-            </MDBListGroup>
-          )}
+          <div id="content">{this.props.children}</div>
         </div>
       </>
     );
   }
   handleLogout = () => {
-    console.log(Cookies.get());
     Cookies.remove("token");
     Cookies.remove("type");
-    console.log(Cookies.get());
     if (!Cookies.get("token")) {
       window.location.reload();
     }

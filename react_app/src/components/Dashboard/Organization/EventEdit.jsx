@@ -50,8 +50,8 @@ class EventEdit extends React.Component {
             className=""
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
-            <div className="form-group row p-4">
-              <label htmlFor="EventName" className=" pt-2 col-2">
+            <div className="form-group row pl-4 pr-4 pt-1 text-center">
+              <label htmlFor="EventName" className=" pt-2 col-3">
                 Event Name:
               </label>
               <input
@@ -59,16 +59,29 @@ class EventEdit extends React.Component {
                 value={formData.EventName}
                 name="EventName"
                 onChange={this.handleInputChange}
-                className="form-control col-4"
+                className="form-control "
                 id="EventName"
                 placeholder="Enter Event Name"
                 required
               />
-              <label htmlFor="description" className=" pt-2 col-2">
-                Event Description
-              </label>
+            </div>
+            <div className="form-group row pl-4 pr-4 text-center">
+              <label htmlFor="Tag">Category:</label>
+              <input
+                type="text"
+                name="Tag"
+                value={formData.Tag}
+                onChange={this.handleInputChange}
+                className="form-control "
+                id="Tag"
+                placeholder="Enter Category"
+                required
+              />
+            </div>
+            <div className="form-group row pl-4 pr-4  text-center">
+              <label htmlFor="description">Event Description</label>
               <textarea
-                className="form-control pr-3 col-4"
+                className="form-control pr-3 "
                 onChange={this.handleInputChange}
                 value={formData.Description}
                 name="Description"
@@ -77,37 +90,23 @@ class EventEdit extends React.Component {
                 required
               ></textarea>
             </div>
-
-            <div className="form-group row p-4">
-              <label htmlFor="StreetNumber" className=" pt-2 col-2">
-                Street Number:
-              </label>
-              <input
-                type="text"
-                value={formData.StreetNumber}
-                onChange={this.handleInputChange}
-                className="form-control col-4"
-                name="StreetNumber"
-                id="StreetNumber"
-                placeholder="Enter Street Number"
-              />
-
-              <label htmlFor="StreetName" className=" pt-2 col-2">
+            
+            <div className="form-group row px-4">
+              <label htmlFor="StreetName" className=" pt-2 ">
                 Street Name:
               </label>
               <input
                 value={formData.StreetName}
                 type="text"
                 onChange={this.handleInputChange}
-                className="form-control col-4"
+                className="form-control "
                 name="StreetName"
                 id="StreetName"
                 placeholder="Enter Street Name"
                 required
               />
             </div>
-
-            <div className="form-group row p-4">
+            <div className="form-group row px-4">
               <label htmlFor="City" className=" pt-2  col-2">
                 City:
               </label>
@@ -135,7 +134,7 @@ class EventEdit extends React.Component {
                 required
               />
             </div>
-            <div className="form-group row p-4">
+            <div className="form-group row px-4">
               <label htmlFor="ZIP" className=" pt-2 col-2">
                 ZIP:
               </label>
@@ -163,10 +162,9 @@ class EventEdit extends React.Component {
                 )}
               />
             </div>
-
-            <div className="form-group row p-4">
+            <div className="form-group row px-4">
               <label className="  col-2">Start Time:</label>
-              <div className="  col-3">
+              <div className="  col-4">
                 <TimePicker
                   format="HH:mm"
                   defaultValue={moment(
@@ -176,8 +174,8 @@ class EventEdit extends React.Component {
                   onChange={this.onStartTime}
                 />
               </div>
-              <label className=" ml-2 col-2">End Time:</label>
-              <div className="  col-3">
+              <label htmlFor="EndTime" className=" col-2">End Time:</label>
+              <div className="  col-4">
                 <TimePicker
                   format="HH:mm"
                   onChange={this.onEndTime}
@@ -188,19 +186,22 @@ class EventEdit extends React.Component {
                 />
               </div>
             </div>
-
-            <div className="p-2 text-center m-2">
-              <input
-                type="submit"
-                className="btn btn-info "
-                value="Confirm Changes"
-              />
-              <input
-                className="btn btn-danger m-2"
-                value="Cancel"
-                type="button"
-                onClick={this.props.openEditReset}
-              />
+            <div className=" text-center m-2">
+              <span className=" m-2 ">
+                <input
+                  type="submit"
+                  className="btn btn-info "
+                  value="Confirm Changes"
+                />
+              </span>
+              <span >
+                <input
+                  className="btn btn-danger"
+                  value="Cancel"
+                  type="button"
+                  onClick={this.props.openEditReset}
+                />
+              </span>
             </div>
           </form>
         </div>

@@ -4,8 +4,8 @@
 }
 .backgrounddiv {
   background: url("./background2.jpeg") no-repeat top center fixed;
-  background-size: 100%;
-  position: absolute;
+  background-size: cover;
+  position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
@@ -14,12 +14,11 @@
   bottom: 0;
   z-index: -1;
   background-position: center;
-  overflow: hidden;
+  clear: both;
 }
-.navbarName {
-  font-weight: 900;
-  font: 25px Impact, fantasy;
-  font-stretch: ultra-expanded;
+#root{
+  width: 100%;
+  height: 100%;
 }
 .reset-container {
   padding: 70px 0;
@@ -47,52 +46,38 @@
 }
 
 .RegisteredEvents {
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: scroll;
 }
 .Registered {
   height: 700px;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
-.EventsVol {
+/* .EventsVol {
   padding-left: 270px;
-}
+} */
 
 .activity {
   padding-left: 270px;
 }
-.volprofile {
-  padding-left: 270px;
-}
 
-.searched {
+.searched{
+
   min-height: 200px;
 }
 
-.Events {
+/* .Events{
   padding-left: 200px;
-}
+} */
 
-.activeClass {
-  color: #17a2b8;
-}
-.pnotfound {
-  background: url("./background2.jpeg") no-repeat top center fixed;
-  background-size: 100%;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  background-position: center;
-  overflow: hidden;
-}
+.activeClass{
+  color:#17A2B8
 
-.notfound{
-  top:350px
 }
+/* 
+.navbardiv{
+  position: fixed
+} */
+
+
+
+

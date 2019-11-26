@@ -1,14 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Main from "./components/App";
-import EventsVol from './components/Dashboard/Volunteer/EventsVol'
-import Events from './components/Dashboard/Organization/Events'
+import Pay from './components/trial'
 import './components/App.css'
 
 
 const App = () => <Main />;
+const C=()=><Pay/>
 
 
 
-
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App/>, document.getElementById("root"));

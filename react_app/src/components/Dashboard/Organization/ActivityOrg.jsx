@@ -4,10 +4,16 @@ import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { Modal } from "reactstrap";
 import moment, { min } from "moment";
+import {
+  ModalBody,
+  ModalHeader,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+} from "reactstrap";
 
-import VolLayout from "./VolLayout";
-
-class ActivityTracking extends React.Component {
+class ActivityOrg extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,11 +21,11 @@ class ActivityTracking extends React.Component {
     };
   }
   componentDidMount() {
-    if (Cookies.get("token") && Cookies.get("type") === "/vdashboard/") {
+    if (Cookies.get("token") && Cookies.get("type") === "/odashboard/") {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       axios
-        .get("/event/activity/" + ID)
+        .get("/event/activityOrg/" + ID)
         .then(function(response) {
           p.setState({ activityData: response.data });
         })
@@ -40,13 +46,11 @@ class ActivityTracking extends React.Component {
                 <div className="row">
                   <h4 className="float-left"> Past Events</h4>
                 </div>
-
                 <div className="row">
                   {this.state.activityData.map(activityData => (
                     //call the registered component
                     <PastEvents
                       activityData={activityData}
-                      history={this.props.history}
                       key={activityData.EventId}
                     />
                   ))}
@@ -78,11 +82,34 @@ class PastEvents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      eid: ""
+      eid: "",
+      registered_vol: [],
+      showreg: false,
+      regId: ""
     };
     this.toggleeid = this.toggleeid.bind(this);
+    this.togglereg = this.togglereg.bind(this);
   }
+  componentDidMount() {
+    let thisstate = this;
 
+    axios
+      .get(
+        "/event/organizer/registered/" +
+          this.props.activityData.id
+      )
+      .then(function(response) {
+        thisstate.setState({ registered_vol: response.data });
+        console.log(
+          thisstate.state.registered_vol,
+          thisstate.props.activityData.EventName
+        );
+      })
+
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
   toggleeid(e) {
     if (e.target.id) {
       this.setState({ eid: e.target.id });
@@ -90,9 +117,14 @@ class PastEvents extends React.Component {
       this.setState({ eid: "" });
     }
   }
+  togglereg() {
+    this.setState({
+      showreg: !this.state.showreg
+    });
+  }
 
   render() {
-    console.log(this.props.activityData)
+    const showreg = this.state.showreg;
     return (
       <>
         {" "}
@@ -104,13 +136,7 @@ class PastEvents extends React.Component {
                 {this.props.activityData.Tag}
               </span>
             </h5>
-            <input
-              type="button"
-              className="btn text-info"
-              onClick={this.orgProfile}
-              value={this.props.activityData.OrganizationName}
-            />
-
+            [ {this.state.registered_vol.length} Registered Vounteer(s)]
             <hr />
             <p className="card-text">
               {this.props.activityData.Description.length > 58
@@ -145,7 +171,31 @@ class PastEvents extends React.Component {
                 type="button"
               />
             </div>
+            <Dropdown isOpen={showreg} toggle={this.togglereg}>
+              <DropdownToggle className="bg-info" caret>
+                Show Registered Volunteers
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem header>
+                  Registered Volunteers [ {this.state.registered_vol.length} ]
+                </DropdownItem>
 
+                {this.state.registered_vol.map(vol => (
+                  <DropdownItem key={this.props.event.id}>
+                    <div className="text-center m-auto">
+                      <div className="">
+                        <span>Name: </span>
+                        {vol.FirstName} {vol.LastName}
+                      </div>
+                      <div className="">
+                        <span>Email: </span>
+                        {vol.Email}
+                      </div>
+                    </div>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
             <Modal
               centered
               isOpen={this.state.eid == this.props.activityData.EventId}
@@ -160,22 +210,6 @@ class PastEvents extends React.Component {
       </>
     );
   }
-  orgProfile = () => {
-    const id = this.props.activityData.EventId;
-    const t = this;
-    axios
-      .get("/profile/organization/" + id)
-      .then(function(response, props) {
-        t.props.history.push({
-          pathname:
-            "/vdashboard/profile/organizer/" + response.data[0].ORGANIZER,
-          state: { oid: response.data[0].ORGANIZER }
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
 }
 
 class ShowEventDetails extends React.Component {
@@ -189,6 +223,7 @@ class ShowEventDetails extends React.Component {
   render() {
     const data = this.props.eventdata;
     const t = new Date(data.StartTime);
+    console.log(data);
     return (
       <React.Fragment>
         <div className="showDetails ">
@@ -206,7 +241,7 @@ class ShowEventDetails extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
+              {data.Streetnumber}, {data.Streetname}, {data.City}, {data.State},{" "}
               {data.Zip}
             </div>
 
@@ -244,4 +279,4 @@ class ShowEventDetails extends React.Component {
   }
 }
 
-export default ActivityTracking;
+export default ActivityOrg;

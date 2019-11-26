@@ -110,12 +110,12 @@ exports.login = function(req, res) {
 
 exports.register = function(req, res) {
     let user_info = req.body;
-   
+  
 
     // bcrypt.hash(user_info.Password, 8, function(err, hash) {
     //     user_info.Password = hash;
     // });
-    console.log(user_info.Verified);
+    
 
     let table;
     if (user_info.type === "Volunteer") {
@@ -124,9 +124,9 @@ exports.register = function(req, res) {
         table = "ORGANIZER";
     }
 
-    if (user_info.Verified === "false") {
+    // if (user_info.Verified === "false") {
         // Create account
-        let token = getToken();
+        // let token = getToken();
        
 
         let query = "SELECT CASE WHEN EXISTS (SELECT EMAIL FROM " + table + "_TAB WHERE EMAIL = ?) THEN 1 ELSE 0 END AS \"exists\";";
@@ -139,50 +139,68 @@ exports.register = function(req, res) {
                 // Hash password
                 bcrypt.hash(user_info.Password, 8, function(err, hash) {
 
-                    let response_object = {
-                        "jwt": "",
-                        "id": "",
-                        "verification_token": "" + token
-                    }
+                    // let response_object = {
+                    //     "jwt": "",
+                    //     "id": "",
+                    //     "verification_token": "" + token
+                    // }
                     
                     // Create db entry
                     if (table === "VOLUNTEER") { // Volunteer
                         let vals = [user_info.Firstname, user_info.Lastname, user_info.Email, hash, user_info.City, user_info.State];
                         let query = "INSERT INTO " + table + "_TAB(FIRST_NAME,LAST_NAME,EMAIL,PASSWORD, CITY, STATE) VALUES (?, ?, ?, ?, ?, ?)";
                         
-                        g.query(query, vals, function(result, fields) {
-                            verifyAccount(user_info.Email, token);
-
-                            g.query('SELECT ID FROM '+table+"_TAB WHERE EMAIL = ?", [user_info.Email], function(resul, field) {
-                                g.query('INSERT INTO '+table+'_PROFILE (ID) VALUES (?)', [resul[0].ID], function(resu, fiel) {
-                                    res.send(response_object);
-                                });
-                            });
-                        });
+                        try {
+                            g.query(query, vals, function(result, fields) {
+                                //  verifyAccount(user_info.Email, token);
+                                
+                                try {
+                                    g.query('SELECT ID FROM '+table+"_TAB WHERE EMAIL = ?", [user_info.Email], function(resul, field) {
+                                        g.query('INSERT INTO '+table+'_PROFILE (ID) VALUES (?)', [resul[0].ID], function(resu, fiel) {
+                                            // res.send(response_object)
+                                            res.status(200).send("Account Created");
+                                        });
+                                    });
+                                }catch (error) {
+                                    res.send(error);
+                                }
+                            })
+                        } catch (error) {
+                            res.send(error);
+                        }
                     } else { // Organizer
                         let vals = [user_info.Organization_name, user_info.Email, hash, user_info.City, user_info.State];
                         let query = "INSERT INTO " + table + "_TAB(NAME, EMAIL, PASSWORD, CITY, STATE) VALUES (?, ?, ?, ?, ?)";
 
-                        g.query(query, vals, function(result, fields) {
-                            verifyAccount(user_info.Email, token);
+                        try {
+                            g.query(query, vals, function(result, fields) {
+                                //  verifyAccount(user_info.Email, token);
 
-                            g.query('SELECT ID FROM '+table+"_TAB WHERE EMAIL = ?", [user_info.Email], function(resul, field) {
-                                g.query('INSERT INTO '+table+'_PROFILE (ID) VALUES (?)', [resul[0].ID], function(resu, fiel) {
-                                    res.send(response_object);
-                                });
+                                try {
+                                    g.query('SELECT ID FROM '+table+"_TAB WHERE EMAIL = ?", [user_info.Email], function(resul, field) {
+                                        g.query('INSERT INTO '+table+'_PROFILE (ID) VALUES (?)', [resul[0].ID], function(resu, fiel) {
+                                            // res.send(response_object)
+                                            res.status(200).send("Account Created");
+                                        });
+                                    });
+                                } catch (error) {
+                                    res.send(error);
+                                }
                             });
-                        });
+                        } catch (error) {
+                            res.send(error);
+                        }
                     }
                 });
             }
         });
-    } else {
-        console.log('else');
-        // Verify
-        g.query("UPDATE " + table + "_TAB SET VERIFIED = TRUE WHERE EMAIL = ?;", [user_info.Email], function(result, fields) {
-            res.status(200).send("Account Created");
-        });
-    }
+    // } else {
+       
+    //     // Verify
+    //     g.query("UPDATE " + table + "_TAB SET VERIFIED = TRUE WHERE EMAIL = ?;", [user_info.Email], function(result, fields) {
+    //         res.status(200).send("Account Created");
+    //     });
+    // }
 }
 
 /*
@@ -257,13 +275,21 @@ exports.reset = function(req, res) {
 
     let table;
     if (user_info.type === "Volunteer") {
-        table = "VOLUNTEER_TAB";
+        // table = "VOLUNTEER_TAB";
+        table = "VOLUNTEER";
     } else {
-        table = "ORGANIZER_TAB";
+        // table = "ORGANIZER_TAB";
+        table = "ORGANIZER";
     }
 
     if (user_info.Verified === "false") {
         let token = getToken();
+        let response_object = {
+            "jwt": "",
+            "id": "",
+            "verification_token": "" + token
+        }
+        
 
         g.query("SELECT * FROM " + table + " WHERE EMAIL = ?", [user_info.email], function(result, fields) {
             if (result.length > 0) {
@@ -279,7 +305,7 @@ exports.reset = function(req, res) {
                     console.log(info);
                 });
 
-                res.send("" + token);
+                res.send(response_object);
             } else {
                 
                 res.status(401).send("Account does not exist");
@@ -353,6 +379,77 @@ exports.test = function(req, res) {
         });
     });
 }*/
+
+
+exports.googleLogIn = function(req, res) {
+    let user_info = req.body;
+
+    let table;
+    if (user_info.type === "Volunteer") {
+        table = "VOLUNTEER_TAB";
+    } else {
+        table = "ORGANIZER_TAB";
+    }
+
+    let query = "select * from " + table + "_TAB where EMAIL = ?";
+    let params = [user_info.Email];
+    
+    g.query(query, params, function(result, fields) {
+
+        let token = getToken();
+        let response_object = {
+            "jwt": "",
+            "id": "",
+            "verification_token": "" + token
+        }
+
+        if (result.length > 0) {
+            // Sign in
+            try {
+                response_object["jwt"] = jwt.encode({"uid": result[0]["ID"]}, "Group2");
+                response_object["id"] = result[0]["ID"];
+
+                res.send(response_object);
+            } catch(error) {
+                console.log(error);
+                res.status(400).send(error);
+            }
+        } else {
+            // Create entry in db then sign in
+            if (table === "VOLUNTEER") {
+                query = "INSERT INTO VOLUNTEER_TAB(FIRST_NAME,LAST_NAME,EMAIL) VALUES (?, ?, ?)"
+                params = [user_info.Firsntame, user_info.Lastname, user_info.Email];
+            } else {
+                query = "INSERT INTO VOLUNTEER_TAB(NAME,EMAIL) VALUES (?, ?)"
+                params = [user_info.Organization_name, user_info.Email];
+            }
+
+            try {
+                g.query(query, params, function(result, fields) {
+
+                    query = "SELECT ID FROM " + table + "_TAB WHERE EMAIL = ?"
+                    params = [user_info.Email];
+
+                    g.query(query, params, function(result, fields) {
+                        try {
+                            response_object["jwt"] = jwt.encode({"uid": result[0]["ID"]}, "Group2");
+                            response_object["id"] = result[0]["ID"];
+
+                            res.send(response_object);
+                        } catch(error) {
+                            console.log(error);
+                            res.status(400).send(error);
+                        }
+                    });
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(400).send(error);
+            }
+        }
+    })
+}
+
 
 function verifyAccount(email, token) {
     g.transport.sendMail({

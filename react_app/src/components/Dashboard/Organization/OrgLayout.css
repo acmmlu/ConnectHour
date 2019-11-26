@@ -18,7 +18,37 @@ a {
   width: 100%;
   padding: 2.5rem;
 }
-
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
 .navtop {
   margin-left: 256px;
 }
+#content {
+  margin-left: 270px;
+  width: 100%;
+}
+.navtop {
+  margin-left: 256px;
+}
+.event-card {
+  padding: 5px;
+  min-height: 350px;
+}
+.orgdash{background-color: #000000;
+  background-image: linear-gradient(315deg, #000000 0%, #7f8c8d 74%);
+
+background-size: cover;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-position: center;
+  overflow: scroll;
+}
+

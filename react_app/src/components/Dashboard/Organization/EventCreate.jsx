@@ -24,6 +24,7 @@ class EventCreate extends Component {
         State: "",
         ZIP: "",
         date: "",
+        tag:'',
         StartTime: "",
         EndTime: ""
       }
@@ -67,7 +68,7 @@ class EventCreate extends Component {
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
             <div className="form-group row pl-4 pr-4 pt-1 text-center">
-              <label htmlFor="EventName">Event Name:</label>
+              <label className=" pt-2 col-3"  htmlFor="EventName">Event Name:</label>
               <input
                 type="text"
                 name="EventName"
@@ -77,6 +78,27 @@ class EventCreate extends Component {
                 placeholder="Enter Event Name"
                 required
               />
+            </div>
+            <div className="form-group row pl-4 pr-4 pt-1 text-center">
+              <label htmlFor="Tag">Category:</label>
+              <input
+                type="text"
+                name="Tag"
+                onChange={this.handleInputChange}
+                className="form-control "
+                id="Tag"
+                placeholder="Enter Category"
+                required
+              />
+              {/* <div className="input-group row pl-4 pr-2 pt-1 text-center">
+  <select onChange={this.handleInputChange} className="custom-select" id="inputGroupSelect04">
+    <option selected>Choose...</option>
+    <option name="Animals">Animals</option>
+    <option name="Children">Children</option>
+    <option name="Customer Service">Customer Service</option>
+    <option name="Elderly">Elderly</option>
+    '<option name="Construction">Construction</option>
+  </select> */}
             </div>
             <div className="form-group row pl-4 pr-4 text-center">
               <label htmlFor="description">Event Description:</label>
@@ -90,17 +112,7 @@ class EventCreate extends Component {
               ></textarea>
             </div>
 
-            <div className="form-group row pl-4 pr-4 text-center">
-              <label htmlFor="StreetNumber">Street Number:</label>
-              <input
-                type="text"
-                onChange={this.handleInputChange}
-                className="form-control "
-                name="StreetNumber"
-                id="StreetNumber"
-                placeholder="Enter Street Number"
-              />
-            </div>
+          
             <div className="form-group row pl-4 pr-4 text-center">
               <label htmlFor="StreetName">Street Name:</label>
               <input
@@ -114,7 +126,7 @@ class EventCreate extends Component {
               />
             </div>
 
-            <div className="form-group row p-4">
+            <div className="form-group row px-4">
               <label htmlFor="City" className=" pt-2  col-2">
                 City:
               </label>
@@ -140,7 +152,7 @@ class EventCreate extends Component {
                 required
               />
             </div>
-            <div className="form-group row p-4">
+            <div className="form-group row px-4">
               <label htmlFor="ZIP" className=" pt-2 col-2">
                 ZIP:
               </label>
@@ -167,21 +179,21 @@ class EventCreate extends Component {
               />
             </div>
 
-            <div className="form-group row p-4">
+            <div className="form-group row px-4">
               <label htmlFor="StartTime" className="  col-2">
                 Start Time:
               </label>
-              <div>
+              <div className="  col-4">
                 <TimePicker
                   format="HH:mm"
                   onChange={this.onStartTime}
                   required
                 />
               </div>
-              <label htmlFor="EndTime" className="col-2">
+              <label htmlFor="EndTime" className="col-2 ">
                 End Time:
               </label>
-              <div>
+              <div className="  col-4">
                 <TimePicker format="HH:mm" onChange={this.onEndTime} required />
               </div>
             </div>

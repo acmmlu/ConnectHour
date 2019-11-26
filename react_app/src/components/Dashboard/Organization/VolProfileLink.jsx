@@ -1,25 +1,45 @@
 import React from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
-import { Modal } from "reactstrap";
+import Cookies from "js-cookie";
+import axios from "axios";
 import moment, { min } from "moment";
+import user from "../../user.png";
+import {
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+} from "reactstrap";
 
-import VolLayout from "./VolLayout";
-
-class ActivityTracking extends React.Component {
+class VolProfileLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      formData: {},
       activityData: []
     };
   }
-  componentDidMount() {
-    if (Cookies.get("token") && Cookies.get("type") === "/vdashboard/") {
-      const ID = jwt_decode(Cookies.get("token")).uid;
+  componentDidMount = () => {
+    if (Cookies.get("token") && Cookies.get("type") === "/odashboard/") {
       const p = this;
       axios
-        .get("/event/activity/" + ID)
+        .get(
+          "/volunteer/" + this.props.location.state.vid
+        )
+        .then(function(response) {
+          p.setState({ formData: response.data });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      axios
+        .get(
+          "/event/activity/" +
+            this.props.location.state.vid
+        )
         .then(function(response) {
           p.setState({ activityData: response.data });
         })
@@ -29,46 +49,99 @@ class ActivityTracking extends React.Component {
     } else {
       this.props.history.push("/");
     }
-  }
+  };
+
   render() {
     return (
       <>
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <div className="col">
-              <div className="DisplayRecommended container justify-content-left">
-                <div className="row">
-                  <h4 className="float-left"> Past Events</h4>
-                </div>
-
-                <div className="row">
-                  {this.state.activityData.map(activityData => (
-                    //call the registered component
-                    <PastEvents
-                      activityData={activityData}
-                      history={this.props.history}
-                      key={activityData.EventId}
+        <div className="container">
+          <div className="row justify-content-center">
+            <form
+              className=" topdist  volprofile col-8"
+              onSubmit={e => this.onSubmit(e, this.state.formData)}
+            >
+              <div className="container">
+                <div className="row" style={{ marginTop: "20px" }}>
+                  <div className="col">
+                    <img
+                      src={user}
+                      className="img-thumbnail shadow p-3 bg-white rounded"
+                      style={{ width: "200px", height: "200px" }}
                     />
-                  ))}
+                    {/* Profile picture here */}
+                  </div>
+                  <div className="col-8 ">
+                    <div className="container">
+                      <div className="row h-100 ">
+                        <div className="col-10">
+                          <h5 id="AccountName" className=" m-auto display-4">
+                            {this.state.formData.FirstName}{" "}
+                            {this.state.formData.LastName}
+                          </h5>{" "}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <h5 className=" m-auto " id="AccountEmail">
+                            Email ID: {this.state.formData.Email}
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row m-2 p-3 shadow  bg-white rounded">
+                <div className="col-12">
+                  <h3 htmlFor="Description">About Me</h3>
+                  {this.state.formData.Description}
+                </div>
+              </div>
+              <div className="row  d-flex  m-2 p-3 card shadow  bg-white rounded ">
+                <div className="col">
+                  <div className="container">
+                    <div className="row">
+                      {" "}
+                      {/* Address Section */}
+                      <div className="col">
+                        <h3>Address Info</h3>
+                      </div>
+                    </div>
+
+                    <div className="row m-1 justify-content-left">
+                      {" "}
+                      {/* City & State */}
+                      {this.state.formData.StreetName},
+                      {this.state.formData.City},{this.state.formData.State},
+                      {this.state.formData.ZIP}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div className="container-fluid mt-5">
+            <div className="row">
+              <div className="col">
+                <div className="DisplayRecommended container justify-content-left">
+                  <div className="row">
+                    <h4 className="float-left"> Past Events</h4>
+                  </div>
+                  <div className="row">
+                    {this.state.activityData.map(activityData => (
+                      //call the registered component
+                      <PastEvents
+                        activityData={activityData}
+                        key={activityData.EventId}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* <VolLayout />
-        
-        <div className="row EventsVol">
-          <div className="  col-8 activity">
-            {this.state.activityData.map(activityData => (
-              //call the registered component
-              <PastEvents
-                activityData={activityData}
-                key={activityData.EventId}
-              />
-            ))}
-          </div>
-        </div>*/}
       </>
     );
   }
@@ -78,7 +151,8 @@ class PastEvents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      eid: ""
+      eid: "",
+      registered_vol: ""
     };
     this.toggleeid = this.toggleeid.bind(this);
   }
@@ -92,7 +166,8 @@ class PastEvents extends React.Component {
   }
 
   render() {
-    console.log(this.props.activityData)
+    console.log(this.props.activityData);
+    const showreg = this.state.showreg;
     return (
       <>
         {" "}
@@ -104,13 +179,7 @@ class PastEvents extends React.Component {
                 {this.props.activityData.Tag}
               </span>
             </h5>
-            <input
-              type="button"
-              className="btn text-info"
-              onClick={this.orgProfile}
-              value={this.props.activityData.OrganizationName}
-            />
-
+            <span>{this.props.activityData.date}</span>
             <hr />
             <p className="card-text">
               {this.props.activityData.Description.length > 58
@@ -160,22 +229,6 @@ class PastEvents extends React.Component {
       </>
     );
   }
-  orgProfile = () => {
-    const id = this.props.activityData.EventId;
-    const t = this;
-    axios
-      .get("/profile/organization/" + id)
-      .then(function(response, props) {
-        t.props.history.push({
-          pathname:
-            "/vdashboard/profile/organizer/" + response.data[0].ORGANIZER,
-          state: { oid: response.data[0].ORGANIZER }
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
 }
 
 class ShowEventDetails extends React.Component {
@@ -189,6 +242,7 @@ class ShowEventDetails extends React.Component {
   render() {
     const data = this.props.eventdata;
     const t = new Date(data.StartTime);
+    console.log(data);
     return (
       <React.Fragment>
         <div className="showDetails ">
@@ -206,7 +260,7 @@ class ShowEventDetails extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
+              {data.Streetnumber}, {data.Streetname}, {data.City}, {data.State},{" "}
               {data.Zip}
             </div>
 
@@ -244,4 +298,4 @@ class ShowEventDetails extends React.Component {
   }
 }
 
-export default ActivityTracking;
+export default VolProfileLink;

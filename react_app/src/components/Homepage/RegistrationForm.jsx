@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { Component } from "react";
-import currDom from "../../Config";
+import ReCAPTCHA from 'react-google-recaptcha'
 
-const dom = currDom();
+
+const recaptchaRef = React.createRef();
+
 //Register child component
 class Register extends React.Component {
   constructor(props) {
@@ -17,14 +19,23 @@ class Register extends React.Component {
         Email: "",
         Password: "",
         City: "",
+        repeat_password: "",
         State: "",
         Verified: "false",
         passreq: false //used for password validation
       },
       errmsg: "" //stores the errr message to display
     };
-  }
+    this.isVerified = this.isVerified.bind(this);
 
+  }
+  isVerified(){
+    let formData=this.state.formData
+    formData.Verified=true
+    this.setState({
+      Verified: true
+    });
+  }
   render() {
     //formadata is used to store the input values of the user
 
@@ -143,6 +154,24 @@ class Register extends React.Component {
               )}
             </div>
           </div>
+
+          <div className="row">
+            <div className="col p-2">
+              {this.state.formData.Password !=
+                this.state.formData.repeat_password && (
+                <span className="text-danger">Password Does Not Match</span>
+              )}
+              <input
+                type="password"
+                name="repeat_password"
+                placeholder="Re-enter new password"
+                className="form-control"
+                onChange={this.handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
           <div className="row">
             <div className=" col p-2">
               <input
@@ -171,12 +200,22 @@ class Register extends React.Component {
             className="btn btn-primary m-1"
             value="Submit"
             disabled={
+              this.state.formData.Password !=
+                this.state.formData.repeat_password ||
+              this.state.formData.repeat_password === "" ||
+              this.state.formData.Email === "" ||
               this.state.formData.Password.length < 8 ||
               this.state.formData.Password.match(num) === null ||
               this.state.formData.Password.match(num) === null ||
               this.state.formData.Password.match(lc) === null
             }
           />
+                <ReCAPTCHA
+        ref={recaptchaRef}
+        onChange={this.isVerified}
+        sitekey="6LfUcMQUAAAAALOGzwBYpjurYmt4FS9AzKySE0sh"
+        
+      />
         </form>
       </div>
     );
@@ -214,17 +253,28 @@ class Register extends React.Component {
     const thisprops = this.props;
     const p = this;
     //request to backend
-    axios
+    if(this.state.formData.Verified==true){
+
+      this.setState({ errmsg: "" });
+
+      axios
       .post("/register", formData)
-      .then(function(response) {
+      .then(function(response, props) {
         p.noregErr(); //clear the error message
-        const code = response.data; //code mailed from backend
-        const data = { formData: formData, code: code };
-        thisprops.toggleVerify(data); //toggle the modal state to show verification form
+        window.location.reload();
       })
       .catch(function(error) {
         p.regErr(); //show the error message
+        console.log(error); 
       });
+
+    } 
+   
+    
+      else{
+        this.setState({ errmsg: "Please verify that you are Human." });
+            }
+            
   };
 }
 

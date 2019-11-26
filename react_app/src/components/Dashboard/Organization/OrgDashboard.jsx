@@ -2,7 +2,15 @@ import React from "react";
 import Events from "./Events";
 import OrgLayout from "./OrgLayout";
 import Cookies from "js-cookie";
-
+import OrgProfile from "./OrgProfile";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
+import ActivityOrg from "./ActivityOrg";
+import VolProfileLink from "./VolProfileLink";
 class OrgDashboard extends React.Component {
   // componentDidMount=()=> {
   //   console.log(Cookies.get())
@@ -13,13 +21,57 @@ class OrgDashboard extends React.Component {
   //     this.props.history.push("/");
   //   }
   // }
+  componentDidMount() {
+    if (Cookies.get("token") && Cookies.get("type") != "/odashboard/") {
+      console.log("removed");
+      this.props.history.push("/");
+    }
+  }
   render() {
     return (
       <React.Fragment>
-        <div className='orgdash'>
-        <OrgLayout history={this.props.history} />
-        <Events history={this.props.history} />
+        <div className="orgdash">
+          <OrgLayout history={this.props.history}>
+            <Route
+              exact
+              path="/odashboard/:organizationID/profile"
+              render={props => <OrgProfile {...props} />}
+            />
+            <Route
+              exact
+              path="/odashboard/:organizationID/activity"
+              render={props => <ActivityOrg {...props} />}
+            />
+            <Route
+              exact
+              path="/odashboard/:organizationID"
+              render={props => <Events {...props} />}
+            />
+             <Route
+              exact
+              path="/odashboard/profile/volunteer/:id"
+              render={props => <VolProfileLink {...props} />}
+            />
+
+
+          </OrgLayout>
         </div>
+        {/* <div className="orgdash">
+          <OrgLayout history={this.props.history}>
+            
+            <Route
+              exact
+              path="/odashboard/:organizationID/profile"
+              render={props => <OrgProfile {...props} />}
+            />
+
+            <Route
+              exact
+              path="/odashboard/:organizationID"
+              render={props => <Events {...props} />}
+            />
+          </OrgLayout>
+        </div> */}
       </React.Fragment>
     );
   }

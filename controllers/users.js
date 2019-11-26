@@ -25,7 +25,6 @@ exports.volunteerById = function(req, res) {
                     response[key] = row[key];
                 }
             }
-            console.log(response);
             res.send(response);
         });
     } catch (error) {
@@ -58,7 +57,6 @@ exports.organizerById = function(req, res) {
                     response[key] = row[key];
                 }
             }
-            console.log(response);
             res.send(response);
         });
     } catch (error) {
@@ -91,7 +89,6 @@ exports.edit_volProfile = function(req, res) {
 
     try {
         g.query(query2, params2, function(result, fields) {
-            console.log(result);
             g.query(query, params1, function(result, fields) {
                 console.log(result);
                 res.send(result);
@@ -128,7 +125,6 @@ exports.edit_orgProfile = function(req, res) {
 
     try {
         g.query(query2, params2, function(result, fields) {
-            console.log(result);
             g.query(query, params1, function(result, fields) {
                 console.log(result);
                 res.send(result);
@@ -140,3 +136,23 @@ exports.edit_orgProfile = function(req, res) {
         console.log(error);
     }
 };
+
+
+exports.organizerId = function(req, res) {
+    let oid = req.params.organizer;
+
+    let query = 'SELECT ORGANIZER FROM EVENT WHERE ID=?';
+
+    
+        g.query(query, [oid], function(result, fields) {
+            res.send(result);
+    
+   
+})}
+
+
+exports.donate = async(req, res)=> {
+    
+       
+   
+}

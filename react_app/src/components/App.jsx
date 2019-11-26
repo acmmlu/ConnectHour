@@ -1,12 +1,11 @@
 import React from "react";
 import LoginPage from "./Homepage/LoginPage";
-import NotFound from "./Homepage/NotFound";
+// import NotFound from "../Homepage/NotFound";
 import ResetPassword from "./Homepage/ResetPassword";
 import OrgDashboard from "./Dashboard/Organization/OrgDashboard";
 import VolDashboard from "./Dashboard/Volunteer/VolDashboard";
-import ActivityTracking from './Dashboard/Volunteer/ActivityTracking'
 import { createBrowserHistory } from "history";
-import AboutUs from "./Homepage/AboutUs";
+// import AboutUs from "./Homepage/AboutUs";
 
 import {
   BrowserRouter as Router,
@@ -14,21 +13,18 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import OrgProfile from "./Dashboard/Organization/OrgProfile";
-import VolProfile from "./Dashboard/Volunteer/VolProfile";
 
 const history = createBrowserHistory();
 
 class Main extends React.Component {
   render() {
     return (
-      <div>
+      <>
         <Router>
-        <React.Fragment>
           <Switch>
-         
+            <React.Fragment>
               <Route
-                exact
+                exact 
                 path="/"
                 render={props => <LoginPage {...props} />}
               />
@@ -47,6 +43,16 @@ class Main extends React.Component {
                 path="/odashboard/:organizationID"
                 render={props => <OrgDashboard {...props} />}
               />
+                  <Route
+                exact
+                path="/odashboard/:organizationID/profile"
+                render={props => <OrgDashboard {...props} />}
+              />
+                 <Route
+                exact
+                path="/odashboard/:organizationID/activity"
+                render={props => <OrgDashboard {...props} />}
+              />
               <Route
                 exact
                 path="/vdashboard/:volunteerID"
@@ -55,29 +61,34 @@ class Main extends React.Component {
               <Route
                 exact
                 path="/vdashboard/:volunteerID/activity"
-                render={props => <ActivityTracking {...props} />}
+                render={props => <VolDashboard {...props} />}
               />
-                <Route
-                exact
-                path="/odashboard/:organizationID/profile"
-                render={props => <OrgProfile {...props} />}
-              />
+            
                <Route
                 exact
                 path="/vdashboard/:volunteerID/profile"
-                render={props => <VolProfile {...props} />}
+                render={props => <VolDashboard {...props} />}
               />
               <Route
+              exact
+              path="/vdashboard/profile/organizer/:id"
+              render={props => <VolDashboard {...props} />}
+            />
+             <Route
+              exact
+              path="/odashboard/profile/volunteer/:id"
+              render={props => <OrgDashboard {...props} />}
+            />
+              {/* <Route
                 exact
                 path="/aboutus"
                 render={props => <AboutUs {...props} />}
-              />
-               <Route  component={NotFound} />  
-              </Switch>
+              /> */}
+              {/* <Route  component={NotFound} />  */}
             </React.Fragment>
-        
+          </Switch>
         </Router>
-      </div>
+      </>
     );
   }
 }

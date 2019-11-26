@@ -24,7 +24,39 @@ class LoginPage extends React.Component {
     this.toggleLogin = this.toggleLogin.bind(this);
     this.toggleVerify = this.toggleVerify.bind(this);
     this.toggleType = this.toggleType.bind(this);
+    this.onSignIn = this.onSignIn.bind(this);
   }
+
+  onGoogleSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+
+    axios
+      .post("/googleLogIn", {
+        type: this.props.type, // figure this out
+        Firstname: profile.getGivenName(),
+        Lastname: profile.getFamilyName(),
+        Organization_name: profile.getName(),
+        Email: profile.getEmail(),
+        pfp: profile.getImageUrl(),
+        City: "",
+        State: ""
+      }).then(function(response) {
+        const code = response.data
+        // go to the next page?
+      }).catch(function(err) {
+        console.log(err);
+      });
+    // console.log("ID: " + profile.getId());
+    // console.log('Full Name: ' + profile.getName());
+    // console.log('Given Name: ' + profile.getGivenName());
+    // console.log('Family Name: ' + profile.getFamilyName());
+    // console.log("Image URL: " + profile.getImageUrl());
+    // console.log("Email: " + profile.getEmail());
+
+    // var id_token = googleUser.getAuthResponse().id_token;
+    // console.log("ID Token: " + id_token);
+  }
+
   componentDidMount() {
     if (Cookies.get("token")) {
       window.location.href =
@@ -60,9 +92,9 @@ class LoginPage extends React.Component {
       shouldRender && (
         <React.Fragment>
           <Header />
-          <div className="row">
-            <div className="backgrounddiv col-8"></div>
-            <div className="container col-3   text-center mr-5 login-container">
+          <div className="row mx-auto ">
+             <div className="backgrounddiv col-8"></div>
+            <div className="container-fluid col-3  text-center mr-5 login-container pr-xl-5">
               <div>
                 <img src={logo} />
                 <div className="row typetoggle">
@@ -81,7 +113,7 @@ class LoginPage extends React.Component {
                       <input
                         type="radio"
                         name="options"
-                        id="option1"
+                        id="volForm"
                         autoComplete="off"
                         defaultChecked
                       />{" "}
@@ -98,7 +130,7 @@ class LoginPage extends React.Component {
                       <input
                         type="radio"
                         name="options"
-                        id="option2"
+                        id="orgForm"
                         autoComplete="off"
                       />{" "}
                       Organization
@@ -198,9 +230,14 @@ class LoginPage extends React.Component {
                   </div>
                 )}
               </div>
+              <div className="row mt-1">
+                <div className="col text-center justify-content-center">
+                  Or Sign In with Google <div className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>
+                </div>
+              </div>
               {/*Verify modal form*/}
               <Modal isOpen={this.state.verifymodal}>
-                <ModalHeader>Verify</ModalHeader>
+                <ModalHeader>Please check your mail and enter the code</ModalHeader>
                 <Verify
                   type={this.state.type}
                   toggleVerify={this.toggleVerify}

@@ -19,10 +19,10 @@ class ShowEventDetails extends React.Component {
       <React.Fragment>
         <div className="showDetails ">
           <form
-            className="EventCreate  text-center"
-            onSubmit={e => this.onSubmit(e)}
+            className="  text-center"
+            
           >
-            <div className="form-group  bg-info card row p-4">
+            <div className="form-group  bg-info card  p-4">
               <span className=" pt-2 display-4 text-center ">
                 {" "}
                 {data.EventName}

@@ -2,9 +2,7 @@ import React from "react";
 
 class NotFound extends React.Component {
   render() {
-    return (<><div  className="pnotfound"></div>
-    <div className="container notfound col-6 display-1 m-auto text-white ">Page Not Found!</div></>)
-
+    return <div className="container col-6 ">Page Not Found!</div>;
   }
 }
 
