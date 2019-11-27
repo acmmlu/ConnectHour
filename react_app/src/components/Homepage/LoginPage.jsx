@@ -7,6 +7,7 @@ import Register from "./RegistrationForm";
 import Cookies from "js-cookie";
 import logo from "../../logo.png";
 import jwt_decode from "jwt-decode";
+import axios from "axios";
 
 //Login page parent component
 class LoginPage extends React.Component {
