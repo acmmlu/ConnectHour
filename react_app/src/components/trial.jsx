@@ -29,7 +29,7 @@ export class MapContainer extends Component {
       <Map
       google={this.props.google}
       zoom={14}
-      style={style}
+      {/*style={style}*/}
       
     >
         <Marker onClick={this.onMarkerClick} name={'current location'} />
