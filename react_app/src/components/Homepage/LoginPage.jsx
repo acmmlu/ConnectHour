@@ -25,7 +25,7 @@ class LoginPage extends React.Component {
     this.toggleLogin = this.toggleLogin.bind(this);
     this.toggleVerify = this.toggleVerify.bind(this);
     this.toggleType = this.toggleType.bind(this);
-    this.onSignIn = this.onSignIn.bind(this);
+    this.onGoogleSignIn = this.onGoogleSignIn.bind(this);
   }
 
   onGoogleSignIn(googleUser) {
@@ -33,7 +33,7 @@ class LoginPage extends React.Component {
 
     axios
       .post("/googleLogIn", {
-        type: this.props.type, // figure this out
+        type: this.state.type, // figure this out
         Firstname: profile.getGivenName(),
         Lastname: profile.getFamilyName(),
         Organization_name: profile.getName(),
