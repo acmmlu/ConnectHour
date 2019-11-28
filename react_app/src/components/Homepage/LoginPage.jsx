@@ -43,7 +43,26 @@ class LoginPage extends React.Component {
         State: ""
       }).then(function(response) {
         const code = response.data
-        // go to the next page?
+        
+        if (this.state.formtype === "Volunteer") {
+          path_type = "/vdashboard/";
+        } else {
+          path_type = "/odashboard/";
+        }
+        
+        let token = response.data.jwt;
+        let ID = jwt_decode(String(token)).uid;
+        console.log(path_type + ID);
+
+        Cookies.remove("token", {});
+        Cookies.remove("type");
+        Cookies.set("token", token);
+
+        Cookies.set("type", path_type);
+        thisprops.history.push({
+          pathname: path_type + ID
+        });
+            
       }).catch(function(err) {
         console.log(err);
       });
