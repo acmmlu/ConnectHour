@@ -30,6 +30,7 @@ class LoginPage extends React.Component {
 
   onGoogleSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
+    let thisprops = this.props;
 
     axios
       .post("/googleLogIn", {
