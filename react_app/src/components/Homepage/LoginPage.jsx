@@ -34,7 +34,7 @@ class LoginPage extends React.Component {
 
     axios
       .post("/googleLogIn", {
-        type: this.state.type, // figure this out
+        type: this.state.formtype,
         Firstname: profile.getGivenName(),
         Lastname: profile.getFamilyName(),
         Organization_name: profile.getName(),
@@ -43,8 +43,6 @@ class LoginPage extends React.Component {
         City: "",
         State: ""
       }).then(function(response) {
-        const code = response.data
-
         let path_type = "";
         
         if (this.state.formtype === "Volunteer") {
@@ -62,9 +60,7 @@ class LoginPage extends React.Component {
         Cookies.set("token", token);
 
         Cookies.set("type", path_type);
-        thisprops.history.push({
-          pathname: path_type + ID
-        });
+        thisprops.history.push(path_type + ID);
             
       }).catch(function(err) {
         console.log(err);
