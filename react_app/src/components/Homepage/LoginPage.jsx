@@ -84,7 +84,7 @@ class LoginPage extends React.Component {
       this.setState({ shouldRender: true });
     }
     
-    gapi.signin2.render('gbutton', {
+    window.gapi.signin2.render('gbutton', {
       'scope': 'profile email',
       'longtitle': true,
       'onsuccess': this.onGoogleSignIn,
