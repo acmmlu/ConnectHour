@@ -43,6 +43,8 @@ class LoginPage extends React.Component {
         State: ""
       }).then(function(response) {
         const code = response.data
+
+        let path_type = "";
         
         if (this.state.formtype === "Volunteer") {
           path_type = "/vdashboard/";
