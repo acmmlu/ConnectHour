@@ -251,7 +251,7 @@ class LoginPage extends React.Component {
               </div>
               <div className="row mt-1">
                 <div className="col text-center justify-content-center">
-                  Or Sign In with Google <div className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>
+                  Or Sign In with Google <div className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess={onGoogleSignIn} data-theme="dark"></div>
                 </div>
               </div>
               {/*Verify modal form*/}
