@@ -31,42 +31,48 @@ class LoginPage extends React.Component {
 
   onGoogleSignIn(response) {
     console.log(response);
-    var profile = response.currentUser.get().getBasicProfile();
-    let thisprops = this.props;
+    
+    try {
+      var profile = response.currentUser.get().getBasicProfile();
+      let thisprops = this.props;
 
-    axios
-      .post("/google_login", {
-        type: this.state.formtype,
-        Firstname: profile.getGivenName(),
-        Lastname: profile.getFamilyName(),
-        Organization_name: profile.getName(),
-        Email: profile.getEmail(),
-        pfp: profile.getImageUrl(),
-        City: "",
-        State: ""
-      }).then(function(response) {
-        let path_type = "";
-        
-        if (this.state.formtype === "Volunteer") {
-          path_type = "/vdashboard/";
-        } else {
-          path_type = "/odashboard/";
-        }
-        
-        let token = response.data.jwt;
-        let ID = jwt_decode(String(token)).uid;
-        console.log(path_type + ID);
+      axios
+        .post("/google_login", {
+          type: this.state.formtype,
+          Firstname: profile.getGivenName(),
+          Lastname: profile.getFamilyName(),
+          Organization_name: profile.getName(),
+          Email: profile.getEmail(),
+          pfp: profile.getImageUrl(),
+          City: "",
+          State: ""
+        }).then(function(response) {
+          let path_type = "";
+          
+          if (this.state.formtype === "Volunteer") {
+            path_type = "/vdashboard/";
+          } else {
+            path_type = "/odashboard/";
+          }
+          
+          let token = response.data.jwt;
+          let ID = jwt_decode(String(token)).uid;
+          console.log(path_type + ID);
 
-        Cookies.remove("token", {});
-        Cookies.remove("type");
-        Cookies.set("token", token);
+          Cookies.remove("token", {});
+          Cookies.remove("type");
+          Cookies.set("token", token);
 
-        Cookies.set("type", path_type);
-        thisprops.history.push(path_type + ID);
-            
-      }).catch(function(err) {
-        console.log(err);
-      });
+          Cookies.set("type", path_type);
+          thisprops.history.push(path_type + ID);
+              
+        }).catch(function(err) {
+          console.log(err);
+        });
+      } catch (error) {
+        // browser has cookies disabled
+        console.log("enable cookies");
+      }
     // console.log("ID: " + profile.getId());
     // console.log('Full Name: ' + profile.getName());
     // console.log('Given Name: ' + profile.getGivenName());
