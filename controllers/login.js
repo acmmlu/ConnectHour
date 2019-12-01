@@ -234,11 +234,11 @@ exports.googleLogIn = function(req, res) {
             }
         } else {
             // Create entry in db then sign in
-            if (table === "VOLUNTEER") {
+            if (table === "VOLUNTEER_TAB") {
                 query = "INSERT INTO VOLUNTEER_TAB(FIRST_NAME,LAST_NAME,EMAIL) VALUES (?, ?, ?)"
                 params = [user_info.Firsntame, user_info.Lastname, user_info.Email];
             } else {
-                query = "INSERT INTO VOLUNTEER_TAB(NAME,EMAIL) VALUES (?, ?)"
+                query = "INSERT INTO ORGANIZER_TAB(NAME,EMAIL) VALUES (?, ?)"
                 params = [user_info.Organization_name, user_info.Email];
             }
 
