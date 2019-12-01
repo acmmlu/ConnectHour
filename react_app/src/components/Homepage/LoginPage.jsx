@@ -262,8 +262,8 @@ class LoginPage extends React.Component {
                   <GoogleLogin
                     clientId="926515268553-bb97lrsb78c4d3ms5auuuu33sq6vdr2i.apps.googleusercontent.com"
                     buttonText="Login"
-                    onSuccess={onGoogleSignIn}
-                    onFailure={onGoogleSignIn}
+                    onSuccess={this.onGoogleSignIn}
+                    onFailure={this.onGoogleSignIn}
                     cookiePolicy={'single_host_origin'}
                   />
                 </div>
