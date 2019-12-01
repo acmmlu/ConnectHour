@@ -33,17 +33,17 @@ class LoginPage extends React.Component {
     console.log(response);
     
     try {
-      var profile = response.currentUser.get().getBasicProfile();
+      var profile = response.profileObj;
       let thisprops = this.props;
 
       axios
         .post("/google_login", {
           type: this.state.formtype,
-          Firstname: profile.getGivenName(),
-          Lastname: profile.getFamilyName(),
-          Organization_name: profile.getName(),
-          Email: profile.getEmail(),
-          pfp: profile.getImageUrl(),
+          Firstname: profile.givenName,
+          Lastname: profile.familyName,
+          Organization_name: profile.name,
+          Email: profile.email,
+          pfp: profile.imageUrl,
           City: "",
           State: ""
         }).then(function(response) {
