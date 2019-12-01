@@ -33,7 +33,7 @@ class LoginPage extends React.Component {
     let thisprops = this.props;
 
     axios
-      .post("/googleLogIn", {
+      .post("/google_login", {
         type: this.state.formtype,
         Firstname: profile.getGivenName(),
         Lastname: profile.getFamilyName(),
