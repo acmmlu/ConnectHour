@@ -29,8 +29,9 @@ class LoginPage extends React.Component {
     this.onGoogleSignIn = this.onGoogleSignIn.bind(this);
   }
 
-  onGoogleSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
+  onGoogleSignIn(response) {
+    console.log(response);
+    var profile = response.currentUser.get().getBasicProfile();
     let thisprops = this.props;
 
     axios
