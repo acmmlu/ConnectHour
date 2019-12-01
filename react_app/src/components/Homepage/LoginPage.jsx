@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import logo from "../../logo.png";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import GoogleLogin from 'react-google-login';
 
 //Login page parent component
 class LoginPage extends React.Component {
@@ -257,7 +258,14 @@ class LoginPage extends React.Component {
               </div>
               <div className="row mt-1">
                 <div className="col text-center justify-content-center">
-                  Or Sign In with Google <div className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>
+                  Or Sign In with Google  {/*<div id="gbutton" className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>*/}
+                  <GoogleLogin
+                    clientId="926515268553-bb97lrsb78c4d3ms5auuuu33sq6vdr2i.apps.googleusercontent.com"
+                    buttonText="Login"
+                    onSuccess={onGoogleSignIn}
+                    onFailure={onGoogleSignIn}
+                    cookiePolicy={'single_host_origin'}
+                  />
                 </div>
               </div>
               {/*Verify modal form*/}
