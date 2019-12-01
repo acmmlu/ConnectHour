@@ -29,7 +29,7 @@ class LoginPage extends React.Component {
     this.onGoogleSignIn = this.onGoogleSignIn.bind(this);
   }
 
-  onGoogleSignIn(response) {
+  onGoogleSignIn = response => {
     console.log(response);
     
     try {
