@@ -47,13 +47,7 @@ class LoginPage extends React.Component {
           City: "",
           State: ""
         }).then(function(response) {
-          let path_type = "";
-          
-          if (this.state.formtype === "Volunteer") {
-            path_type = "/vdashboard/";
-          } else {
-            path_type = "/odashboard/";
-          }
+          let path_type = this.state.formtype === "Volunteer" ? "/vdashboard/" : "/odashboard/";
           
           let token = response.data.jwt;
           let ID = jwt_decode(String(token)).uid;
