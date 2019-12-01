@@ -70,7 +70,7 @@ exports.get_registered = function(req, res) {
   let vid = req.params.volunteer;
 
   let query =
-    'SELECT E.ID as "id", E.NAME AS "EventName",E.ORGANIZER as ORGANIZER,  E.DESCRIPTION AS "Description", ' +
+    'SELECT E.ID as "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", ' +
     '(SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
     'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' +
     'E.START AS "StartTime", E.END AS "EndTime", E.TAG AS "Tag" FROM EVENT E INNER JOIN ATTENDING A ON ' +
@@ -267,7 +267,7 @@ exports.activityTracking = function(req, res) {
     g.pool.getConnection(function(err, connection) {
       if (err) throw err;
       let query =
-        'SELECT E.ID as "EventId", E.NAME AS "EventName", E.DESCRIPTION AS "Description", (SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
+        'SELECT E.ID as "EventId", E.NAME AS "EventName", E.DESCRIPTION AS "Description", E.ORGNAME AS "OrganizationName", ' +
         'E.STREETNUMBER AS "Streetnumber", E.STREETNAME AS "Streetname", E.CITY AS "City", ' +
         'E.STATE AS "State", E.ZIP AS "ZIP", E.START AS "StartTime", E.END AS "EndTime", E.TAG AS "Tag" ' +
         "FROM EVENT E INNER JOIN ATTENDING A ON E.ID=A.EVENTID WHERE A.VOLUNTEERID=?";

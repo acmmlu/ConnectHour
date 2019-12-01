@@ -150,9 +150,9 @@ exports.organizerId = function(req, res) {
    
 })}
 
+exports.upload_photo = function(req, res) {
+    let acct_type = req.params.type;
+    let id = req.params.id;
 
-exports.donate = async(req, res)=> {
     
-       
-   
 }
