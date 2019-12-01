@@ -29,12 +29,13 @@ class LoginPage extends React.Component {
     this.onGoogleSignIn = this.onGoogleSignIn.bind(this);
   }
 
-  onGoogleSignIn = response => {
+  onGoogleSignIn = (response) => {
     console.log(response);
     
     try {
       var profile = response.profileObj;
       let thisprops = this.props;
+      let thisstate = this.state;
 
       axios
         .post("/google_login", {
@@ -47,7 +48,7 @@ class LoginPage extends React.Component {
           City: "",
           State: ""
         }).then(function(response) {
-          let path_type = this.state.formtype === "Volunteer" ? "/vdashboard/" : "/odashboard/";
+          let path_type = thisstate.formtype === "Volunteer" ? "/vdashboard/" : "/odashboard/";
           
           let token = response.data.jwt;
           let ID = jwt_decode(String(token)).uid;
