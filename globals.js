@@ -14,38 +14,18 @@ oauth2Client.setCredentials({
 });
 
 // Create a connection to DB
-// exports.pool = mysql.createPool(process.env.DATABASE_URL);
-
-// exports.transport = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         type: 'OAuth2',
-//         user: 'connecthourofficial@gmail.com',
-//         clientId: process.env.CLIENT_ID,
-//         clientSecret: process.env.CLIENT_SECRET,
-//         refreshToken: process.env.REFRESH_TOKEN,
-//         accessToken: oauth2Client.getAccessToken(),
-//         expires: (new Date()).getTime()
-//     }
-// });
-exports.google = google;
-// Create a connection to DB
-exports.pool = mysql.createPool({
-    multipleStatements: true,
-    connectionLimit: 100,
-    user: "p565f19_lalovett",
-    host: "db.sice.indiana.edu",
-    password: "my+sql=p565f19_lalovett",
-    database: "p565f19_lalovett"
-});
+exports.pool = mysql.createPool(process.env.DATABASE_URL);
 
 exports.transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
-        user: "connecthourofficialv2@gmail.com",
-        pass: "Connect@Hour2"
+        type: 'OAuth2',
+        user: 'connecthourofficial@gmail.com',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: oauth2Client.getAccessToken(),
+        expires: (new Date()).getTime()
     }
 });
 
