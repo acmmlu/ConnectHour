@@ -71,7 +71,7 @@ class LoginPage extends React.Component {
         });
       } catch (error) {
         // browser has cookies disabled
-        console.log("enable cookies");
+        console.log(error);
       }
     // console.log("ID: " + profile.getId());
     // console.log('Full Name: ' + profile.getName());
