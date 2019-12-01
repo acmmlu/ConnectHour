@@ -209,7 +209,7 @@ exports.googleLogIn = function(req, res) {
         table = "ORGANIZER_TAB";
     }
 
-    let query = "select * from " + table + "_TAB where EMAIL = ?";
+    let query = "select * from " + table + " where EMAIL = ?";
     let params = [user_info.Email];
     
     g.query(query, params, function(result, fields) {
@@ -245,7 +245,7 @@ exports.googleLogIn = function(req, res) {
             try {
                 g.query(query, params, function(result, fields) {
 
-                    query = "SELECT ID FROM " + table + "_TAB WHERE EMAIL = ?"
+                    query = "SELECT ID FROM " + table + " WHERE EMAIL = ?"
                     params = [user_info.Email];
 
                     g.query(query, params, function(result, fields) {
