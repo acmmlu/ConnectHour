@@ -85,11 +85,11 @@ class LoginPage extends React.Component {
       this.setState({ shouldRender: true });
     }
     
-    window.gapi.signin2.render('gbutton', {
-      'scope': 'profile email',
-      'longtitle': true,
-      'onsuccess': this.onGoogleSignIn,
-    });
+    // window.gapi.signin2.render('gbutton', {
+    //   'scope': 'profile email',
+    //   'longtitle': true,
+    //   'onsuccess': this.onGoogleSignIn,
+    // });
   }
   //function to hide/show verify form
   toggleVerify(data) {
