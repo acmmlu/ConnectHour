@@ -3,22 +3,21 @@ import Cookies from "js-cookie";
 
 import React from "react";
 import ActivityTracking from "./ActivityTracking";
-
+import Base from '../../cometchat/Base'
 import VolLayout from "./VolLayout";
 import VolProfile from "./VolProfile";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
+  
+
+  Route
+  
 } from "react-router-dom";
-import LoginPage from "../../Homepage/LoginPage";
 import OrgProfileLink from "./OrgProfieLink";
 //Dashboard for volunteer
 class VolDashboard extends React.Component {
   componentDidMount() {
     console.log('dash')
-    if (Cookies.get("token") && Cookies.get("type") != "/vdashboard/") {
+    if (Cookies.get("token") && Cookies.get("type") !== "/vdashboard/") {
       this.props.history.push("/");
     }
   }
@@ -41,6 +40,11 @@ class VolDashboard extends React.Component {
               exact
               path="/vdashboard/:volunteerID/activity"
               render={props => <ActivityTracking {...props} />}
+            />
+            <Route
+              exact
+              path="/vdashboard/:volunteerid/messages"
+              render={props => <Base {...props} />}
             />
             <Route
               exact

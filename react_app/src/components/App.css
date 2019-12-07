@@ -1,6 +1,19 @@
 .login-container {
+ height: 100%;
+}
+/* .login_con{
+  background: #F8F8F8	;
+} */
+.login-container_1 {
   padding: 70px 0;
   text-align: center;
+
+}
+.fontType{
+  font-family: 'Arial Narrow, sans-serif';
+}
+.Navimg{
+  height: 40px;
 }
 .backgrounddiv {
   background: url("./background2.jpeg") no-repeat top center fixed;
@@ -12,9 +25,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 10;
   background-position: center;
   clear: both;
+}
+.backgrounddiv .container{
+  z-index: 12;
+  color:white;
 }
 #root{
   width: 100%;
@@ -46,7 +63,7 @@
 }
 
 .RegisteredEvents {
-  overflow: scroll;
+  overflow: hidden;
 }
 .Registered {
   height: 700px;
@@ -73,10 +90,10 @@
   color:#17A2B8
 
 }
-/* 
-.navbardiv{
-  position: fixed
-} */
+
+.navbar{
+  z-index: 15;
+}
 
 
 

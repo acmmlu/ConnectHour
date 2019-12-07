@@ -3,6 +3,7 @@ module.exports = function(app) {
     let events = require('./controllers/events');
     let users = require('./controllers/users');
     let search = require('./controllers/search');
+   
 
     // Login routes
     app.post('/login', login.login);
@@ -30,8 +31,8 @@ module.exports = function(app) {
     app.get('/organizer/:organizer', users.organizerById);
     app.put('/organizer/:organizer', users.edit_orgProfile);
     app.get('/profile/organization/:organizer', users.organizerId);
-    app.put('pfp/:type/:id', users.upload_photo);
-
+    app.put('/pfp/:type/:id', users.upload_photo);
+    app.get('/pfp/:type/:id', users.get_pfp);
     // Search routes
     app.get('/search', search.search);
     app.get('/recommended/:volunteer', search.recommended);
@@ -42,5 +43,13 @@ module.exports = function(app) {
     app.get('/event/issubscribed/:volunteer/:organizer',events.issubsbribed);
     app.get('/event/get_subscribed/:organizer',events.get_subscribed); //sonia
     app.get('/event/get_subscribed_org/:volunteer',events.get_subscribed_org); //sonia
+
+
+    // //Donate
     
+    app.post('/donate/:volunteer/:organizer',users.donate);
+    
+
+
+  
 }

@@ -6,7 +6,7 @@ exports.search = function(req, res) {
   let query =
     'SELECT E.ID AS "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", O.NAME AS "OrganizationName", ' +
     'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' +
-    'E.START AS "StartTime", E.END AS "EndTime" FROM EVENT E INNER JOIN ORGANIZER_TAB O ON E.ORGANIZER = O.ID ' +
+    'E.START AS "StartTime", E.END AS "EndTime",E.TAG AS "Tag" FROM EVENT E INNER JOIN ORGANIZER_TAB O ON E.ORGANIZER = O.ID ' +
     "WHERE ((E.NAME LIKE ?) OR (E.DESCRIPTION LIKE ?) OR (O.NAME LIKE ?)) " +
     "AND E.ID NOT IN (SELECT A.EVENTID FROM ATTENDING A WHERE A.VOLUNTEERID = ?) ";
     console.log(req.query.id);

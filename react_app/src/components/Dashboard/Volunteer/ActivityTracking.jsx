@@ -3,9 +3,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { Modal } from "reactstrap";
-import moment, { min } from "moment";
+import moment from "moment";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 
-import VolLayout from "./VolLayout";
+const GMapComponent = withScriptjs(withGoogleMap( (props) => 
+          <GoogleMap defaultCenter={{lat: props.lat, lng: props.lon}} defaultZoom={15}>
+            <Marker position={{lat: props.lat, lng: props.lon}} />
+          </GoogleMap>
+        ));
 
 class ActivityTracking extends React.Component {
   constructor(props) {
@@ -22,6 +27,8 @@ class ActivityTracking extends React.Component {
         .get("/event/activity/" + ID)
         .then(function(response) {
           p.setState({ activityData: response.data });
+         
+      
         })
         .catch(function(error) {
           console.log(error);
@@ -33,13 +40,18 @@ class ActivityTracking extends React.Component {
   render() {
     return (
       <>
-        <div className="container-fluid mt-5">
+        <div className="container-fluid ">
+        <div className='row ml-2  justify-content-left'>
+            <div className='col ' style={{fontSize:'30px'}}>
+            Past Events
+            <hr/>
+            </div>
+          </div>
+        
           <div className="row">
             <div className="col">
               <div className="DisplayRecommended container justify-content-left">
-                <div className="row">
-                  <h4 className="float-left"> Past Events</h4>
-                </div>
+                
 
                 <div className="row">
                   {this.state.activityData.map(activityData => (
@@ -120,8 +132,8 @@ class PastEvents extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {this.props.activityData.Streetnumber},{" "}
-              {this.props.activityData.Streetname},{" "}
+              {this.props.activityData.StreetNumber},{" "}
+              {this.props.activityData.StreetName},{" "}
               {this.props.activityData.City}, {this.props.activityData.State},{" "}
               {this.props.activityData.Zip}
             </div>
@@ -148,7 +160,7 @@ class PastEvents extends React.Component {
 
             <Modal
               centered
-              isOpen={this.state.eid == this.props.activityData.EventId}
+              isOpen={this.state.eid === this.props.activityData.EventId}
             >
               <ShowEventDetails
                 eventdata={this.props.activityData}
@@ -182,13 +194,49 @@ class ShowEventDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: this.props.eventdata
+      formData: this.props.eventdata,
+      lat: "",
+      lon: "",
+      renderMap: false,
+      gmap: ""
     };
   }
 
+componentDidMount(){
+  const data =  this.props.eventdata;
+  let p=this
+  const key = "3579bae5570c63";
+  axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
+  `${encodeURIComponent(`${data.Streetnumber} ${data.Streetname}, ` +
+  `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
+(response) => {
+// console.log(response);
+
+let lat = parseFloat(response.data[0].lat);
+let lon = parseFloat(response.data[0].lon);
+
+let GMap = <GMapComponent
+lat={lat}
+lon={lon}
+resetBoundsOnResize
+googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA"
+loadingElement={<div style={{ height: `100%` }} />}
+containerElement={<div style={{ height: `300px` }} />}
+mapElement={<div style={{ height: `100%`}} />}
+/>
+
+p.setState({lat: parseFloat(lat), lon: parseFloat(lon), renderMap: true, gmap: GMap});
+
+console.log(lat, lon);
+
+
+}).catch( (error) => {
+console.log(error);
+});
+
+}
   render() {
     const data = this.props.eventdata;
-    const t = new Date(data.StartTime);
     return (
       <React.Fragment>
         <div className="showDetails ">
@@ -208,6 +256,7 @@ class ShowEventDetails extends React.Component {
               <span className="text-weight-bold">Address: </span>
               {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
               {data.Zip}
+              {this.state.renderMap && this.state.gmap}
             </div>
 
             <hr />

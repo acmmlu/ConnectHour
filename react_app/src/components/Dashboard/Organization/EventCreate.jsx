@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { TimePicker } from "antd";
-import moment, { min } from "moment";
 import "antd/dist/antd.css";
 
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 
-const format = "HH:mm";
 
 class EventCreate extends Component {
   constructor(props) {

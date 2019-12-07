@@ -4,32 +4,32 @@ import { Modal } from "reactstrap";
 import jwt_decode from "jwt-decode";
 import ShowEventDetails from "./EventDetails";
 import "./volunteer.css";
-import moment, { min } from "moment";
+import moment from "moment";
 import axios from "axios";
 
 //Searched events components
 class Searched extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
   render() {
     
     return (
-      <div className="p-3 col-xl-4 col-lg-6 col-md-12">
+      
+      <div className="p-2 col-xl-4 col-lg-6 col-md-12 " >
         <div className="card event-card text-center shadow bg-white rounded">
-          <h5 className="card-title">{this.props.event.EventName}
+          <h5 className="card-title bg-info">{this.props.event.EventName}
           <span className="badge badge-pill badge-primary">
               {this.props.event.Tag}
-            </span></h5>
-
-          <input
+            </span>   <input
             type="button"
-            className="btn text-info"
-            onClick={this.orgProfile}
-            value={this.props.event.OrganizationName}
-          />
 
-          <hr />
+            className="btn text-white"
+            onClick={this.orgProfile}
+            value={'-Created by '+this.props.event.OrganizationName}
+          /></h5>
+
+        
+
+        
           <p className="card-text">
             {this.props.event.Description.length > 58
               ? this.props.event.Description.substring(1, 58) + "..."
@@ -70,11 +70,12 @@ class Searched extends React.Component {
             >
               Details
             </button>
+            </div>
           </div>
           <Modal
             centered
             isOpen={
-              this.props.showFormId == this.props.event.id &&
+              this.props.showFormId === this.props.event.id &&
               this.props.name === "Searched"
             }
           >
@@ -86,7 +87,7 @@ class Searched extends React.Component {
               reg={true}
             />
           </Modal>
-        </div>
+       
       </div>
     );
   }
@@ -119,6 +120,7 @@ class Searched extends React.Component {
         formData
       )
       .then(function(response, props) {
+        
         window.location.reload();
       })
       .catch(function(error) {

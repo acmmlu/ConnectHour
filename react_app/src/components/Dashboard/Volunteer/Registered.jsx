@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "reactstrap";
 import ShowEventDetails from "./EventDetails";
-import moment, { min } from "moment";
+import moment from "moment";
 import axios from "axios";
 
 //Child component to display registered events
@@ -73,7 +73,7 @@ class Registered extends React.Component {
         <Modal
           centered
           isOpen={
-            this.props.showFormId == this.props.event.id &&
+            this.props.showFormId === this.props.event.id &&
             this.props.name === "Registered"
           }
         >

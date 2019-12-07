@@ -3,15 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { Modal } from "reactstrap";
-import moment, { min } from "moment";
-import {
-  ModalBody,
-  ModalHeader,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
+import moment from "moment";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+
 
 class ActivityOrg extends React.Component {
   constructor(props) {
@@ -39,13 +33,17 @@ class ActivityOrg extends React.Component {
   render() {
     return (
       <>
-        <div className="container-fluid mt-5">
+        <div className="container-fluid">
+        <div className='row ml-2  justify-content-left'>
+            <div className='col ' style={{fontSize:'50px'}}>
+              Past Events
+            </div>
+          </div>
+          <hr/>
           <div className="row">
             <div className="col">
               <div className="DisplayRecommended container justify-content-left">
-                <div className="row">
-                  <h4 className="float-left"> Past Events</h4>
-                </div>
+                
                 <div className="row">
                   {this.state.activityData.map(activityData => (
                     //call the registered component
@@ -124,7 +122,6 @@ class PastEvents extends React.Component {
   }
 
   render() {
-    const showreg = this.state.showreg;
     return (
       <>
         {" "}
@@ -136,7 +133,7 @@ class PastEvents extends React.Component {
                 {this.props.activityData.Tag}
               </span>
             </h5>
-            [ {this.state.registered_vol.length} Registered Vounteer(s)]
+            
             <hr />
             <p className="card-text">
               {this.props.activityData.Description.length > 58
@@ -146,8 +143,8 @@ class PastEvents extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {this.props.activityData.Streetnumber},{" "}
-              {this.props.activityData.Streetname},{" "}
+              {this.props.activityData.StreetNumber},{" "}
+              {this.props.activityData.StreetName},{" "}
               {this.props.activityData.City}, {this.props.activityData.State},{" "}
               {this.props.activityData.Zip}
             </div>
@@ -171,34 +168,10 @@ class PastEvents extends React.Component {
                 type="button"
               />
             </div>
-            <Dropdown isOpen={showreg} toggle={this.togglereg}>
-              <DropdownToggle className="bg-info" caret>
-                Show Registered Volunteers
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem header>
-                  Registered Volunteers [ {this.state.registered_vol.length} ]
-                </DropdownItem>
-
-                {this.state.registered_vol.map(vol => (
-                  <DropdownItem key={this.props.event.id}>
-                    <div className="text-center m-auto">
-                      <div className="">
-                        <span>Name: </span>
-                        {vol.FirstName} {vol.LastName}
-                      </div>
-                      <div className="">
-                        <span>Email: </span>
-                        {vol.Email}
-                      </div>
-                    </div>
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+          
             <Modal
               centered
-              isOpen={this.state.eid == this.props.activityData.EventId}
+              isOpen={this.state.eid === this.props.activityData.EventId}
             >
               <ShowEventDetails
                 eventdata={this.props.activityData}
@@ -216,14 +189,62 @@ class ShowEventDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: this.props.eventdata
+      formData: this.props.eventdata,
+      lat: "",
+      lon: "",
+      renderMap: false,
+      gmap: ""
     };
   }
 
+
+  componentDidMount() {
+    const p = this;
+    const data = this.props.eventdata;
+    const key = "3579bae5570c63";
+
+    axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
+              `${encodeURIComponent(`${data.StreetNumber} ${data.StreetName}, ` +
+              `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
+      (response) => {
+        // console.log(response);
+
+        let lat = parseFloat(response.data[0].lat);
+        let lon = parseFloat(response.data[0].lon);
+
+        let GMap = <GMapComponent
+          lat={lat}
+          lon={lon}
+          resetBoundsOnResize
+          googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA"
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `300px` }} />}
+          mapElement={<div style={{ height: `100%`}} />}
+        />
+
+        p.setState({lat: parseFloat(lat), lon: parseFloat(lon), renderMap: true, gmap: GMap});
+
+        console.log(lat, lon);
+
+        
+      }).catch( (error) => {
+        console.log(error);
+      });
+    // Geocode.setApiKey("AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA");
+    // Geocode.fromAddress(`${data.StreetNumber} ${data.StreetName}, ${data.City}, ${data.State} ${data.Zip}`).then(
+    //   response => {
+    //     const {lat, long} = response.results[0].geometry.location;
+    //     p.setState({lat: lat, long: long, renderMap: true});
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // )
+    
+  }
   render() {
     const data = this.props.eventdata;
-    const t = new Date(data.StartTime);
-    console.log(data);
+  
     return (
       <React.Fragment>
         <div className="showDetails ">
@@ -241,8 +262,9 @@ class ShowEventDetails extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {data.Streetnumber}, {data.Streetname}, {data.City}, {data.State},{" "}
+              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
               {data.Zip}
+              {this.state.renderMap && this.state.gmap}
             </div>
 
             <hr />
@@ -278,5 +300,9 @@ class ShowEventDetails extends React.Component {
     );
   }
 }
-
+const GMapComponent = withScriptjs(withGoogleMap( (props) => 
+          <GoogleMap defaultCenter={{lat: props.lat, lng: props.lon}} defaultZoom={15}>
+            <Marker position={{lat: props.lat, lng: props.lon}} />
+          </GoogleMap>
+        ));
 export default ActivityOrg;

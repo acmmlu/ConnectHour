@@ -1,36 +1,69 @@
 import React from "react";
-import { MDBListGroup, MDBListGroupItem, MDBIcon } from "mdbreact";
+import { MDBListGroup, MDBListGroupItem } from "mdbreact";
 import "./volunteer.css";
 import { NavLink } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import user from "../../user.png";
+import logo from "../../../favicon.png";
+import axios from "axios";
 
 //navbar and sidebar layout
 class VolLayout extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      photo: ""
+    };
   }
   componentDidMount() {
-    console.log('lay')
-    if (Cookies.get("token") && Cookies.get("type") != "/vdashboard/") {
-      this.props.history.push("/");
+    if (Cookies.get("token") && Cookies.get("type") === "/vdashboard/") {
+      const ID = jwt_decode(Cookies.get("token")).uid;
+    let p = this;
+    if (!p.state.photo) {
+      axios
+        .get("/pfp/vol/" + ID)
+        .then(function(res) {
+          let buf = Buffer.from(res.data, 'binary');
+
+          var reader = new FileReader();
+          reader.onload = (function(self) {
+            return function(e) {
+              p.setState({photo: reader.result});
+              document.getElementById("sidebarpfp").src = reader.result;
+            }
+          })(this);
+          
+          reader.readAsDataURL(new Blob([buf], {type: 'image/png'}));
+        })
+        .catch(function(error) {
+          console.log(error);
+          p.setState({photo: user});
+        });
     }
+     
+    }
+    else{
+      this.props.history.push("/");
   }
+}
   render() {
-    console.log('lay')
     return (
       <>
         <nav className="navbar  flex-nav navbar-expand-lg navbar-light bg-info navtop">
-          <span className="navbar-brand ml-5 font-weight-bold" href="#">
-            ConnectHour
-          </span>
+          <div className="ml-2 font-weight-bold ">
+            <img className="Navimg" alt='' src={logo} />
+          </div>
         </nav>
         <div className="wrapper">
           <div className="sidebar-fixed position-fixed">
             <div className="logo-wrapper waves-effect">
-              <img src={user} className="img-fluid" alt="image" />
-            </div>
+            <img
+            alt=''
+                id="sidebarpfp"
+                src={this.state.photo ? this.state.photo : user}
+                style={{ width: "200px", height: "200px" }}
+              />            </div>
             {Cookies.get("token") && Cookies.get("type") === "/vdashboard/" && (
               <MDBListGroup className="list-group-flush">
                 <NavLink
@@ -59,6 +92,7 @@ class VolLayout extends React.Component {
                     Events
                   </MDBListGroupItem>
                 </NavLink>
+
                 <NavLink
                   to={
                     "/vdashboard/" +
@@ -69,6 +103,22 @@ class VolLayout extends React.Component {
                 >
                   <MDBListGroupItem>
                     <i className="fas m-1 fa-history"></i>Past Events
+                  </MDBListGroupItem>
+                </NavLink>
+
+                <NavLink
+                  exact={true}
+                  to={
+                    "/vdashboard/" +
+                    jwt_decode(Cookies.get("token")).uid +
+                    "/messages"
+                  }
+                  activeClassName="activeClass"
+                >
+                  <MDBListGroupItem>
+                    {" "}
+                    <i className="fas m-1 fa-user-alt"></i>
+                    Messages
                   </MDBListGroupItem>
                 </NavLink>
                 <MDBListGroupItem>
@@ -91,7 +141,7 @@ class VolLayout extends React.Component {
   //handle on logout
   handleLogout = () => {
     Cookies.remove("token");
-    console.log('removed')
+    console.log("removed");
     Cookies.remove("type");
     if (!Cookies.get("token")) {
       window.location.reload();

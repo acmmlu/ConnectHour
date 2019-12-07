@@ -1,18 +1,14 @@
 import React from "react";
-import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
-import moment, { min } from "moment";
+import moment from "moment";
 import user from "../../user.png";
 import {
   Modal,
-  ModalBody,
-  ModalHeader,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
+  
 } from "reactstrap";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+
 
 class VolProfileLink extends React.Component {
   constructor(props) {
@@ -21,7 +17,33 @@ class VolProfileLink extends React.Component {
       formData: {},
       activityData: []
     };
+    
+    this.getPFP = this.getPFP.bind(this);
   }
+
+  getPFP() {
+    let p = this;
+    axios
+      .get("/pfp/vol/" + this.props.location.state.vid)
+      .then(function(res) {
+        let buf = Buffer.from(res.data, 'binary');
+
+        var reader = new FileReader();
+        reader.onload = (function(self) {
+          return function(e) {
+            let fd = {...p.state.formData};
+            fd.pfp = reader.result;
+            p.setState({formData: fd});
+            document.getElementById("pfp").src = reader.result;
+          }
+        })(this);
+        reader.readAsDataURL(new Blob([buf], {type: 'image/png'}));
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
   componentDidMount = () => {
     if (Cookies.get("token") && Cookies.get("type") === "/odashboard/") {
       const p = this;
@@ -46,6 +68,8 @@ class VolProfileLink extends React.Component {
         .catch(function(error) {
           console.log(error);
         });
+
+      p.getPFP();
     } else {
       this.props.history.push("/");
     }
@@ -54,54 +78,78 @@ class VolProfileLink extends React.Component {
   render() {
     return (
       <>
-        <div className="container">
+        <div className="container-fluid">
+          <div className='row ml-2  justify-content-left'>
+            <div className='col ' style={{fontSize:'50px'}}>
+              My Profile
+            </div>
+          </div>
+          <hr/>
           <div className="row justify-content-center">
             <form
-              className=" topdist  volprofile col-8"
+              className=" topdist volprofile"
               onSubmit={e => this.onSubmit(e, this.state.formData)}
             >
               <div className="container">
-                <div className="row" style={{ marginTop: "20px" }}>
-                  <div className="col">
-                    <img
-                      src={user}
-                      className="img-thumbnail shadow p-3 bg-white rounded"
-                      style={{ width: "200px", height: "200px" }}
-                    />
-                    {/* Profile picture here */}
-                  </div>
-                  <div className="col-8 ">
-                    <div className="container">
-                      <div className="row h-100 ">
-                        <div className="col-10">
-                          <h5 id="AccountName" className=" m-auto display-4">
+                <div className="row " style={{ marginTop: "20px" }}>
+                  <div className="col-3 ">
+                    <div className="container-fluid  ">
+                      <div className="row ">
+                        <div className="col ">
+                          <img
+                            id="pfp"
+                            src={this.state.formData.pfp ? this.state.formData.pfp : user}
+                            className="img-thumbnail shadow p-3 bg-white rounded"
+                            style={{ width: "200px", height: "200px" }}
+                            alt=''
+                          />
+                        </div>
+                      </div>
+                      {/* Profile picture here */}
+
+                      <div className="row mt-2">
+                        <div className="col ">
+                          <h5 id="AccountName" className=" m-auto" style={{fontSize:'30px'}}>
                             {this.state.formData.FirstName}{" "}
-                            {this.state.formData.LastName}
+                            {this.state.formData.LastName}{" "}
                           </h5>{" "}
                         </div>
                       </div>
                       <div className="row">
                         <div className="col">
                           <h5 className=" m-auto " id="AccountEmail">
-                            Email ID: {this.state.formData.Email}
+                            {this.state.formData.Email}
                           </h5>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div className="row m-2 p-3 shadow  bg-white rounded">
-                <div className="col-12">
-                  <h3 htmlFor="Description">About Me</h3>
-                  {this.state.formData.Description}
-                </div>
-              </div>
-              <div className="row  d-flex  m-2 p-3 card shadow  bg-white rounded ">
-                <div className="col">
-                  <div className="container">
-                    <div className="row">
+                  <div className="container-fluid col-9 p-3 shadow  bg-white rounded">
+                    <div className="row ">
+                      <div className="col">
+                        <h3 htmlFor="Description ">About Me</h3>
+                      </div>
+                      <div className="col ">
+                        <button
+                          type="button"
+                          onClick={this.toggleEditForm}
+                          className="btn text-info visible float-right"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="row" style={{maxHeight:'90px', overflow:'scroll'}}>
+                      <div className="col">
+                        {this.state.formData.Description}
+                      </div>
+                    </div>
+
+                    {/* </div>
+          <div className="row  d-flex  m-2 p-3 card shadow  bg-white rounded "> */}
+
+                    <div className="row mt-2">
                       {" "}
                       {/* Address Section */}
                       <div className="col">
@@ -109,44 +157,60 @@ class VolProfileLink extends React.Component {
                       </div>
                     </div>
 
-                    <div className="row m-1 justify-content-left">
+                    <div className="row justify-content-left">
                       {" "}
-                      {/* City & State */}
-                      {this.state.formData.StreetName},
-                      {this.state.formData.City},{this.state.formData.State},
-                      {this.state.formData.ZIP}
+                      <div className="col">
+                        {/* City & State */}
+                        {this.state.formData.StreetName},
+                        {this.state.formData.City},{this.state.formData.State},
+                        {this.state.formData.ZIP}
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+              <div className=" ml-2 mt-4
+              p-2 shadow container bg-white rounded" style={{}}>
+                <div className="row ">
+                  <div className="col">
+                    <h3>Past Events({this.state.activityData.length})</h3>
+                    <div className='container-fluid'>
+                      <div className='row flex-row flex-nowrap'style={{overflow:'scroll'}}>
+
+                     
+                      {this.state.activityData.map(activityData => (
+                         <PastEvents
+                         activityData={activityData}
+                         key={activityData.EventId}
+                       />
+                      ))}
+                     
+                    </div>
                     </div>
                   </div>
                 </div>
               </div>
+              
             </form>
           </div>
-          <div className="container-fluid mt-5">
-            <div className="row">
-              <div className="col">
-                <div className="DisplayRecommended container justify-content-left">
-                  <div className="row">
-                    <h4 className="float-left"> Past Events</h4>
-                  </div>
-                  <div className="row">
-                    {this.state.activityData.map(activityData => (
-                      //call the registered component
-                      <PastEvents
-                        activityData={activityData}
-                        key={activityData.EventId}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        
         </div>
       </>
     );
   }
 }
-
+/* <div className="row">
+{this.state.activityData.map(activityData => (
+  //call the registered component
+  <PastEvents
+    activityData={activityData}
+    key={activityData.EventId}
+  />
+))}
+</div> */
 class PastEvents extends React.Component {
   constructor(props) {
     super(props);
@@ -167,7 +231,6 @@ class PastEvents extends React.Component {
 
   render() {
     console.log(this.props.activityData);
-    const showreg = this.state.showreg;
     return (
       <>
         {" "}
@@ -189,8 +252,8 @@ class PastEvents extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {this.props.activityData.Streetnumber},{" "}
-              {this.props.activityData.Streetname},{" "}
+              {this.props.activityData.StreetNumber},{" "}
+              {this.props.activityData.StreetName},{" "}
               {this.props.activityData.City}, {this.props.activityData.State},{" "}
               {this.props.activityData.Zip}
             </div>
@@ -217,7 +280,7 @@ class PastEvents extends React.Component {
 
             <Modal
               centered
-              isOpen={this.state.eid == this.props.activityData.EventId}
+              isOpen={this.state.eid === this.props.activityData.EventId}
             >
               <ShowEventDetails
                 eventdata={this.props.activityData}
@@ -235,14 +298,63 @@ class ShowEventDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: this.props.eventdata
+      formData: this.props.eventdata,
+      lat: "",
+      lon: "",
+      renderMap: false,
+      gmap: ""
     };
   }
 
+  componentDidMount() {
+    const p = this;
+    const data = this.props.eventdata;
+    const key = "3579bae5570c63";
+
+    axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
+              `${encodeURIComponent(`${data.StreetNumber} ${data.StreetName}, ` +
+              `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
+      (response) => {
+        // console.log(response);
+
+        let lat = parseFloat(response.data[0].lat);
+        let lon = parseFloat(response.data[0].lon);
+
+        let GMap = <GMapComponent
+          lat={lat}
+          lon={lon}
+          resetBoundsOnResize
+          googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA"
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `300px` }} />}
+          mapElement={<div style={{ height: `100%`}} />}
+        />
+
+        p.setState({lat: parseFloat(lat), lon: parseFloat(lon), renderMap: true, gmap: GMap});
+
+        console.log(lat, lon);
+
+        
+      }).catch( (error) => {
+        console.log(error);
+      });
+    // Geocode.setApiKey("AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA");
+    // Geocode.fromAddress(`${data.StreetNumber} ${data.StreetName}, ${data.City}, ${data.State} ${data.Zip}`).then(
+    //   response => {
+    //     const {lat, long} = response.results[0].geometry.location;
+    //     p.setState({lat: lat, long: long, renderMap: true});
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // )
+    
+  }
+
+
   render() {
     const data = this.props.eventdata;
-    const t = new Date(data.StartTime);
-    console.log(data);
+ 
     return (
       <React.Fragment>
         <div className="showDetails ">
@@ -260,8 +372,10 @@ class ShowEventDetails extends React.Component {
             <div className="text-center">
               {" "}
               <span className="text-weight-bold">Address: </span>
-              {data.Streetnumber}, {data.Streetname}, {data.City}, {data.State},{" "}
+              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
               {data.Zip}
+              {this.state.renderMap && this.state.gmap}
+
             </div>
 
             <hr />
@@ -297,5 +411,11 @@ class ShowEventDetails extends React.Component {
     );
   }
 }
+
+const GMapComponent = withScriptjs(withGoogleMap( (props) => 
+          <GoogleMap defaultCenter={{lat: props.lat, lng: props.lon}} defaultZoom={15}>
+            <Marker position={{lat: props.lat, lng: props.lon}} />
+          </GoogleMap>
+        ));
 
 export default VolProfileLink;

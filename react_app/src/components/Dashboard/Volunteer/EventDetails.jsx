@@ -2,26 +2,73 @@ import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
-import moment, { min } from "moment";
+import moment from "moment";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 
 //Show event details child component
 class ShowEventDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: this.props.eventdata
+      formData: this.props.eventdata,
+      lat: "",
+      lon: "",
+      renderMap: false,
+      gmap: ""
     };
   }
+
+  componentDidMount() {
+    const p = this;
+    const data = this.props.eventdata;
+    const key = "3579bae5570c63";
+
+    axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
+              `${encodeURIComponent(`${data.StreetNumber} ${data.StreetName}, ` +
+              `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
+      (response) => {
+        // console.log(response);
+
+        let lat = parseFloat(response.data[0].lat);
+        let lon = parseFloat(response.data[0].lon);
+
+        let GMap = <GMapComponent
+          lat={lat}
+          lon={lon}
+          resetBoundsOnResize
+          googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA"
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `300px` }} />}
+          mapElement={<div style={{ height: `100%`}} />}
+        />
+
+        p.setState({lat: parseFloat(lat), lon: parseFloat(lon), renderMap: true, gmap: GMap});
+
+        console.log(lat, lon);
+
+        
+      }).catch( (error) => {
+        console.log(error);
+      });
+    // Geocode.setApiKey("AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA");
+    // Geocode.fromAddress(`${data.StreetNumber} ${data.StreetName}, ${data.City}, ${data.State} ${data.Zip}`).then(
+    //   response => {
+    //     const {lat, long} = response.results[0].geometry.location;
+    //     p.setState({lat: lat, long: long, renderMap: true});
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // )
+    
+  }
+
   render() {
     const data = this.props.eventdata;
-    const t = new Date(data.StartTime);
     return (
       <React.Fragment>
         <div className="showDetails ">
-          <form
-            className="  text-center"
-            
-          >
+          <form className="  text-center">
             <div className="form-group  bg-info card  p-4">
               <span className=" pt-2 display-4 text-center ">
                 {" "}
@@ -37,6 +84,7 @@ class ShowEventDetails extends React.Component {
               <span className="text-weight-bold">Address: </span>
               {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
               {data.Zip}
+              {this.state.renderMap && this.state.gmap}
             </div>
 
             <hr />
@@ -92,5 +140,11 @@ class ShowEventDetails extends React.Component {
       });
   };
 }
+
+const GMapComponent = withScriptjs(withGoogleMap( (props) => 
+          <GoogleMap defaultCenter={{lat: props.lat, lng: props.lon}} defaultZoom={15}>
+            <Marker position={{lat: props.lat, lng: props.lon}} />
+          </GoogleMap>
+        ));
 
 export default ShowEventDetails;

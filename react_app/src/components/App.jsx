@@ -1,20 +1,18 @@
 import React from "react";
 import LoginPage from "./Homepage/LoginPage";
-// import NotFound from "../Homepage/NotFound";
+import NotFound from "./Homepage/NotFound";
 import ResetPassword from "./Homepage/ResetPassword";
 import OrgDashboard from "./Dashboard/Organization/OrgDashboard";
 import VolDashboard from "./Dashboard/Volunteer/VolDashboard";
-import { createBrowserHistory } from "history";
 // import AboutUs from "./Homepage/AboutUs";
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
+  
 } from "react-router-dom";
 
-const history = createBrowserHistory();
 
 class Main extends React.Component {
   render() {
@@ -48,6 +46,15 @@ class Main extends React.Component {
                 path="/odashboard/:organizationID/profile"
                 render={props => <OrgDashboard {...props} />}
               />
+              <Route
+              exact
+              path="/vdashboard/:volunteerid/messages"
+              render={props => <VolDashboard {...props} />}
+            /><Route
+            exact
+            path="/odashboard/:organizationID/messages"
+            render={props => <OrgDashboard {...props} />}
+          />
                  <Route
                 exact
                 path="/odashboard/:organizationID/activity"
@@ -79,6 +86,7 @@ class Main extends React.Component {
               path="/odashboard/profile/volunteer/:id"
               render={props => <OrgDashboard {...props} />}
             />
+          
               {/* <Route
                 exact
                 path="/aboutus"

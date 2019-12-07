@@ -2,14 +2,9 @@ import React from "react";
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
-import VolLayout from "./VolLayout";
 import user from "../../user.png";
-import { ListGroup, ListGroupItem } from "reactstrap";
-import {
-  Modal,
-  ModalBody,
- 
-} from "reactstrap";
+import { Modal, ModalBody ,Card,CardBody,CardImg,CardTitle,Button,ModalHeader} from "reactstrap";
+
 
 class VolProfile extends React.Component {
   constructor(props) {
@@ -28,18 +23,28 @@ class VolProfile extends React.Component {
       },
       subscribedOrg: [],
       id: "",
-      Editing: false
+      Editing: false,
+      photo: "",
+      photomodal: false
     };
     this.toggleEditForm = this.toggleEditForm.bind(this);
-
+    this.handleChange = this.handleChange.bind(this);
+    this.submitPhoto = this.submitPhoto.bind(this);
+    this.getPFP = this.getPFP.bind(this);
+    this.getOrgPFPs = this.getOrgPFPs.bind(this);
+    this.togglePhotoModal = this.togglePhotoModal.bind(this);
+    this.fileChangedHandler = this.fileChangedHandler.bind(this);
     // this.handleChange = this.handleChange.bind(this);
   }
+
   componentDidMount = () => {
-    console.log('mount')
+    console.log("mount");
     if (Cookies.get("token") && Cookies.get("type") === "/vdashboard/") {
-      console.log('in')
+      console.log("in");
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
+      p.state.id = ID;
+      
       axios
         .get("/volunteer/" + ID)
         .then(function(response) {
@@ -53,145 +58,230 @@ class VolProfile extends React.Component {
         .get("/event/get_subscribed_org/" + ID)
         .then(function(response) {
           p.setState({ subscribedOrg: response.data });
+          p.getOrgPFPs();
         })
         .catch(function(error) {
           console.log(error);
         });
+
+      p.getPFP();
     } else {
-      console.log('out')
+      console.log("out");
       this.props.history.push("/");
     }
   };
 
-  toggleEditForm() {
-    this.setState({ Editing: !this.state.Editing });
-   
+  fileChangedHandler = (event) => {
+    console.log(event.target.files[0]);
+    const file = event.target.files[0];
+    this.setState({"photo": file});
   }
 
-  // handleChange(event) {
-  //   let formData = this.state.formData;
-  //   formData[event.target.id] = event.target.value;
-  //   this.setState({
-  //     formData
-  //   });
-  // }
+  togglePhotoModal() {
+    this.setState({ photomodal: !this.state.photomodal });
+  }
 
-  // toggleEditMode() {
-  //   if (this.state.Editing) {
-  //     for (let e of document.getElementsByClassName("toggleedit")) {
-  //       e.readOnly = true;
-  //     }
-  //     let submit = document.getElementById("submit");
-  //     submit.innerHTML = "Edit";
-  //     this.setState({ Editing: false });
-  //   } else {
-  //     for (let e of document.getElementsByClassName("toggleedit")) {
-  //       e.readOnly = false;
-  //     }
-  //     let submit = document.getElementById("submit");
-  //     submit.innerHTML = "Save";
-  //     this.setState({ Editing: true });
-  //   }
-  // }
+  submitPhoto() {
+    let p = this;
+    let data = new FormData();
+    data.append("photo", this.state.photo);
 
-  //   populateFields() {
-  //     for (let e of document.getElementsByClassName("toggleedit")) {
-  //       e.value = this.state.formData[e.id];
-  //     }
-  //   }
+    axios
+      .put("/pfp/vol/" + p.state.id, data)
+      .then(function(d) {
+        this.getPFP();
+        p.togglePhotoModal();
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  getPFP() {
+    let p = this;
+    axios
+      .get("/pfp/vol/" + p.state.id)
+      .then(function(res) {
+        let buf = Buffer.from(res.data, 'binary');
+
+        var reader = new FileReader();
+        reader.onload = (function(self) {
+          return function(e) {
+            let fd = {...p.state.formData};
+            fd.pfp = reader.result;
+            p.setState({formData: fd});
+            document.getElementById("pfp").src = reader.result;
+          }
+        })(this);
+        reader.readAsDataURL(new Blob([buf], {type: 'image/png'}));
+      })
+      .catch(function(error) {
+        console.log(error);
+        // Display default photo
+        p.setState({photo: user});
+      });
+  }
+
+  getOrgPFPs() {
+    let p = this;
+    for (let org of p.state.subscribedOrg) {
+      axios
+        .get("/pfp/org/" + org.orgId)
+        .then(function(res) {
+          let buf = Buffer.from(res.data, 'binary');
+
+          var reader = new FileReader();
+          reader.onload = (function(self) {
+            return function(e) {
+              org.pfp = reader.result;
+              document.getElementById("pfp" + org.orgId).src = reader.result;
+            }
+          })(this);
+          reader.readAsDataURL(new Blob([buf], {type: 'image/png'}));
+        })
+        .catch(function(error) {
+          console.log(error);
+          // Display default photo
+          p.setState({photo: user});
+        });
+    }
+  }
+
+  handleChange(event) {
+    let formData = this.state.formData;
+    formData[event.target.id] = event.target.value;
+    this.setState({
+      formData
+    });
+  }
+
+  toggleEditForm() {
+    this.setState({ Editing: !this.state.Editing });
+  }
+
   render() {
-    console.log('mount')
+    
 
     return (
       <>
-        <div className="container">
+        <div className="container-fluid">
+          <div className='row ml-2  justify-content-left'>
+            <div className='col ' style={{fontSize:'30px'}}>
+              My Profile
+              <hr/>
+            </div>
+          </div>
+         
           <div className="row justify-content-center">
             <form
-              className=" topdist  volprofile col-8"
+              className=" topdist volprofile container"
               onSubmit={e => this.onSubmit(e, this.state.formData)}
-            ><div className="container">
-            <div className="row" style={{ marginTop: "20px" }}>
-              <div className="col">
-                <img
-                  src={user}
-                  className="img-thumbnail shadow p-3 bg-white rounded"
-                  style={{ width: "200px", height: "200px" }}
-                />
-                {/* Profile picture here */}
-              </div>
-              <div className="col-8 ">
-                <div className="container">
-                  <div className="row h-100 ">
-                    <div className="col-9">
-                      <h5 id="AccountName" className=" m-auto display-4">
-                        {this.state.formData.FirstName}{" "}
-                        {this.state.formData.LastName}{" "}
-                      </h5>{" "}
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col">
-                      <h5 className=" m-auto " id="AccountEmail">
-                        Email ID: {this.state.formData.Email}
-                      </h5>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row m-2 p-3 shadow  bg-white rounded">
-            <div className="col-12">
-              <h3 htmlFor="Description">About Me</h3>
-              {this.state.formData.Description}
-            </div>
-          </div>
-          <div className="row  d-flex  m-2 p-3 card shadow  bg-white rounded ">
-            <div className="col">
-              <div className="container">
-                <div className="row">
-                  {" "}
-                  {/* Address Section */}
-                  <div className="col">
-                    <h3>Address Info</h3>
-                  </div>
-                </div>
+            >
+              <div className="container container-fluid">
+                <div className="row " style={{ marginTop: "20px" }}>
+                  <div className="col-3 ">
+                    <div className="container-fluid  ">
+                      <div className="row ">
+                        <div className="col ">
+                        <img
+                          id="pfp"
+                          alt=''
+                          src={this.state.formData.pfp ? this.state.formData.pfp : user}
+                          className="img-thumbnail shadow p-3 bg-white rounded"
+                          style={{ width: "200px", height: "200px" }}
+                          onClick={this.togglePhotoModal}
+                        />
+                        </div>
+                      </div>
+                      {/* Profile picture here */}
 
-                <div className="row m-1 justify-content-left">
-                  {" "}
-                  {/* City & State */}
-                  {this.state.formData.StreetName},
-                  {this.state.formData.City},{this.state.formData.State},
-                  {this.state.formData.ZIP}
+                      <div className="row mt-2">
+                        <div className="col ">
+                          <h5 id="AccountName" className=" m-auto" style={{fontSize:'30px'}}>
+                            {this.state.formData.FirstName}{" "}
+                            {this.state.formData.LastName}{" "}
+                          </h5>{" "}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <h5 className=" m-auto " id="AccountEmail">
+                            {this.state.formData.Email}
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="container-fluid col-9 p-3 shadow  bg-white rounded">
+                    <div className="row ">
+                      <div className="col">
+                        <h3 htmlFor="Description ">About Me</h3>
+                      </div>
+                      <div className="col ">
+                        <button
+                          type="button"
+                          onClick={this.toggleEditForm}
+                          className="btn text-info visible float-right"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="row" style={{maxHeight:'90px', 'overflow-y':'scroll', 'overflow-x':'hidden'}}>
+                      <div className="col">
+                        {this.state.formData.Description}
+                      </div>
+                    </div>
+
+                    {/* </div>
+          <div className="row  d-flex  m-2 p-3 card shadow  bg-white rounded "> */}
+
+                    <div className="row mt-2">
+                      {" "}
+                      {/* Address Section */}
+                      <div className="col">
+                        <h3>Address Info</h3>
+                      </div>
+                    </div>
+
+                    <div className="row justify-content-left">
+                      {" "}
+                      <div className="col">
+                        {/* City & State */}
+                        {this.state.formData.StreetName},
+                        {this.state.formData.City},{this.state.formData.State},
+                        {this.state.formData.ZIP}
+                      </div>
+                    </div>
+                  </div>
+
+
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="row ">
-  <div className="col-1 m-auto">
-     <button
-      type="button"
-      onClick={this.toggleEditForm}
-      className="btn btn-info visible"
-    >
-      Edit
-    </button>
-  </div>
- </div>
-              <div className="row m-2 p-3 shadow  bg-white rounded">
-                <div className="col-12">
-                  <h3>Subscribed Oragnizatons</h3>
-                  <ListGroup>
-                    {this.state.subscribedOrg.map(subscribedOrg => (
-                      <SubscribedOrg
+
+              <div className=" ml-2 mt-4
+              p-2 shadow container bg-white rounded justify-content-center" style={{}}>
+                <div className="row justify-content-center">
+                  <div className="col">
+                    <h3>Subscribed Oragnizations({this.state.subscribedOrg.length})</h3>
+                    <div className='container-fluid'>
+                      <div className='row flex-row flex-nowrap'style={{'overflow-y':'hidden', 'overflow-x':'scroll'}}>
+
                      
-                        history={this.props.history}
-                        org={subscribedOrg}
-                      />
-                    ))}
-                  </ListGroup>
+                      {this.state.subscribedOrg.map(subscribedOrg => (
+                        <SubscribedOrg
+                          history={this.props.history}
+                          org={subscribedOrg}
+                        />
+                      ))}
+                     
+                    </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+              
             </form>
           </div>
           <Modal isOpen={this.state.Editing} centered>
@@ -199,9 +289,18 @@ class VolProfile extends React.Component {
               <ProfileEdit
                 formData={this.state.formData}
                 toggleEditForm={this.toggleEditForm}
-               
               />
             </ModalBody>
+          </Modal>
+          <Modal isOpen={this.state.photomodal}>
+            <ModalHeader>Upload new Profile Picture</ModalHeader>
+            <input type="file" name="pic" accept="image/*" onChange={this.fileChangedHandler}/>
+            <button
+              id="submitPhoto"
+              className="btn btn-info visible"
+              onClick={this.submitPhoto}
+            > Submit
+            </button>
           </Modal>
         </div>
       </>
@@ -229,9 +328,7 @@ class VolProfile extends React.Component {
 }
 
 class SubscribedOrg extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
 
   orgProfile = e => {
     const id = e.target.id;
@@ -243,20 +340,36 @@ class SubscribedOrg extends React.Component {
   };
 
   render() {
+    console.log(this.props.org)
     return (
-      <ListGroupItem
-        onClick={this.orgProfile}
-        key={this.props.org.orgId}
-        id={this.props.org.orgId}
-      >
-        <span className="mx-1">{this.props.org.Name}</span>
-        <span className="mx-1">({this.props.org.Email})</span>
-      </ListGroupItem>
+      // <div className='col-3' 
+      //   onClick={this.orgProfile}
+      //   key={this.props.org.orgId}
+      //   id={this.props.org.orgId}
+      // >
+
+      //   <span  className="mx-1">{this.props.org.Name}</span>
+      //   <span className="mx-1">({this.props.org.Email})</span>
+        
+      // </div>
+
+    <Card className='m-1 shadow  bg-white rounded"'>
+    <CardImg top width="100%" src={this.props.org.pfp ? this.props.org.pfp : user} id={"pfp" + this.props.org.orgId} alt="Card image cap" style={{ width: "150px", height: "150px" }}/>
+    <CardBody>
+      <CardTitle style={{fontSize:'20px', width:'100px', maxWidth:'100px'}}>{this.props.org.Name}</CardTitle>
+      
+      {/* <CardText>{this.props.org.Description}</CardText> */}
+      <Button
+      className='btn-info'
+      onClick={this.orgProfile}
+      key={this.props.org.orgId}
+      id={this.props.org.orgId}>Go to Profile</Button>
+    </CardBody>
+    </Card>
+
     );
   }
 }
-
-
 
 class ProfileEdit extends React.Component {
   constructor(props) {
@@ -271,14 +384,13 @@ class ProfileEdit extends React.Component {
         StreetNumber: "",
         City: this.props.formData.City,
         State: this.props.formData.State,
-        ZIP:  this.props.formData.ZIP
+        ZIP: this.props.formData.ZIP
       }
     };
     this.handleChange = this.handleChange.bind(this);
   }
- 
+
   render() {
-   
     return (
       <>
         <div>
@@ -288,12 +400,13 @@ class ProfileEdit extends React.Component {
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
             <div className="form-group row pl-4 pr-4 text-center">
-              <label htmlFor="description">About Me:</label>
+              <label htmlFor="description">About Me:</label> 
               <textarea
                 className="form-control pr-3 "
                 onChange={this.handleChange}
                 name="Description"
                 id="Description"
+                maxLength='300'
                 value={this.state.formData.Description}
                 rows="3"
                 required
@@ -384,14 +497,15 @@ class ProfileEdit extends React.Component {
 
   onSubmit = (e, formData) => {
     e.preventDefault();
-    const p = this.props;
     let f = this.props.formData;
     const t = this;
     axios
-      .put("/volunteer/" + jwt_decode(Cookies.get("token")).uid, formData)
+      .put(
+        "/volunteer/" +
+          jwt_decode(Cookies.get("token")).uid,
+        formData
+      )
       .then(function(response, props) {
-
-
         // window.location.reload();
         f.Description = formData.Description;
         f.StreetName = formData.StreetName;

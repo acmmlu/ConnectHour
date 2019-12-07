@@ -1,8 +1,6 @@
 import React from "react";
-import {
-    Link
-  } from "react-router-dom";
- 
+
+ import logo from '../favicon.png'
 class Header extends React.Component {
 
 
@@ -11,10 +9,11 @@ class Header extends React.Component {
 
 
  <div className='navbardiv'>
-<nav className="navbar navbar-expand-lg navbar-light bg-info navbar-fixed-top"> 
+<nav className="navbar navbar-light bg-info "> 
 
-<div className = 'font-weight-bold navbarName'>
-  ConnectHour
+<div className = 'font-weight-bold '>
+<img alt='' className='Navimg' src={logo} />
+ 
 </div>
 
 

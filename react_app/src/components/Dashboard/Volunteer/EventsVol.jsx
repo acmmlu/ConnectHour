@@ -5,6 +5,7 @@ import jwt_decode from "jwt-decode";
 import Registered from "./Registered";
 import Searched from "./Search";
 
+
 //Component for Events page for Volunteer
 class EventsVol extends React.Component {
   constructor(props) {
@@ -31,7 +32,6 @@ class EventsVol extends React.Component {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       const regeventid = this.state.regeventid;
-      let RegisteredEvents = this.state.RegisteredEvents;
       axios
         .get("/event/volunteer/" + ID)
         .then(function(response) {
@@ -76,10 +76,8 @@ class EventsVol extends React.Component {
 
   //Shpw search results
   DisplayEvents(Events) {
-    this.state.EventsList = Events;
-    this.setState({
-      EventsList: this.state.EventsList
-    });
+    this.setState({ EventsList : Events})
+    this.setState({ EventsList: this.state.EventsList});
     if (this.state.EventsList.length < 1) {
       this.setState({ errmsg: "No Results Found" });
       this.setState({ showRecommended: "False" });
@@ -100,16 +98,30 @@ class EventsVol extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="container justify-content-center">
+        <div className="container-fluid">
+        <div className="row  ml-2 justify-content-left">
+          <div className='col ' style={{fontSize:'30px'}}>
+             Events
+             <hr/>
+            </div>
+            </div>
+           
+            <div className='row'>
+
           <SearchEvents
             DisplayEvents={this.DisplayEvents}
             ClearDisplay={this.ClearDisplay}
             regeventid={this.state.regeventid}
           />
-        </div>
-        <div className="container-fluid mt-5">
-          <div className="row">
+        </div></div>
+        
+        <div className="container-fluid mt-2">
+          
+
+            
+            <div className="row">
             <div className="col">
+
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-9">
@@ -126,6 +138,8 @@ class EventsVol extends React.Component {
                               </div>
                               <div className="row">
                                 {this.state.RecommendedList.map(event => (
+                                 
+
                                   <Searched
                                     history={this.props.history}
                                     event={event}
@@ -136,6 +150,7 @@ class EventsVol extends React.Component {
                                     name={this.state.name}
                                     ID={jwt_decode(Cookies.get("token")).uid}
                                   />
+                                 
                                 ))}
                               </div>
                             </div>
@@ -159,7 +174,6 @@ class EventsVol extends React.Component {
                                   <Searched
                                     event={event}
                                     history={this.props.history}
-
                                     key={event.id}
                                     showFormId={this.state.showFormId}
                                     showForm={this.showForm}
@@ -177,8 +191,9 @@ class EventsVol extends React.Component {
                     </div>
                   </div>
                   {/* Registered Events */}
-                  <div className=" col-3  Registered shadow  p-3 mb-5 bg-white rounded card container text-center">
-                    <h3 >Registered Events </h3>
+                  
+                  <div className=" col-3 mt-5 Registered shadow  py-1 bg-white rounded card container text-center">
+                    <h3>Registered Events ({this.state.RegisteredEvents.length })</h3>
                     <div className="RegisteredEvents">
                       {this.state.RegisteredEvents.map(event => (
                         //call the registered component
@@ -282,6 +297,9 @@ class SearchEvents extends React.Component {
       }
     };
   }
+   handleChange = (item, value) => {
+    this.setState({...this.state, [item]: value});
+  };
 
   handleInputChange = e => {
     let formData = { ...this.state.formData };
@@ -301,13 +319,14 @@ class SearchEvents extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="ml-5 topdist">
+        <div className="ml-5 ">
           <form
-            className="form-inline my-2 my-lg-0 ml-5"
+            className="form-inline  ml-5"
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
+            
             <input
-              className="form-control m-2 mr-sm-2 shadow-sm"
+              className="form-control mx-2 mr-sm-2 mt-2 shadow-sm form-control-lg "
               type="search"
               name="SearchString"
               placeholder="Search"
@@ -316,7 +335,7 @@ class SearchEvents extends React.Component {
             />
 
             <input
-              className="form-control m-2 sm-2 shadow-sm"
+              className="form-control mx-2 sm-2 mt-2 shadow-sm form-control-lg "
               type="text"
               name="city"
               placeholder="City"
@@ -328,23 +347,26 @@ class SearchEvents extends React.Component {
               type="date"
               id="date"
               onChange={this.handleInputChange}
-              className="form-control m-2 mr-sm-2 shadow-sm"
+              className="form-control mx-2 mr-sm-2 mt-2 shadow-sm form-control-lg "
               name="date"
             />
 
+
             <button
-              className="btn btn-outline-success ml-4 my-sm-0"
+              className="btn form-control btn-outline-success ml-2 mt-2 "
               type="submit"
             >
-              Search
+              <i className="fas fa-search"></i>
             </button>
-            <input
-              className="form-control btn btn-danger m-2"
-              value="cancel"
-              type="button"
+              <input
+          type='button'
+          value='X'
+              className="form-control btn btn-danger mt-2 px-3 mx-1"
               onClick={this.props.ClearDisplay}
             />
           </form>
+       
+             
         </div>
       </React.Fragment>
     );
@@ -363,7 +385,8 @@ class SearchEvents extends React.Component {
           formData["city"] +
           "&date=" +
           formData["date"] +
-          "&id=" + jwt_decode(Cookies.get("token")).uid
+          "&id=" +
+          jwt_decode(Cookies.get("token")).uid
       )
       .then(function(response, props) {
         let Events = response.data;
@@ -375,7 +398,7 @@ class SearchEvents extends React.Component {
             );
           });
         }
-        
+
         p.DisplayEvents(Events);
       })
       .catch(function(error) {

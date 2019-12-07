@@ -70,7 +70,7 @@ exports.get_registered = function(req, res) {
   let vid = req.params.volunteer;
 
   let query =
-    'SELECT E.ID as "id", E.NAME AS "EventName", E.DESCRIPTION AS "Description", ' +
+    'SELECT E.ID as "id", E.NAME AS "EventName",E.ORGANIZER as ORGANIZER,  E.DESCRIPTION AS "Description", ' +
     '(SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
     'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", E.STATE AS "State", E.ZIP AS "Zip", ' +
     'E.START AS "StartTime", E.END AS "EndTime", E.TAG AS "Tag" FROM EVENT E INNER JOIN ATTENDING A ON ' +
@@ -137,28 +137,32 @@ exports.create_event = function(req, res) {
 
         // Notify all subscribers
         try {
-            query = "SELECT V.EMAIL FROM VOLUNTEER_TAB V " +
-                "INNER JOIN SUBSCRIBED S ON V.ID = S.VOLUNTEERID " +
-                "WHERE S.ORGANIZERID = ?";
+          query =
+            "SELECT V.EMAIL FROM VOLUNTEER_TAB V " +
+            "INNER JOIN SUBSCRIBED S ON V.ID = S.VOLUNTEERID " +
+            "WHERE S.ORGANIZERID = ?";
 
-            g.query(query, [event.OrganizationId], function(result, fields) {
-                for (let e of result) {
-                    g.transport.sendMail({
-                        from: "Connect Hour <connecthourofficial@gmail.com>",
-                        to: e["EMAIL"],
-                        subject: "New Event",
-                        text:
-                        "An Organizer you are subscribed to has created a new event. Log in to check it out!"
-                    }, function(err, info) {
-                        if (err) throw err;
-                        console.log(info);
-                    });
+          g.query(query, [event.OrganizationId], function(result, fields) {
+            for (let e of result) {
+              g.transport.sendMail(
+                {
+                  from: "Connect Hour <connecthourofficial@gmail.com>",
+                  to: e["EMAIL"],
+                  subject: "New Event",
+                  text:
+                    "An Organizer you are subscribed to has created a new event. Log in to check it out!"
+                },
+                function(err, info) {
+                  if (err) throw err;
+                  console.log(info);
                 }
-            
-                res.send("success");
-            });
+              );
+            }
+
+            res.send("success");
+          });
         } catch (error) {
-            res.send(error);
+          res.send(error);
         }
       });
     });
@@ -229,33 +233,37 @@ exports.register = function(req, res) {
     res.send("already registered");
   }
 };
-exports.delete_event = function(req,res){
-    console.log(req.params)
-    let query_1 = 'DELETE FROM ATTENDING WHERE EVENTID = ?;';
-    let params_1 = [req.params.id];
-    let query_2 = 'DELETE FROM EVENT WHERE ORGANIZER = ? AND ID = ?;';
-    let params_2 = [req.params.organizer, req.params.id];
-    let query_3 = 'SELECT V.EMAIL FROM VOLUNTEER_TAB V INNER JOIN ATTENDING A ON V.ID = A.VOLUNTEERID INNER JOIN EVENT E ON A.EVENTID = E.ID WHERE E.ID = ?;'
+exports.delete_event = function(req, res) {
+  console.log(req.params);
+  let query_1 = "DELETE FROM ATTENDING WHERE EVENTID = ?;";
+  let params_1 = [req.params.id];
+  let query_2 = "DELETE FROM EVENT WHERE ORGANIZER = ? AND ID = ?;";
+  let params_2 = [req.params.organizer, req.params.id];
+  let query_3 =
+    "SELECT V.EMAIL FROM VOLUNTEER_TAB V INNER JOIN ATTENDING A ON V.ID = A.VOLUNTEERID INNER JOIN EVENT E ON A.EVENTID = E.ID WHERE E.ID = ?;";
 
-    try {
-        g.query(query_3,params_1, function(result, fields) {
-            g.query(query_1,params_1, function(resul, fields) {
-                g.query(query_2, params_2, function(resu, fields) {
-                    for (let e of result) {
-                        g.transport.sendMail({
-                            from: "Connect Hour <connecthourofficial@gmail.com>",
-                            to: e["EMAIL"],
-                            subject: "Event cancelled",
-                            text: "An event you are subscribed to has been cancelled."
-                        }, function(err, info) {
-                            if (err) throw err;
-                            console.log(info);
-                        });
-                    }
-                    res.send("success");
-                });
-            });
+  try {
+    g.query(query_3, params_1, function(result, fields) {
+      g.query(query_1, params_1, function(resul, fields) {
+        g.query(query_2, params_2, function(resu, fields) {
+          for (let e of result) {
+            g.transport.sendMail(
+              {
+                from: "Connect Hour <connecthourofficial@gmail.com>",
+                to: e["EMAIL"],
+                subject: "Event cancelled",
+                text: "An event you are subscribed to has been cancelled."
+              },
+              function(err, info) {
+                if (err) throw err;
+                console.log(info);
+              }
+            );
+          }
+          res.send("success");
         });
+      });
+    });
   } catch (error) {
     res.send(error);
   }
@@ -267,8 +275,8 @@ exports.activityTracking = function(req, res) {
     g.pool.getConnection(function(err, connection) {
       if (err) throw err;
       let query =
-        'SELECT E.ID as "EventId", E.NAME AS "EventName", E.DESCRIPTION AS "Description", E.ORGNAME AS "OrganizationName", ' +
-        'E.STREETNUMBER AS "Streetnumber", E.STREETNAME AS "Streetname", E.CITY AS "City", ' +
+        'SELECT E.ID as "EventId", E.NAME AS "EventName", E.DESCRIPTION AS "Description", (SELECT O.NAME FROM ORGANIZER_TAB O WHERE ID=E.ORGANIZER) AS "OrganizationName", ' +
+        'E.STREETNUMBER AS "StreetNumber", E.STREETNAME AS "StreetName", E.CITY AS "City", ' +
         'E.STATE AS "State", E.ZIP AS "ZIP", E.START AS "StartTime", E.END AS "EndTime", E.TAG AS "Tag" ' +
         "FROM EVENT E INNER JOIN ATTENDING A ON E.ID=A.EVENTID WHERE A.VOLUNTEERID=?";
 
@@ -298,7 +306,7 @@ exports.activityOrg = function(req, res) {
       if (err) throw err;
       let query =
         'SELECT ID as "EventId", NAME AS "EventName", DESCRIPTION AS "Description", ORGNAME AS "OrganizationName", ' +
-        'STREETNUMBER AS "Streetnumber", STREETNAME AS "Streetname", CITY AS "City", ' +
+        'STREETNUMBER AS "StreetNumber", STREETNAME AS "StreetName", CITY AS "City", ' +
         'STATE AS "State", ZIP AS "ZIP", START AS "StartTime", END AS "EndTime", TAG AS "Tag" ' +
         "FROM EVENT WHERE ORGANIZER=?";
 
@@ -370,7 +378,7 @@ exports.issubsbribed = function(req, res) {
 
 exports.get_subscribed = function(req, res) {
   let query =
-    "SELECT ID as 'volId', FIRST_NAME AS 'FirstName' ,LAST_NAME AS 'LastName',EMAIL AS 'Email' FROM VOLUNTEER_TAB WHERE ID IN ( SELECT VOLUNTEERID FROM SUBSCRIBED WHERE ORGANIZERID = ?)";
+    "SELECT ID as 'volId', FIRST_NAME AS 'FirstName', LAST_NAME AS 'LastName',EMAIL AS 'Email' FROM VOLUNTEER_TAB WHERE ID IN ( SELECT VOLUNTEERID FROM SUBSCRIBED WHERE ORGANIZERID = ?)";
 
   let params = [req.params.organizer];
   try {
@@ -381,13 +389,16 @@ exports.get_subscribed = function(req, res) {
     res.send(error);
   }
 };
-
+//, DESCRIPTION AS 'Description',PFP as 'pfp' 
+// "SELECT ID as 'orgId', NAME AS 'Name', EMAIL AS 'Email' FROM ORGANIZER_TAB WHERE ID IN ( SELECT ORGANIZERID FROM SUBSCRIBED WHERE VOLUNTEERID = ?)";
+//
 exports.get_subscribed_org = function(req, res) {
   let query =
-    "SELECT ID as 'orgId', NAME AS 'Name',EMAIL AS 'Email' FROM ORGANIZER_TAB WHERE ID IN ( SELECT ORGANIZERID FROM SUBSCRIBED WHERE VOLUNTEERID = ?)";
-
+    'SELECT T.ID as "orgId",P.STREETNUM as "StreetNumber", P.STREETNAME as "StreetName", P.ZIP as "ZIP", P.DESCRIPTION as "Description",PFP as "pfp", ' +
+    'T.CITY as "City", T.STATE as "State", T.EMAIL as "Email", T.NAME as "Name"' +
+    'FROM ORGANIZER_PROFILE P RIGHT OUTER JOIN ORGANIZER_TAB T ON P.ID = T.ID WHERE T.ID IN ( SELECT ORGANIZERID FROM SUBSCRIBED WHERE VOLUNTEERID = ?)';
   let params = [req.params.volunteer];
-  
+
   try {
     g.query(query, params, function(result, fields) {
       res.send(result);

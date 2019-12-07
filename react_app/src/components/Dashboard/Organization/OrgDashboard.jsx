@@ -3,11 +3,11 @@ import Events from "./Events";
 import OrgLayout from "./OrgLayout";
 import Cookies from "js-cookie";
 import OrgProfile from "./OrgProfile";
+import OrgBase from '../../cometchat/OrgBase'
+
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
+
+  Route
 } from "react-router-dom";
 import ActivityOrg from "./ActivityOrg";
 import VolProfileLink from "./VolProfileLink";
@@ -22,7 +22,7 @@ class OrgDashboard extends React.Component {
   //   }
   // }
   componentDidMount() {
-    if (Cookies.get("token") && Cookies.get("type") != "/odashboard/") {
+    if (Cookies.get("token") && Cookies.get("type") !== "/odashboard/") {
       console.log("removed");
       this.props.history.push("/");
     }
@@ -46,7 +46,11 @@ class OrgDashboard extends React.Component {
               exact
               path="/odashboard/:organizationID"
               render={props => <Events {...props} />}
-            />
+            /> <Route
+            exact
+            path="/odashboard/:organizationID/messages"
+            render={props => <OrgBase {...props} />}
+          />
              <Route
               exact
               path="/odashboard/profile/volunteer/:id"

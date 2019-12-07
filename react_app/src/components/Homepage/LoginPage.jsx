@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Header from "../Header";
 import { Modal, ModalHeader } from "reactstrap";
 import Verify from "./Verify";
@@ -28,7 +28,6 @@ class LoginPage extends React.Component {
     this.toggleType = this.toggleType.bind(this);
     this.onGoogleSignIn = this.onGoogleSignIn.bind(this);
   }
-
   onGoogleSignIn = (response) => {
     console.log(response);
     
@@ -86,12 +85,6 @@ class LoginPage extends React.Component {
     } else {
       this.setState({ shouldRender: true });
     }
-    
-    // window.gapi.signin2.render('gbutton', {
-    //   'scope': 'profile email',
-    //   'longtitle': true,
-    //   'onsuccess': this.onGoogleSignIn,
-    // });
   }
   //function to hide/show verify form
   toggleVerify(data) {
@@ -120,145 +113,168 @@ class LoginPage extends React.Component {
       shouldRender && (
         <React.Fragment>
           <Header />
-          <div className="row mx-auto ">
-             <div className="backgrounddiv col-8"></div>
-            <div className="container-fluid col-3  text-center mr-5 login-container pr-xl-5">
-              <div>
-                <img src={logo} />
-                <div className="row typetoggle">
-                  <div
-                    className="btn-group typetoggle-div btn-group-toggle"
-                    data-toggle="buttons"
-                  >
-                    <label
-                      className="btn btn-info active"
-                      onClick={
-                        this.state.formtype === "Volunteer"
-                          ? this.toggleType
-                          : null
-                      }
-                    >
-                      <input
-                        type="radio"
-                        name="options"
-                        id="volForm"
-                        autoComplete="off"
-                        defaultChecked
-                      />{" "}
-                      Volunteer
-                    </label>
-                    <label
-                      className="btn btn-info"
-                      onClick={
-                        this.state.formtype === "Organization"
-                          ? this.toggleType
-                          : null
-                      }
-                    >
-                      <input
-                        type="radio"
-                        name="options"
-                        id="orgForm"
-                        autoComplete="off"
-                      />{" "}
-                      Organization
-                    </label>
+          <div className=" mx-auto login-container login_con container-fluid ">
+            <div className="row">
+            {/* <div className="container-fluid">
+                  <div className="row my-auto">
+                    <div className="col">Connect to the Society</div>
                   </div>
-                </div>
-                {this.state.type && (
-                  <div>
-                    {/*Forms for Volunteer type*/}
-                    {!this.state.showlogin && (
-                      //*Calling the regiter component
-                      <Register
-                        type="Volunteer"
-                        toggleVerify={this.toggleVerify}
-                        history={this.props.history}
-                      />
-                    )}
-                    {!this.state.showlogin && (
-                      <div>
-                        Already have an account?
-                        <input
-                          type="button"
-                          className="btn btn-sm btn-success m-2"
-                          value="Sign in"
-                          onClick={this.toggleLogin}
-                        />
-                      </div>
-                    )}
-
-                    {this.state.showlogin && (
-                      //Calling the login component
-
-                      <Login
-                        type="Volunteer"
-                        toggleVerify={this.toggleVerify}
-                        history={this.props.history}
-                      />
-                    )}
-                    {this.state.showlogin && (
-                      <div>
-                        Don't have an account?
-                        <input
-                          type="button"
-                          className="btn  btn-sm btn-success m-2"
-                          value="Sign Up"
-                          onClick={this.toggleLogin}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/*Forms for Organization type*/}
-                {!this.state.type && (
-                  <div>
-                    {!this.state.showlogin && (
-                      //Calling the REgister component
-
-                      <Register
-                        type="Organization"
-                        toggleVerify={this.toggleVerify}
-                        history={this.props.history}
-                      />
-                    )}
-                    {!this.state.showlogin && (
-                      <div>
-                        Already have an account?
-                        <input
-                          type="button"
-                          className="btn btn-sm btn-success m-2"
-                          value="Sign in"
-                          onClick={this.toggleLogin}
-                        />
-                      </div>
-                    )}
-
-                    {this.state.showlogin && (
-                      //Calling the login component
-
-                      <Login
-                        type="Organization"
-                        toggleVerify={this.toggleVerify}
-                        history={this.props.history}
-                      />
-                    )}
-                    {this.state.showlogin && (
-                      <div>
-                        Don't have an account?
-                        <input
-                          type="button"
-                          className="btn btn-sm btn-success m-2"
-                          value="Sign Up"
-                          onClick={this.toggleLogin}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
+                </div> */}
+              <div className="backgrounddiv col-8">
+               
               </div>
-              <div className="row mt-1">
+
+              <div
+                className="col-3
+            float-left text-center login-container login-container_1 ml-auto mr-5 pr-xl-5 "
+              >
+                <div>
+                  <img src={logo} alt='' />
+
+                  <div className="mx-3">
+                    <div
+                      className="btn-group mb-1 typetoggle-div btn-group-toggle"
+                      data-toggle="buttons"
+                    >
+                      <label
+                        className="btn btn-info active form-control form-control-lg fontType"
+                        onClick={
+                          this.state.formtype === "Volunteer"
+                            ? this.toggleType
+                            : null
+                        }
+                      >
+                        <input
+                          type="radio"
+                          name="options"
+                          id="volForm"
+                          autoComplete="off"
+                          defaultChecked
+                        />{" "}
+                        <i className="fas mr-1 fa-hands-helping"></i>
+                        Volunteer
+                      </label>
+                      <label
+                        className="btn btn-info form-control form-control-lg fontType"
+                        onClick={
+                          this.state.formtype === "Organization"
+                            ? this.toggleType
+                            : null
+                        }
+                      >
+                        <input
+                          type="radio"
+                          name="options"
+                          id="orgForm"
+                          autoComplete="off"
+                        />{" "}
+                        <i className="far mr-1 fa-building"></i>Organization
+                      </label>
+                    </div>
+                  </div>
+                  {this.state.type && (
+                    <div>
+                      {/*Forms for Volunteer type*/}
+                      {!this.state.showlogin && (
+                        //*Calling the regiter component
+                        <Register
+                          type="Volunteer"
+                          toggleVerify={this.toggleVerify}
+                          history={this.props.history}
+                          toggleLogin={this.toggleLogin}
+                        />
+                      )}
+                      {!this.state.showlogin && (
+                        <div className="mx-auto">
+                          <hr />
+
+                          <button
+                            className="btn text-info fontType"
+                            onClick={this.toggleLogin}
+                          >
+                            <i className="fas mr-1 fa-user"></i>Sign in
+                          </button>
+                        </div>
+                      )}
+
+                      {this.state.showlogin && (
+                        //Calling the login component
+
+                        <Login
+                          type="Volunteer"
+                          toggleVerify={this.toggleVerify}
+                          history={this.props.history}
+                          toggleLogin={this.toggleLogin}
+                        />
+                      )}
+
+                      {this.state.showlogin && (
+                        <div className=" mx-auto">
+                          <hr />
+                          <button
+                            className="btn text-info fontType"
+                            onClick={this.toggleLogin}
+                          >
+                            <i class="fas text-info fa-user-plus"></i> Register
+                            for an account
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/*Forms for Organization type*/}
+                  {!this.state.type && (
+                    <div>
+                      {!this.state.showlogin && (
+                        //Calling the REgister component
+
+                        <Register
+                          type="Organization"
+                          toggleVerify={this.toggleVerify}
+                          history={this.props.history}
+                          toggleLogin={this.toggleLogin}
+                        />
+                      )}
+                      {!this.state.showlogin && (
+                        <div className=" mx-auto">
+                          <hr />
+
+                          <button
+                            className="btn text-info fontType"
+                            onClick={this.toggleLogin}
+                          >
+                            <i className="fas mr-1 fa-user"></i>Sign in
+                          </button>
+                        </div>
+                      )}
+
+                      {this.state.showlogin && (
+                        //Calling the login component
+
+                        <Login
+                          type="Organization"
+                          toggleVerify={this.toggleVerify}
+                          history={this.props.history}
+                          toggleLogin={this.toggleLogin}
+                        />
+                      )}
+                      {this.state.showlogin && (
+                        <div className=" ">
+                          <hr />
+                          <button
+                            className="btn text-info fontType"
+                            onClick={this.toggleLogin}
+                          >
+                            <i className="fas text-info fa-user-plus"></i> Register
+                            for an account
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="row mt-1">
                 <div className="col text-center justify-content-center">
                   Or Sign In with Google  {/*<div id="gbutton" className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>*/}
                   <GoogleLogin
@@ -270,17 +286,30 @@ class LoginPage extends React.Component {
                   />
                 </div>
               </div>
-              {/*Verify modal form*/}
-              <Modal isOpen={this.state.verifymodal}>
-                <ModalHeader>Please check your mail and enter the code</ModalHeader>
-                <Verify
-                  type={this.state.type}
-                  toggleVerify={this.toggleVerify}
-                  verifyCode={this.state.formData}
-                  history={this.props.history}
-                />
-              </Modal>
+              </div>
             </div>
+        
+            {/*Verify modal form*/}
+            <Modal isOpen={this.state.verifymodal} centered>
+              <ModalHeader>
+                <input
+                  className="btn btn-sm btn-danger mr-2"
+                  type="button"
+                  value="<"
+                  onClick={this.toggleVerify}
+                />
+
+                <span className="fontType">
+                  Please check your mail and enter the code
+                </span>
+              </ModalHeader>
+              <Verify
+                type={this.state.type}
+                toggleVerify={this.toggleVerify}
+                verifyCode={this.state.formData}
+                history={this.props.history}
+              />
+            </Modal>
           </div>
         </React.Fragment>
       )

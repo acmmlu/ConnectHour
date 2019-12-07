@@ -1,10 +1,8 @@
 import React from "react";
 import axios from "axios";
-import { createBrowserHistory } from "history";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 
-const history = createBrowserHistory();
 
 //Child component for verifying
 class Verify extends React.Component {
@@ -28,42 +26,35 @@ class Verify extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="Volunteer_form" className="card  mb-3 p-4 ">
+        <div id="Volunteer_form" className="card   p-2 ">
           {/*Error message */}
           {this.state.errmsg && (
             <span className="error_msg text-danger">
               Invalid Code. Try again.
             </span>
           )}
-          <form className="text-center" onSubmit={e => this.onSubmit(e)}>
+          <form className="text-center px-2" onSubmit={e => this.onSubmit(e)}>
             <div className="row">
-              <div className="col p-2">
+              <div className="col  pb-1">
                 <input
                   type="text"
                   name="Reset_code"
                   onChange={this.handleInputChange}
-                  className="form-control"
-                  placeholder="Check Your Email For Verification Code"
+                  className="form-control form-control-lg  fontType"
+                  placeholder="Enter code here"
                   required
                 />
               </div>
             </div>
             <div className="row justify-content-center">
-              <div className="col-2">
+              <div className="col">
                 <input
                   type="submit"
-                  className="btn btn-primary "
+                  className="btn btn-primary  fontType"
                   value="Submit"
                 />
               </div>
-              <div className="col-2 ">
-                <input
-                  className="btn btn-danger "
-                  type="button"
-                  value="Close"
-                  onClick={this.props.toggleVerify}
-                />
-              </div>
+              
             </div>
           </form>
         </div>

@@ -1,9 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { TimePicker } from "antd";
-import moment, { min } from "moment";
+import moment from "moment";
 import "antd/dist/antd.css";
-const format = "HH:mm";
 
 class EventEdit extends React.Component {
   constructor(props) {
@@ -41,8 +40,7 @@ class EventEdit extends React.Component {
 
   render() {
     const formData = this.state.formData;
-    const endtime = formData.EndTime;
-    const starttime = formData.StartTime;
+  
     return (
       <React.Fragment>
         <div className=" EditForm">

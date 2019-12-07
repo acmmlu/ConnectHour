@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 
 //Login child component
 class Login extends Component {
@@ -20,22 +20,23 @@ class Login extends Component {
 
   render() {
     return (
-      <div id="Login_form" className=" mb-3 p-3 ">
-        <h5 className="card-title text-info">
+      <div id="Login_form" className=" px-3 ">
+        <h4 className="card-title text-info fontType">
           {" "}
           {this.state.formData.type} Login
-        </h5>
+        </h4>
         <div className="text-danger">{this.state.errmsg}</div>
         <form
           className="text-center"
           onSubmit={e => this.onSubmit(e, this.state.formData)}
         >
           <div className="row">
-            <div className="col p-2">
+            <div className="col py-1 px-3">
               <input
                 type="email"
                 name="email"
-                className="form-control"
+               
+                className="form-control form-control-lg fontType"
                 placeholder="Enter email"
                 value={this.state.email}
                 onChange={this.handleInputChange}
@@ -44,11 +45,11 @@ class Login extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col p-2">
+            <div className="col py-1 px-3">
               <input
                 type="password"
                 name="password"
-                className="form-control"
+                className="form-control form-control-lg fontType"
                 placeholder="Enter password"
                 value={this.state.password}
                 onChange={this.handleInputChange}
@@ -56,40 +57,53 @@ class Login extends Component {
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col m-auto ">
-              <input
+          <div className='row pt-2'>
+          <div className="mx-auto col">
+              <button
                 type="submit"
-                className="btn btn-primary "
-                value="Submit"
-              />
+                className="btn btn-primary btn-lg btn-block fontType"
+              >Login<i class="fas ml-1 fa-sign-in-alt"></i></button>
+</div>
+
             </div>
-          </div>
-        </form>
-        {/*show if type is volunteer */}
-        {this.state.formData.type == "Volunteer" && (
+            <div className='row'>
+          <div className=" col">
+               {/*show if type is volunteer */}
+        {this.state.formData.type === "Volunteer" && (
+          <div className="float-left ">
+            <i class="fas fa-key mr-1"></i>
           <Link
             to={{
               pathname: "/volunteer/reset",
               state: { type: this.state.formData.type }
             }}
-            className="text-center"
+            className="text-center fontType"
           >
-            Reset Password?
+            Forgot your password?
           </Link>
+          </div>
         )}
         {/*show if type is Organization */}
-        {this.state.formData.type == "Organization" && (
+        {this.state.formData.type ==="Organization" && (
+          <div className="float-left">
+            <i class="fas fa-key mr-1"></i>
           <Link
             to={{
               pathname: "/organization/reset",
               state: { type: this.state.formData.type }
             }}
-            className="text-center"
+            className="text-center fontType"
           >
-            Reset Password?
+            Forgot your password?
           </Link>
+          </div>
         )}
+            
+         
+            </div>
+          </div>
+        </form>
+        
       </div>
     );
   }
@@ -129,7 +143,7 @@ class Login extends Component {
         thisprops.toggleVerify(data); //toggle the modal state to show verification form
       })
       .catch(function(error) {
-        if (error.response.status === 401) {
+        if (error.status === 401) {
           p.loginErr(); //display the error message
         }
       });

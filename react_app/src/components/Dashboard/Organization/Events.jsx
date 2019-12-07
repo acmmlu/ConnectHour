@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import EventEdit from "./EventEdit";
 import EventCreate from "./EventCreate";
-import { Animated } from "react-animated-css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
@@ -17,7 +16,6 @@ import {
 
 import "../../App.css";
 import moment from "moment";
-import { Divider } from "antd";
 
 class Events extends Component {
   constructor(props) {
@@ -79,6 +77,12 @@ class Events extends Component {
     return (
       <React.Fragment>
         <div className=" container-fluid">
+        <div className='row ml-2  justify-content-left'>
+            <div className='col ' style={{fontSize:'50px'}}>
+              Events
+            </div>
+          </div>
+          <hr/>
           <div className="row ">
             <div className="col">
               <button
@@ -100,6 +104,7 @@ class Events extends Component {
                           <div className="DisplayRecommended container justify-content-left">
                             <div className="row">
                               {this.state.eventList.map(event => (
+                                
                                 <Event
                                   key={event.id}
                                   editFormId={this.state.editFormId}
@@ -309,7 +314,7 @@ class Event extends Component {
             </div>
           </div>
         </div>
-        {this.props.event.id == this.props.editFormId && (
+        {this.props.event.id === this.props.editFormId && (
           <Modal isOpen={this.props.showEdit} centered>
             <ModalBody>
               <EventEdit
