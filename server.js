@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const g = require('./globals');
-
+const fileUpload = require('express-fileupload');
 const app = express();
 const port = process.env.PORT || 40951;
 
