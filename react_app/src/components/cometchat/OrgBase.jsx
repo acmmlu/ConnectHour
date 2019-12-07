@@ -43,7 +43,7 @@ export default class OrgBase extends Component {
 
       //getformdata
       axios
-        .get("http://localhost:40951/organizer/" + UID)
+        .get("/organizer/" + UID)
         .then(function(response) {
           p.setState({ formData: response.data });
           p.setState({ name: response.data.Name });
@@ -52,7 +52,7 @@ export default class OrgBase extends Component {
 
           //get registered events
           axios
-            .get("http://localhost:40951/event/organizer/" + UID)
+            .get("/event/organizer/" + UID)
             .then(function(response) {
               p.setState({ eventList: response.data });
               //login with name id on formdata

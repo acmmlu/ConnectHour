@@ -43,7 +43,7 @@ export default class Base extends Component {
            
             //getformdata
             axios
-              .get("http://localhost:40951/volunteer/" + UID)
+              .get("/volunteer/" + UID)
               .then(function(response) {
                 console.log('new',response.data)
                 p.setState({ formData: response.data });
@@ -55,7 +55,7 @@ export default class Base extends Component {
                 
                 //get registered events
                 axios
-                  .get("http://localhost:40951/event/volunteer/" + UID)
+                  .get("event/volunteer/" + UID)
                   .then(function(response) {
                     const groupID = p.state.groupID;
                     console.log(response.data)
