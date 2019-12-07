@@ -384,9 +384,9 @@ exports.googleLogIn = function(req, res) {
 
     let table;
     if (user_info.type === "Volunteer") {
-        table = "VOLUNTEER_TAB";
+        table = "VOLUNTEER";
     } else {
-        table = "ORGANIZER_TAB";
+        table = "ORGANIZER";
     }
 
     let query = "select * from " + table + "_TAB where EMAIL = ?";
