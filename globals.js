@@ -35,6 +35,7 @@ exports.query = function(query, params, onSuccess) {
             if (err) throw err;
 
             connection.execute(query, params, function (err, result, fields) {
+                connection.release();
                 if (err) throw err;
                 onSuccess(result, fields);
             });
