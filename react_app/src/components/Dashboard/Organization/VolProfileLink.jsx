@@ -280,7 +280,7 @@ class PastEvents extends React.Component {
 
             <Modal
               centered
-              isOpen={this.state.eid === this.props.activityData.EventId}
+              isOpen={String(this.state.eid) === String(this.props.activityData.EventId)}
             >
               <ShowEventDetails
                 eventdata={this.props.activityData}

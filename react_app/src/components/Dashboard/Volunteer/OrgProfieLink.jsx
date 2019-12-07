@@ -513,7 +513,7 @@ class PastEvents extends React.Component {
 
             <Modal
               centered
-              isOpen={this.state.eid === this.props.activityData.EventId}
+              isOpen={String(this.state.eid) === String(this.props.activityData.EventId)}
             >
               <ShowDetails
                 eventdata={this.props.activityData}
@@ -639,7 +639,7 @@ class ScheduledEvents extends React.Component {
             </div>
             <Modal
               centered
-              isOpen={this.state.eid ===this.props.event.id}
+              isOpen={String(this.state.eid) ===String(this.props.event.id)}
             >
               {/*call the child component for showing event details*/}
 
