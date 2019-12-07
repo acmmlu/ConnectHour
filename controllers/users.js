@@ -209,6 +209,7 @@ const PDFDocument = require("pdfkit");
 exports.donate = function(req, res) {
   let vid = req.params.volunteer;
   let oid = req.params.organizer;
+ 
   let amount = req.body.amount;
   //send email to org 
   

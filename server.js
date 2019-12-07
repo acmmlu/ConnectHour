@@ -10,7 +10,6 @@ const app = express();
 const port = process.env.PORT || 40951;
 
 
-app.use(express.static(path.join(__dirname, 'react_app', 'public')));
 app.use(fileUpload({limits: { fileSize: 65535}}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
