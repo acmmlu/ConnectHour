@@ -27,18 +27,21 @@ class Conversations extends Component {
 
         conversationsRequest.fetchNext().then(
             conversationList => {
-           
+              conversationList = conversationList.filter(function( element ) {
+                return element !== undefined;
+             });
               this.setState({
                 conversations: conversationList,
                 conversationsFetched: true
               });
-          
+  
+            
         },
         error => {
-           
+         
           this.setState({
             conversations: [],
-            conversationsFetched: true
+            conversationsFetched: false
           });
         }
       );
@@ -76,6 +79,7 @@ class Conversations extends Component {
                 _.pullAt(conversationList, keys_to_remove);
 
                 this.setState({ conversations : conversationList });
+              
 
               }
         }
@@ -130,7 +134,8 @@ class Conversations extends Component {
             </small>
           </div>
           <div className="contact-listing bg-white"  style={{height: "100%"}}>
-            {conversations.map(c => (
+            {this.state.conversationsFetched && conversations.map(c => (
+              
               <Conversation
                 key={c.conversationId}
                 id={c.conversationWith.uid !== undefined ? c.conversationWith.uid : c.conversationWith.guid !== undefined ? c.conversationWith.guid : ""}
