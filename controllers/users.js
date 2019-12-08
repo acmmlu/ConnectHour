@@ -187,7 +187,7 @@ exports.get_pfp = function(req, res) {
   try {
     g.query(query, params, function(result, fields) {
       try {
-        if (result.length > 0) {
+        if (result.length > 0 && result[0]["PFP"]) {
           res.send(result[0]["PFP"].toString("binary"));
         } else {
           res.status(404).send("");
@@ -203,17 +203,54 @@ exports.get_pfp = function(req, res) {
   }
 };
 
-const fs = require("fs");
-const PDFDocument = require("pdfkit");
+// const fs = require("fs");
+// const PDFDocument = require("pdfkit");
 
 exports.donate = function(req, res) {
   let vid = req.params.volunteer;
   let oid = req.params.organizer;
- 
   let amount = req.body.amount;
-  //send email to org 
+  console.log('req',req)
+  // Get vol info
+  g.query("select * from VOLUNTEER_TAB where ID = ?", [vid], function(vol_result, fields) {
+    if (vol_result.length > 0) {
+      g.query("select * from ORGANIZER_TAB where ID = ?", [oid], function(org_result, fields) {
+        if (org_result.length > 0) {
+          try {
+            const message1 = {
+              from: "Connect Hour <connecthourofficial@gmail.com>",
+              to: org_result[0]["EMAIL"],
+              subject: "You recieved a donation!",
+              text: `The user ${vol_result[0]["EMAIL"]} has generously donated $${amount} to your cause!`
+            }
+
+            g.transport.sendMail(message1, function(err, info) {
+                if (err) throw err;
+                console.log(info);
+            });
+
+            const message2 = {
+              from: "Connect Hour <connecthourofficial@gmail.com>",
+              to: vol_result[0]["EMAIL"],
+              subject: "Donation successful",
+              text: `Your generous gift of $${amount} has been processed. Thank you so much for your support of ${org_result[0]["NAME"]}.`
+            }
+
+            g.transport.sendMail(message2, function(err, info) {
+                if (err) throw err;
+                console.log(info);
+            });
+          } catch(error) {
+            console.log(error);
+            res.status(421).send(error);
+          }
+        } else {
+          res.status(404).send("org not found")
+        }
+      })
+    } else {
+      res.status(404).send("vol not found")
+    }
+  });
   
- 
 };
-
-
