@@ -102,7 +102,7 @@ class ShowEventDetails extends React.Component {
               <div className="row my-2">
                 <div className="col">
                   <span className="font-weight-bold text-info">Address: </span>
-                  {this.state.formData.StreetNumber},{" "}
+                
                   {this.state.formData.StreetName}, {this.state.formData.City},{" "}
                   {this.state.formData.State}, {this.state.formData.Zip}
                 </div>

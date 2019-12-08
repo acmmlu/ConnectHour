@@ -118,7 +118,7 @@ class Events extends Component {
                           </div>
                         </div>
 
-                        <Modal isOpen={this.state.showForm}>
+                        <Modal isOpen={this.state.showForm} centered>
                          
                         
                             <EventCreate
@@ -212,7 +212,7 @@ class Event extends Component {
                 Address:{" "}
               </span>
               <span>
-                {this.props.event.StreetNumber}, {this.props.event.StreetName},{" "}
+                {this.props.event.StreetName},{" "}
                 {this.props.event.City}, {this.props.event.State},{" "}
                 {this.props.event.Zip}
               </span>

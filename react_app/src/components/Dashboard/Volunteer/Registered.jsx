@@ -55,7 +55,7 @@ class Registered extends React.Component {
               Address:{" "}
             </span>
             <span>
-              {this.props.event.StreetNumber}, {this.props.event.StreetName}
+               {this.props.event.StreetName}
               , {this.props.event.City}, {this.props.event.State},{" "}
               {this.props.event.Zip}
             </span>

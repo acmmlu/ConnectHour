@@ -154,7 +154,7 @@ class PastEvents extends React.Component {
                     Address:{" "}
                   </span>
                   <span>
-                    {this.props.activityData.StreetNumber},{" "}
+                    
                     {this.props.activityData.StreetName},{" "}
                     {this.props.activityData.City},{" "}
                     {this.props.activityData.State},{" "}
