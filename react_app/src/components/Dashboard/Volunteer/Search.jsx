@@ -63,8 +63,9 @@ class Searched extends React.Component {
               </div>
             </div>
 
-            <div className="justify-content-center row ">
-              <div className="col ">
+            <div className="row ">
+            <div className="col-1" />
+              <div className="col-4">
                 <button
                   className=" mx-1 btn btn-success text-nowrap   "
                   type="submit"
@@ -74,19 +75,21 @@ class Searched extends React.Component {
                   <i className="fas fa-calendar-check ml-1"></i>
                 </button>
               </div>
-
-              <div className="col">
+              <div className="col-1" />
+              <div className="col-4">
                 <button
                   className="btn btn-info text-nowrap  "
                   id={this.props.event.id}
                   onClick={this.props.showForm}
                   name="Searched"
                   type="button"
+                  style={{minWidth: "100px"}}
                 >
                   Details
                   <i className="fas ml-1 fa-info-circle"></i>
                 </button>
               </div>
+              <div className="col-1" />
               
             </div>
             <div className="row "style={{position:'absolute',bottom:'0',right:'0'}}>
