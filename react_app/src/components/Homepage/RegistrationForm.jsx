@@ -47,7 +47,7 @@ class Register extends React.Component {
           className="text-center"
           onSubmit={e => this.onSubmit(e, this.state.formData)}
         >
-          <h4 className="card-title text-info fontType">
+          <h4 className="card-title text-info fontType" style={{fontWeight:'bold'}}>
             {" "}
             {this.state.formData.type} Registration
           </h4>
@@ -62,7 +62,7 @@ class Register extends React.Component {
                   name="Firstname"
                   onChange={this.handleInputChange}
                   className="form-control form-control-lg fontType"
-                  placeholder="First name"
+                  placeholder="First name..."
                   required
                 />
               </div>
@@ -72,7 +72,7 @@ class Register extends React.Component {
                   name="Lastname"
                   onChange={this.handleInputChange}
                   className="form-control form-control-lg fontType"
-                  placeholder="Last name"
+                  placeholder="Last name..."
                   required
                 />
               </div>
@@ -88,7 +88,7 @@ class Register extends React.Component {
                   name="Organization_name"
                   onChange={this.handleInputChange}
                   className="form-control form-control-lg fontType"
-                  placeholder="Organisation name"
+                  placeholder="Organisation name..."
                   required
                 />
               </div>
@@ -102,7 +102,7 @@ class Register extends React.Component {
                 name="Email"
                 onChange={this.handleInputChange}
                 className="form-control form-control-lg fontType" 
-                placeholder="Email"
+                placeholder="Email..."
                 required
               />
             </div>
@@ -114,7 +114,7 @@ class Register extends React.Component {
                 name="Password"
                 onChange={this.handleInputChange}
                 className="form-control form-control-lg fontType"
-                placeholder="Password"
+                placeholder="Password..."
                 required
                 onFocus={this.togglereq}
               />
@@ -162,7 +162,7 @@ class Register extends React.Component {
               <input
                 type="password"
                 name="repeat_password"
-                placeholder="Re-enter new password"
+                placeholder="Re-enter new password..."
                 className="form-control form-control-lg fontType"
                 onChange={this.handleInputChange}
                 required
@@ -177,7 +177,7 @@ class Register extends React.Component {
                 name="City"
                 onChange={this.handleInputChange}
                 className="form-control form-control-lg fontType"
-                placeholder="City"
+                placeholder="City..."
                 required
               />
             </div>
@@ -187,7 +187,7 @@ class Register extends React.Component {
                 name="State"
                 onChange={this.handleInputChange}
                 className="form-control form-control-lg fontType"
-                placeholder="State"
+                placeholder="State..."
                 required
               />
             </div>
@@ -207,7 +207,7 @@ class Register extends React.Component {
                   this.state.formData.Password.match(lc) === null
                 }
               >
-                Submit<i class="fas ml-1 fa-sign-in-alt"></i>
+                Register<i class="fas ml-1 fa-sign-in-alt"></i>
               </button>
             </div>
           </div>
@@ -216,7 +216,7 @@ class Register extends React.Component {
           <ReCAPTCHA
             ref={recaptchaRef}
             onChange={this.isVerified}
-            sitekey="6LfUcMQUAAAAALOGzwBYpjurYmt4FS9AzKySE0sh"
+            sitekey="6Lehb8QUAAAAAAiJMvm-IETRGme1_i-8-DgawbzF"
           /></div></div>
         </form>
       </div>

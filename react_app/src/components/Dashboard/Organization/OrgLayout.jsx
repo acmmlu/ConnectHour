@@ -7,6 +7,8 @@ import { MDBListGroup, MDBListGroupItem } from "mdbreact";
 import user from "../../user.png";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import { CometChat } from "@cometchat-pro/chat";
+
 
 class OrgLayout extends React.Component {
   constructor(props) {
@@ -131,6 +133,16 @@ class OrgLayout extends React.Component {
     );
   }
   handleLogout = () => {
+   
+      CometChat.logout().then(
+        () => {
+          window.location.reload(true);
+        },
+        error => {
+          window.location.reload(true);
+        }
+      );
+  
     Cookies.remove("token");
     Cookies.remove("type");
     if (!Cookies.get("token")) {

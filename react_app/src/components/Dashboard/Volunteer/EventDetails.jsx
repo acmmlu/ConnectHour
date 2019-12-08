@@ -3,7 +3,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import moment from "moment";
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker
+} from "react-google-maps";
 
 //Show event details child component
 class ShowEventDetails extends React.Component {
@@ -23,31 +28,42 @@ class ShowEventDetails extends React.Component {
     const data = this.props.eventdata;
     const key = "3579bae5570c63";
 
-    axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
-              `${encodeURIComponent(`${data.StreetNumber} ${data.StreetName}, ` +
-              `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
-      (response) => {
+    axios
+      .get(
+        `https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
+          `${encodeURIComponent(
+            `${data.StreetNumber} ${data.StreetName}, ` +
+              `${data.City}, ${data.State} ${data.Zip}`
+          )}&format=json`
+      )
+      .then(response => {
         // console.log(response);
 
         let lat = parseFloat(response.data[0].lat);
         let lon = parseFloat(response.data[0].lon);
 
-        let GMap = <GMapComponent
-          lat={lat}
-          lon={lon}
-          resetBoundsOnResize
-          googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA"
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `300px` }} />}
-          mapElement={<div style={{ height: `100%`}} />}
-        />
+        let GMap = (
+          <GMapComponent
+            lat={lat}
+            lon={lon}
+            resetBoundsOnResize
+            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA"
+            loadingElement={<div style={{ height: `100%` }} />}
+            containerElement={<div style={{ height: `300px` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
+          />
+        );
 
-        p.setState({lat: parseFloat(lat), lon: parseFloat(lon), renderMap: true, gmap: GMap});
+        p.setState({
+          lat: parseFloat(lat),
+          lon: parseFloat(lon),
+          renderMap: true,
+          gmap: GMap
+        });
 
         console.log(lat, lon);
-
-        
-      }).catch( (error) => {
+      })
+      .catch(error => {
         console.log(error);
       });
     // Geocode.setApiKey("AIzaSyAHzQhl-yrdyXYJvq0kpbkXpaR1KfREfqA");
@@ -60,59 +76,74 @@ class ShowEventDetails extends React.Component {
     //     console.log(error);
     //   }
     // )
-    
   }
 
   render() {
     const data = this.props.eventdata;
     return (
       <React.Fragment>
-        <div className="showDetails ">
+        <div className="showDetails  ">
           <form className="  text-center">
             <div className="form-group  bg-info card  p-4">
-              <span className=" pt-2 display-4 text-center ">
+              <span className=" pt-2 text-center " style={{ fontSize: "30px" }}>
                 {" "}
-                {data.EventName}
+                {this.state.formData.EventName}
               </span>
             </div>
-
-            <div className="form-group   text-center  ">{data.Description}</div>
-            <hr />
-
-            <div className="text-center">
-              {" "}
-              <span className="text-weight-bold">Address: </span>
-              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
-              {data.Zip}
-              {this.state.renderMap && this.state.gmap}
+            <div className="container">
+              <div className="row my-2">
+                <div className=" badge badge-pill  mx-auto float-right badge-dark">
+                  {this.state.formData.Tag}
+                </div>{" "}
+              </div>
+              <div className="row my-2">
+                <div className="col">{this.state.formData.Description}</div>
+              </div>
+              <div className="row my-2">
+                <div className="col">
+                  <span className="font-weight-bold text-info">Address: </span>
+                  {this.state.formData.StreetNumber},{" "}
+                  {this.state.formData.StreetName}, {this.state.formData.City},{" "}
+                  {this.state.formData.State}, {this.state.formData.Zip}
+                </div>
+              </div>
+              <div className="row my-2">
+                <div className="col">
+                  {this.state.renderMap && this.state.gmap}
+                </div>
+              </div>
+              <div className="row my-2 font-weight-bold text-info">
+                <div className="col">
+                  On{" "}
+                  {moment(this.state.formData.StartTime).format("MM-DD-YYYY")}
+                </div>
+              </div>
+              <div className="row my-2 font-weight-bold text-info">
+                <div className="col">
+                  At {moment(this.state.formData.StartTime).format("HH:mm")}
+                </div>
+              </div>
             </div>
 
-            <hr />
-            <div className="form-group col-9  text-center m-auto ">
-              <p>
-                {" "}
-                Date:{" "}
-                {moment(this.state.formData.StartTime).format("YYYY-MM-DD")}
-              </p>{" "}
-              <p>
-                Starting At-{" "}
-                {moment(this.state.formData.StartTime).format("HH:mm")}
-              </p>
-            </div>
-            <div className="m-auto text-center">
+            <div className="row my-2">
               {this.props.reg && (
-                <input
-                  className=" btn btn-success m-2"
-                  value="Register"
-                  type="submit"
-                />
+                <div className="col">
+                  <input
+                    className=" btn btn-success m-2"
+                    value="Register"
+                    type="submit"
+                  />
+                </div>
               )}
-              <input
-                className="btn btn-danger m-2"
-                value="Cancel"
-                type="button"
-                onClick={this.props.showFormReset}
-              />
+
+              <div className="col">
+                <input
+                  className="btn btn-danger m-2"
+                  value="Cancel"
+                  type="button"
+                  onClick={this.props.showFormReset}
+                />
+              </div>
             </div>
           </form>
         </div>
@@ -141,10 +172,15 @@ class ShowEventDetails extends React.Component {
   };
 }
 
-const GMapComponent = withScriptjs(withGoogleMap( (props) => 
-          <GoogleMap defaultCenter={{lat: props.lat, lng: props.lon}} defaultZoom={15}>
-            <Marker position={{lat: props.lat, lng: props.lon}} />
-          </GoogleMap>
-        ));
+const GMapComponent = withScriptjs(
+  withGoogleMap(props => (
+    <GoogleMap
+      defaultCenter={{ lat: props.lat, lng: props.lon }}
+      defaultZoom={15}
+    >
+      <Marker position={{ lat: props.lat, lng: props.lon }} />
+    </GoogleMap>
+  ))
+);
 
 export default ShowEventDetails;

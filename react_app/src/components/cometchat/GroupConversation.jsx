@@ -14,24 +14,23 @@ import {
   faFileImage,
   faFileVideo,
   faFileAlt,
-  faEllipsisV,
-  faPhoneAlt,
-  faVideo,
-  faUsers,
-  faSignOutAlt,
+
   faMapMarkerAlt,
   faArrowLeft,
-  faUsersCog
+
 } from "@fortawesome/free-solid-svg-icons";
 import Flip from "react-reveal/Flip";
+
 import RenderConversation from "./RenderConversation";
+
 import _ from "lodash";
 import defaultGroupIco from "../../resources/images/group-default-avatar.png";
 import MediaQuery from "react-responsive";
 
 class GroupConversation extends Component {
   state = {
-    members: []
+    members: [],
+    uidToName: {}
   };
 
   componentDidUpdate(prevProps) {
@@ -54,16 +53,23 @@ class GroupConversation extends Component {
       groupMemberRequest.fetchNext().then(
         groupMembers => {
           let members = [];
+          let uidToName = {};
+          
           if (!_.isEmpty(groupMembers)) {
-            _.forEach(groupMembers, function(m) {
-              if (m.uid === subjectUID) members = [...members, "You"];
-              else members = [...members, m.name];
+            _.forEach(groupMembers, (m) => {
+              if (m.uid === this.props.subjectUID.toLowerCase()) {
+                members = [...members, "You"];
+                uidToName[m.uid] = "You";
+              } else {
+                members = [...members, m.name];
+                uidToName[m.uid] = m.name;
+              }
             });
           }
-          this.setState({ members: members });
+          this.setState({ members: members, uidToName: uidToName });
         },
         error => {
-          this.setState({ members: [] });
+          this.setState({ members: [], uidToName: {} });
         }
       );
     }
@@ -100,16 +106,7 @@ class GroupConversation extends Component {
       chat_body_header_classes += "px-4";
     }
 
-    if(this.props.ownerRights)
-    {
-      add_new_members =  <p
-                            className="u-optn"
-                            onClick={() => this.props.handleAddGroupMemberToggle()}
-                            >
-                            <FontAwesomeIcon icon={faUsersCog} />
-                            &nbsp;Add new members
-                          </p>;
-    }
+
 
     return (
       <React.Fragment>
@@ -138,64 +135,16 @@ class GroupConversation extends Component {
                 />
               </div>
               <div className="contact-data">
-                <p className={contact_name_classes}>{activeGroupName}</p>
+                <h4 className='{contact_name_classes}'>{activeGroupName}</h4>
                 <div className={contact_status_classes}>
                   <div className="status-text status-offline" id="members-list-chat">
-                    {!_.isEmpty(this.state.members)
-                      ? _.map(this.state.members).join(", ")
-                      : ""}
-                    {this.state.members.length > 3 ? " and others" : ""}
+                    {''}
+
                   </div>
                 </div>
               </div>
             </div>
-            <div className="contact-calling-optns my-2">
-              <FontAwesomeIcon
-                icon={faPhoneAlt}
-                className="ml-4"
-                onClick={e =>
-                  this.props.makeCall(
-                    "1",
-                    activeGUID,
-                    CometChat.RECEIVER_TYPE.GROUP
-                  )
-                }
-              />
-              <FontAwesomeIcon
-                icon={faVideo}
-                className="ml-4"
-                onClick={e =>
-                  this.props.makeCall(
-                    "2",
-                    activeGUID,
-                    CometChat.RECEIVER_TYPE.GROUP
-                  )
-                }
-              />
-            </div>
-            <div
-              className="contact-utilities my-2 ml-4"
-              onClick={this.props.showHideContactUtilites}
-            >
-              <FontAwesomeIcon icon={faEllipsisV} />
-            </div>
-            <div className={utilities_contact_show}>
-              <p
-                className="u-optn"
-                onClick={() => this.props.handleToggleSubSidebar()}
-              >
-                <FontAwesomeIcon icon={faUsers} />
-                &nbsp;View members
-              </p>
-              {add_new_members}
-              <p
-                className="u-optn mb-0"
-                onClick={() => this.props.handleLeaveGroup(activeGUID)}
-              >
-                <FontAwesomeIcon icon={faSignOutAlt} />
-                &nbsp;Leave group
-              </p>
-            </div>
+        
           </div>
 
           <div className="chat-body-conversation p-4">
@@ -206,15 +155,7 @@ class GroupConversation extends Component {
               let msg = "";
               let attachmentData = [];
               let showMsgAction = false;
-              if (m.category === "call") {
-                if (m.action === "initiated") {
-                  if (m.sender.uid === this.props.subjectUID) {
-                    msg = "Outgoing @ ";
-                  } else {
-                    msg = "Incoming @ ";
-                  }
-                } else return false;
-              } else if (m.type === "groupMember") {
+             if (m.type === "groupMember") {
                 msg = m["message"];
                 if (m.sender.uid === this.props.subjectUID) {
                   //self actions in group
@@ -268,9 +209,10 @@ class GroupConversation extends Component {
                     msgCategory="call"
                     avatar={m.sender.avatar}
                     senderUID={m.sender.uid}
+                    senderName={this.state.uidToName[m.sender.uid]}
                   />
                 );
-              } else if (m.type === "groupMember") {
+              } else if (this.state.uidToName[m.sender.uid] !== "You" && m.type === "groupMember") {
                 return (
                   <RenderConversation
                     key={m.id}
@@ -281,9 +223,10 @@ class GroupConversation extends Component {
                     msgCategory="groupMember"
                     avatar={m.sender.avatar}
                     senderUID={m.sender.uid}
+                    senderName={this.state.uidToName[m.sender.uid]}
                   />
                 );
-              } else if (m.sender.uid === this.props.subjectUID) {
+              } else if (this.state.uidToName[m.sender.uid] === "You") {
                 return (
                   <RenderConversation
                     key={m.id}
@@ -302,9 +245,11 @@ class GroupConversation extends Component {
                     handleMessageDelete={this.props.handleMessageDelete}
                     handleMessageEdit={this.props.handleMessageEdit}
                     scrollToBottom={this.props.scrollToBottom}
+                    senderName={"You"}
                   />
                 );
               } else {
+                console.log("Else " + m.sender.uid)
                 return (
                   <RenderConversation
                     key={m.id}
@@ -322,6 +267,7 @@ class GroupConversation extends Component {
                     handleMessageDelete={this.props.handleMessageDelete}
                     handleMessageEdit={this.props.handleMessageEdit}
                     scrollToBottom={this.props.scrollToBottom}
+                    senderName={this.state.uidToName[m.sender.uid]}
                   />
                 );
               }

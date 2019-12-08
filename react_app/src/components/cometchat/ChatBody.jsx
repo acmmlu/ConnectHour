@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { CometChat } from "@cometchat-pro/chat";
-import ContactConversation from "./ContactConversation";
 import GroupConversation from "./GroupConversation";
 import {
   LISTENER_NEW_MESSAGE,
@@ -285,9 +284,7 @@ export default class ChatBody extends Component {
     this.setState({ showAttachmentOptions: !this.state.showAttachmentOptions });
   };
 
-  showHideContactUtilites = e => {
-    this.setState({ showContactUtilities: !this.state.showContactUtilities });
-  };
+
 
   
 
@@ -403,7 +400,7 @@ export default class ChatBody extends Component {
       }
 
       var messageText = this.state.newMessage;
-
+      
       var textMessage = new CometChat.TextMessage(
         receiverID,
         messageText,
@@ -411,15 +408,20 @@ export default class ChatBody extends Component {
       );
 
       if (this.state.editingMessageActive === true) {
+       
         this.handleMessageUpdate(receiverID, receiverType, messageText);
       } else {
+       
+
         CometChat.sendMessage(textMessage).then(
           message => {
+          
             
             this.setState({
               newMessage: [],
-              msghistory: [...this.state.msghistory, message]
+              //msghistory: [...this.state.msghistory, message]
             });
+            
             
             this.scrollToBottom();
             this.props.handleOnRecentMessageSent(message.id);
@@ -524,44 +526,16 @@ export default class ChatBody extends Component {
   };
 
   render() {
-    if (this.props.activeConversation.uid !== undefined) {
-      return (
-        <ContactConversation
-          activeConversation={this.props.activeConversation}
-          typingIndicatorUIDs={this.props.typingIndicatorUIDs}
-          showAttachmentOptions={this.state.showAttachmentOptions}
-          showContactUtilities={this.state.showContactUtilities}
-          showHideAttachSection={this.showHideAttachSection}
-          makeCall={this.props.makeCall}
-          showHideContactUtilites={this.showHideContactUtilites}
-          msghistory={this.state.msghistory}
-          subjectUID={this.props.subjectUID}
-          handleTextInputChange={this.handleTextInputChange}
-          sendMessage={this.sendMessage}
-          sendCustomMessage={this.sendCustomMessage}
-          newMessage={this.state.newMessage}
-          handleAttachment={this.handleAttachment}
-          handleMessageClick={this.handleMessageClick}
-          showMsgActionID={this.state.showMsgActionID}
-          handleMessageDelete={this.handleMessageDelete}
-          handleMessageEdit={this.handleMessageEdit}
-          handleBlockUser={this.props.handleBlockUser}
-          scrollToBottom={this.scrollToBottom}
-          isMobile={this.props.isMobile}
-          handleScreenChangesOnMobile={this.props.handleScreenChangesOnMobile}
-          chatBodyVisiblity={this.props.chatBodyVisiblity}
-        />
-      );
-    } else if (this.props.activeConversation.guid !== undefined) {
+    if (this.props.activeConversation.guid !== undefined) {
       return (
         <GroupConversation
           activeConversation={this.props.activeConversation}
           typingIndicatorUIDs={this.props.typingIndicatorUIDs}
           showAttachmentOptions={this.state.showAttachmentOptions}
-          showContactUtilities={this.state.showContactUtilities}
+          
           showHideAttachSection={this.showHideAttachSection}
-          makeCall={this.props.makeCall}
-          showHideContactUtilites={this.showHideContactUtilites}
+     
+         
           msghistory={this.state.msghistory}
           subjectUID={this.props.subjectUID}
           handleTextInputChange={this.handleTextInputChange}

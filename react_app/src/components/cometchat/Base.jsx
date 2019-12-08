@@ -49,13 +49,14 @@ export default class Base extends Component {
                 p.setState({ formData: response.data });
                 p.setState({ name: response.data.FirstName });
                 let nam= response.data.FirstName 
+                console.log(nam,UID)
                 p.setState({ username: UID+nam+UID });
 
                
                 
                 //get registered events
                 axios
-                  .get("event/volunteer/" + UID)
+                  .get("/event/volunteer/" + UID)
                   .then(function(response) {
                     const groupID = p.state.groupID;
                     console.log(response.data)
@@ -96,6 +97,7 @@ export default class Base extends Component {
           authToken: user.authToken,
           loginBtnDisabled: false
         });
+        console.log('login',username)
         this.joinedGroups(this.state.groupID);
       },
       error => {
@@ -216,6 +218,7 @@ export default class Base extends Component {
                   {this.state.username !== "" && (
                     <ChatContainer
                       user={userstate}
+                      uid={this.state.username}
                       handleLogout={this.handleLogout}
                     />
                   )}

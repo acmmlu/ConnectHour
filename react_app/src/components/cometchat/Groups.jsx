@@ -195,7 +195,7 @@ class Groups extends Component {
               <i>No matching groups found.</i>
             </small>
           </div>
-          <div className="groups-container bg-white">
+          <div className="groups-container bg-white" style={{height: "100%"}}>
             <div className="groups-listing">
               {joinedTitle}
               {groups.joined.map(c => (
@@ -215,7 +215,7 @@ class Groups extends Component {
                   }
                 />
               ))}
-              {othersTitle}
+              {/* {othersTitle}
               {groups.others.map(c => (
                 <Group
                   key={c.guid}
@@ -232,7 +232,7 @@ class Groups extends Component {
                       : 0
                   }
                 />
-              ))}
+              ))} */}
             </div>
           </div>
           <CreateGroupFormModal

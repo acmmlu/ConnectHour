@@ -20,7 +20,7 @@ class LoginPage extends React.Component {
       formData: {},
       showlogin: true, //state used to show login/register form
       type: true, //used to show volunteer/organization forms
-      formtype: "Organization", //maintain the type
+      formtype: "Volunteer", //maintain the type
       shouldRender: false
     };
     this.toggleLogin = this.toggleLogin.bind(this);
@@ -105,6 +105,7 @@ class LoginPage extends React.Component {
     } else {
       this.setState({ formtype: "Volunteer" });
     }
+   
   }
 
   render() {
@@ -140,8 +141,8 @@ class LoginPage extends React.Component {
                         className="btn btn-info active form-control form-control-lg fontType"
                         onClick={
                           this.state.formtype === "Volunteer"
-                            ? this.toggleType
-                            : null
+                          ? null
+                          : this.toggleType
                         }
                       >
                         <input
@@ -158,8 +159,8 @@ class LoginPage extends React.Component {
                         className="btn btn-info form-control form-control-lg fontType"
                         onClick={
                           this.state.formtype === "Organization"
-                            ? this.toggleType
-                            : null
+                          ? null
+                          : this.toggleType
                         }
                       >
                         <input
@@ -264,6 +265,7 @@ class LoginPage extends React.Component {
                           <hr />
                           <button
                             className="btn text-info fontType"
+                            
                             onClick={this.toggleLogin}
                           >
                             <i className="fas text-info fa-user-plus"></i> Register
@@ -275,15 +277,26 @@ class LoginPage extends React.Component {
                   )}
                 </div>
                 <div className="row mt-1">
+                  <div className='container'>
+                    <div className='row text-center justify-content-center'  style={{fontWeight:'bold',fontSize:'15px'}}>
+                      
+                    OR
+                    </div>
+                    
+                    <div className='row'>
+
                 <div className="col text-center justify-content-center">
-                  Or Sign In with Google  {/*<div id="gbutton" className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>*/}
+                Sign In with Google{/*<div id="gbutton" className="g-signin2 d-inline-block align-middle pl-2" data-onsuccess="onGoogleSignIn" data-theme="dark"></div>*/}
                   <GoogleLogin
                     clientId="926515268553-bb97lrsb78c4d3ms5auuuu33sq6vdr2i.apps.googleusercontent.com"
                     buttonText="Login"
                     onSuccess={this.onGoogleSignIn}
                     onFailure={this.onGoogleSignIn}
                     cookiePolicy={'single_host_origin'}
+                    className='m-1'
                   />
+                </div>
+                </div>
                 </div>
               </div>
               </div>
@@ -300,7 +313,7 @@ class LoginPage extends React.Component {
                 />
 
                 <span className="fontType">
-                  Please check your mail and enter the code
+                  Please check your mail for the verification code
                 </span>
               </ModalHeader>
               <Verify

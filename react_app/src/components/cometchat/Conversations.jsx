@@ -129,7 +129,7 @@ class Conversations extends Component {
               <i>No matching conversations found.</i>
             </small>
           </div>
-          <div className="contact-listing bg-white">
+          <div className="contact-listing bg-white"  style={{height: "100%"}}>
             {conversations.map(c => (
               <Conversation
                 key={c.conversationId}

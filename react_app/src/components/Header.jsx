@@ -8,8 +8,8 @@ class Header extends React.Component {
     return (
 
 
- <div className='navbardiv'>
-<nav className="navbar navbar-light bg-info "> 
+ <div className='navbardiv' >
+<nav className="navbar navbar-light bg-info " > 
 
 <div className = 'font-weight-bold '>
 <img alt='' className='Navimg' src={logo} />

@@ -301,9 +301,10 @@ button img.loader {
 
 .contact-listing,
 .group-member-listing {
+  border-radius: 10px;
   overflow: auto;
   height: calc(100% - 82.97px - 89.08px);
-  max-height: 500px;
+  max-height: 600px;
 }
 .group-member-listing {
   max-height: 600px;

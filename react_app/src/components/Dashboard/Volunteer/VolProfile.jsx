@@ -3,8 +3,16 @@ import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
 import user from "../../user.png";
-import { Modal, ModalBody ,Card,CardBody,CardImg,CardTitle,Button,ModalHeader} from "reactstrap";
+import {
+  Modal,
+  
+  Card,
+  CardBody,
+  CardImg,
+  CardTitle,
+  Button,
 
+} from "reactstrap";
 
 class VolProfile extends React.Component {
   constructor(props) {
@@ -44,7 +52,7 @@ class VolProfile extends React.Component {
       const ID = jwt_decode(Cookies.get("token")).uid;
       const p = this;
       p.state.id = ID;
-      
+
       axios
         .get("/volunteer/" + ID)
         .then(function(response) {
@@ -71,11 +79,11 @@ class VolProfile extends React.Component {
     }
   };
 
-  fileChangedHandler = (event) => {
+  fileChangedHandler = event => {
     console.log(event.target.files[0]);
     const file = event.target.files[0];
-    this.setState({"photo": file});
-  }
+    this.setState({ photo: file });
+  };
 
   togglePhotoModal() {
     this.setState({ photomodal: !this.state.photomodal });
@@ -102,23 +110,23 @@ class VolProfile extends React.Component {
     axios
       .get("/pfp/vol/" + p.state.id)
       .then(function(res) {
-        let buf = Buffer.from(res.data, 'binary');
+        let buf = Buffer.from(res.data, "binary");
 
         var reader = new FileReader();
         reader.onload = (function(self) {
           return function(e) {
-            let fd = {...p.state.formData};
+            let fd = { ...p.state.formData };
             fd.pfp = reader.result;
-            p.setState({formData: fd});
+            p.setState({ formData: fd });
             document.getElementById("pfp").src = reader.result;
-          }
+          };
         })(this);
-        reader.readAsDataURL(new Blob([buf], {type: 'image/png'}));
+        reader.readAsDataURL(new Blob([buf], { type: "image/png" }));
       })
       .catch(function(error) {
         console.log(error);
         // Display default photo
-        p.setState({photo: user});
+        p.setState({ photo: user });
       });
   }
 
@@ -128,21 +136,21 @@ class VolProfile extends React.Component {
       axios
         .get("/pfp/org/" + org.orgId)
         .then(function(res) {
-          let buf = Buffer.from(res.data, 'binary');
+          let buf = Buffer.from(res.data, "binary");
 
           var reader = new FileReader();
           reader.onload = (function(self) {
             return function(e) {
               org.pfp = reader.result;
               document.getElementById("pfp" + org.orgId).src = reader.result;
-            }
+            };
           })(this);
-          reader.readAsDataURL(new Blob([buf], {type: 'image/png'}));
+          reader.readAsDataURL(new Blob([buf], { type: "image/png" }));
         })
         .catch(function(error) {
           console.log(error);
           // Display default photo
-          p.setState({photo: user});
+          p.setState({ photo: user });
         });
     }
   }
@@ -160,18 +168,16 @@ class VolProfile extends React.Component {
   }
 
   render() {
-    
-
     return (
       <>
         <div className="container-fluid">
-          <div className='row ml-2  justify-content-left'>
-            <div className='col ' style={{fontSize:'30px'}}>
+          <div className="row ml-2  justify-content-left">
+            <div className="col " style={{ fontSize: "30px" }}>
               My Profile
-              <hr/>
+              <hr />
             </div>
           </div>
-         
+
           <div className="row justify-content-center">
             <form
               className=" topdist volprofile container"
@@ -183,21 +189,29 @@ class VolProfile extends React.Component {
                     <div className="container-fluid  ">
                       <div className="row ">
                         <div className="col ">
-                        <img
-                          id="pfp"
-                          alt=''
-                          src={this.state.formData.pfp ? this.state.formData.pfp : user}
-                          className="img-thumbnail shadow p-3 bg-white rounded"
-                          style={{ width: "200px", height: "200px" }}
-                          onClick={this.togglePhotoModal}
-                        />
+                          <img
+                            id="pfp"
+                            alt=""
+                            src={
+                              this.state.formData.pfp
+                                ? this.state.formData.pfp
+                                : user
+                            }
+                            className="img-thumbnail shadow p-3 bg-white rounded"
+                            style={{ width: "200px", height: "200px" }}
+                            onClick={this.togglePhotoModal}
+                          />
                         </div>
                       </div>
                       {/* Profile picture here */}
 
                       <div className="row mt-2">
                         <div className="col ">
-                          <h5 id="AccountName" className=" m-auto" style={{fontSize:'30px'}}>
+                          <h5
+                            id="AccountName"
+                            className=" m-auto"
+                            style={{ fontSize: "30px" }}
+                          >
                             {this.state.formData.FirstName}{" "}
                             {this.state.formData.LastName}{" "}
                           </h5>{" "}
@@ -228,7 +242,14 @@ class VolProfile extends React.Component {
                         </button>
                       </div>
                     </div>
-                    <div className="row" style={{maxHeight:'90px', 'overflow-y':'scroll', 'overflow-x':'hidden'}}>
+                    <div
+                      className="row"
+                      style={{
+                        maxHeight: "90px",
+                        "overflow-y": "scroll",
+                        "overflow-x": "hidden"
+                      }}
+                    >
                       <div className="col">
                         {this.state.formData.Description}
                       </div>
@@ -255,52 +276,90 @@ class VolProfile extends React.Component {
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
 
-              <div className=" ml-2 mt-4
-              p-2 shadow container bg-white rounded justify-content-center" style={{}}>
+              <div
+                className=" ml-2 mt-4
+              p-2 shadow container bg-white rounded justify-content-center "
+                style={{}}
+              >
                 <div className="row justify-content-center">
                   <div className="col">
-                    <h3>Subscribed Oragnizations({this.state.subscribedOrg.length})</h3>
-                    <div className='container-fluid'>
-                      <div className='row flex-row flex-nowrap'style={{'overflow-y':'hidden', 'overflow-x':'scroll'}}>
-
-                     
-                      {this.state.subscribedOrg.map(subscribedOrg => (
-                        <SubscribedOrg
-                          history={this.props.history}
-                          org={subscribedOrg}
-                        />
-                      ))}
-                     
-                    </div>
+                    <h3>
+                      Subscribed Organizations({this.state.subscribedOrg.length}
+                      )
+                    </h3>
+                    <div className="container-fluid">
+                      <div
+                        className="row flex-row flex-nowrap"
+                        style={{
+                          "overflow-y": "hidden",
+                          "overflow-x": "scroll"
+                        }}
+                      >
+                        {this.state.subscribedOrg.map(subscribedOrg => (
+                          <SubscribedOrg
+                            history={this.props.history}
+                            org={subscribedOrg}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
             </form>
           </div>
-          <Modal isOpen={this.state.Editing} centered>
-            <ModalBody>
-              <ProfileEdit
-                formData={this.state.formData}
-                toggleEditForm={this.toggleEditForm}
-              />
-            </ModalBody>
+          <Modal isOpen={this.state.Editing} centered className="border-info" >
+            <ProfileEdit
+           
+              formData={this.state.formData}
+              toggleEditForm={this.toggleEditForm}
+            />
           </Modal>
-          <Modal isOpen={this.state.photomodal}>
-            <ModalHeader>Upload new Profile Picture</ModalHeader>
-            <input type="file" name="pic" accept="image/*" onChange={this.fileChangedHandler}/>
-            <button
-              id="submitPhoto"
-              className="btn btn-info visible"
-              onClick={this.submitPhoto}
-            > Submit
-            </button>
+          <Modal isOpen={this.state.photomodal} centered >
+            
+            <div className="card bg-info container " style={{ fontSize: "30px" }}>
+           
+                  <div className='text-center'>
+              Upload new Profile Picture
+              </div>
+           
+            </div>
+            <div className="container p-4">
+              <div className="row">
+                <div className="col-6">
+                  {" "}
+                  <input
+                    type="file"
+                    name="pic"
+                    accept="image/*"
+                    onChange={this.fileChangedHandler}
+                  />
+                </div>
+                <div className="col float-left">
+                  <button
+                    id="submitPhoto"
+                    className="btn float-left btn-sm btn-info visible"
+                    onClick={this.submitPhoto}
+                  >
+                    {" "}
+                    Submit
+                  </button>
+                  <button
+                    id="PhotoClose"
+                    className="btn float-left btn-sm btn-danger ml-2 visible"
+                    style={{width:'60px'}}
+                    onClick={this.togglePhotoModal}
+                  >
+                    {" "}
+                    Close
+                  </button>
+                </div>
+               
+              </div>
+            </div>
           </Modal>
         </div>
       </>
@@ -314,7 +373,7 @@ class VolProfile extends React.Component {
   //     const ID = jwt_decode(Cookies.get("token")).uid;
   //     const p = this.props;
   //     axios
-  //       .put("http://localhost:40951/volunteer/" + ID, formData)
+  //       .put("/volunteer/" + ID, formData)
   //       .then(function(response, props) {
   //         window.location.reload();
   //       })
@@ -328,8 +387,6 @@ class VolProfile extends React.Component {
 }
 
 class SubscribedOrg extends React.Component {
-
-
   orgProfile = e => {
     const id = e.target.id;
     const t = this;
@@ -340,9 +397,9 @@ class SubscribedOrg extends React.Component {
   };
 
   render() {
-    console.log(this.props.org)
+    console.log(this.props.org);
     return (
-      // <div className='col-3' 
+      // <div className='col-3'
       //   onClick={this.orgProfile}
       //   key={this.props.org.orgId}
       //   id={this.props.org.orgId}
@@ -350,23 +407,36 @@ class SubscribedOrg extends React.Component {
 
       //   <span  className="mx-1">{this.props.org.Name}</span>
       //   <span className="mx-1">({this.props.org.Email})</span>
-        
+
       // </div>
 
-    <Card className='m-1 shadow  bg-white rounded"'>
-    <CardImg top width="100%" src={this.props.org.pfp ? this.props.org.pfp : user} id={"pfp" + this.props.org.orgId} alt="Card image cap" style={{ width: "150px", height: "150px" }}/>
-    <CardBody>
-      <CardTitle style={{fontSize:'20px', width:'100px', maxWidth:'100px'}}>{this.props.org.Name}</CardTitle>
-      
-      {/* <CardText>{this.props.org.Description}</CardText> */}
-      <Button
-      className='btn-info'
-      onClick={this.orgProfile}
-      key={this.props.org.orgId}
-      id={this.props.org.orgId}>Go to Profile</Button>
-    </CardBody>
-    </Card>
+      <Card className="m-1 shadow  bg-white rounded border-info">
+        <CardImg
+          top
+          width="100%"
+          src={this.props.org.pfp ? this.props.org.pfp : user}
+          id={"pfp" + this.props.org.orgId}
+          alt="Card image cap"
+          style={{ width: "150px", height: "150px" }}
+        />
+        <CardBody>
+          <CardTitle
+            style={{ fontSize: "20px", width: "100px", maxWidth: "100px" }}
+          >
+            {this.props.org.Name}
+          </CardTitle>
 
+          {/* <CardText>{this.props.org.Description}</CardText> */}
+          <Button
+            className="btn-info"
+            onClick={this.orgProfile}
+            key={this.props.org.orgId}
+            id={this.props.org.orgId}
+          >
+            Go to Profile
+          </Button>
+        </CardBody>
+      </Card>
     );
   }
 }
@@ -394,31 +464,40 @@ class ProfileEdit extends React.Component {
     return (
       <>
         <div>
-          Edit Details
           <form
-            className="card  "
+            className=""
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
-            <div className="form-group row pl-4 pr-4 text-center">
-              <label htmlFor="description">About Me:</label> 
+            <div className="form-group  bg-info card  p-4">
+              <span className=" pt-2 text-center " style={{ fontSize: "30px" }}>
+                {" "}
+                Edit Details
+              </span>
+            </div>
+            <div className="form-group row text-center px-3 pr-4 ml-1">
+              <label htmlFor="description" style={{ fontSize: "20px" }}>
+                About Me:
+              </label>
               <textarea
-                className="form-control pr-3 "
+                className="form-control pr-3 form-control-lg "
                 onChange={this.handleChange}
                 name="Description"
                 id="Description"
-                maxLength='300'
+                maxLength="300"
                 value={this.state.formData.Description}
                 rows="3"
                 required
               ></textarea>
             </div>
 
-            <div className="form-group row pl-4 pr-4 text-center">
-              <label htmlFor="StreetName">Street Name:</label>
+            <div className="form-group row px-3 pr-4 ml-1 ">
+              <label htmlFor="StreetName " style={{ fontSize: "20px" }}>
+                Street Name:
+              </label>
               <input
                 type="text"
                 onChange={this.handleChange}
-                className="form-control "
+                className="form-control form-control-lg "
                 name="StreetName"
                 id="StreetName"
                 value={this.state.formData.StreetName}
@@ -427,25 +506,33 @@ class ProfileEdit extends React.Component {
             </div>
 
             <div className="form-group row px-4">
-              <label htmlFor="City" className=" pt-2  col-2">
+              <label
+                htmlFor="City"
+                className=" pt-2  col-2"
+                style={{ fontSize: "20px" }}
+              >
                 City:
               </label>
               <input
                 type="text"
                 onChange={this.handleChange}
-                className="form-control col-4"
+                className="form-control col-4 form-control-lg "
                 name="City"
                 id="City"
                 value={this.state.formData.City}
                 required
               />
-              <label htmlFor="State" className=" pt-2 col-2">
+              <label
+                htmlFor="State"
+                className=" pt-2 col-2 "
+                style={{ fontSize: "20px" }}
+              >
                 State:
               </label>
               <input
                 type="text"
                 onChange={this.handleChange}
-                className="form-control col-4"
+                className="form-control col-4 form-control-lg "
                 name="State"
                 id="State"
                 value={this.state.formData.State}
@@ -453,7 +540,11 @@ class ProfileEdit extends React.Component {
               />
             </div>
             <div className="form-group row px-4">
-              <label htmlFor="ZIP" className=" pt-2 col-2">
+              <label
+                htmlFor="ZIP"
+                className=" pt-2 col-2"
+                style={{ fontSize: "20px" }}
+              >
                 ZIP:
               </label>
               <input
@@ -461,7 +552,7 @@ class ProfileEdit extends React.Component {
                 title="Please Enter Valid Zip"
                 type="text"
                 onChange={this.handleChange}
-                className="form-control col-4"
+                className="form-control col-4 form-control-lg "
                 name="ZIP"
                 value={this.state.formData.ZIP}
                 id="ZIP"

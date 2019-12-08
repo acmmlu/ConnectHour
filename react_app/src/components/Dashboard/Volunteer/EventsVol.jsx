@@ -192,9 +192,10 @@ class EventsVol extends React.Component {
                   </div>
                   {/* Registered Events */}
                   
-                  <div className=" col-3 mt-5 Registered shadow  py-1 bg-white rounded card container text-center">
-                    <h3>Registered Events ({this.state.RegisteredEvents.length })</h3>
-                    <div className="RegisteredEvents">
+                  
+                  <div className=" col-3 p-4 mt-5 Registered shadow  bg-white rounded card container text-center" >
+                    <h4>Registered Events ({this.state.RegisteredEvents.length })</h4>
+                    <div className="RegisteredEvents " style={{"overflow-x": "hidden"}}>
                       {this.state.RegisteredEvents.map(event => (
                         //call the registered component
                         <Registered

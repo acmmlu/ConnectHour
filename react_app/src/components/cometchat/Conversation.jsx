@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import avatar from "../user.png";
 
 const Conversation = ({ name, lastMessage, id, avatar, conversationType, handleConversationClick, activeID }) => {
   
@@ -10,8 +11,8 @@ const Conversation = ({ name, lastMessage, id, avatar, conversationType, handleC
 
   if(activeID !== undefined && id === activeID)
     contact_classes += ' active';
-  
   return (
+  
     <div
       className={contact_classes}
       onClick={() => handleConversationClick(id, conversationType)}

@@ -21,13 +21,13 @@ class Login extends Component {
   render() {
     return (
       <div id="Login_form" className=" px-3 ">
-        <h4 className="card-title text-info fontType">
+        <h4 className="card-title text-info fontType " style={{fontWeight:'bold'}}>
           {" "}
           {this.state.formData.type} Login
         </h4>
         <div className="text-danger">{this.state.errmsg}</div>
         <form
-          className="text-center"
+          className=""
           onSubmit={e => this.onSubmit(e, this.state.formData)}
         >
           <div className="row">
@@ -36,8 +36,9 @@ class Login extends Component {
                 type="email"
                 name="email"
                
-                className="form-control form-control-lg fontType"
-                placeholder="Enter email"
+                className="form-control form-control-lg fontType "
+                style={{textAlign:'left'}}
+                placeholder="Enter email..."
                 value={this.state.email}
                 onChange={this.handleInputChange}
                 required
@@ -50,7 +51,7 @@ class Login extends Component {
                 type="password"
                 name="password"
                 className="form-control form-control-lg fontType"
-                placeholder="Enter password"
+                placeholder="Enter password..."
                 value={this.state.password}
                 onChange={this.handleInputChange}
                 required
@@ -71,7 +72,7 @@ class Login extends Component {
                {/*show if type is volunteer */}
         {this.state.formData.type === "Volunteer" && (
           <div className="float-left ">
-            <i class="fas fa-key mr-1"></i>
+            <i className="fas fa-key mr-1"></i>
           <Link
             to={{
               pathname: "/volunteer/reset",
@@ -86,7 +87,7 @@ class Login extends Component {
         {/*show if type is Organization */}
         {this.state.formData.type ==="Organization" && (
           <div className="float-left">
-            <i class="fas fa-key mr-1"></i>
+            <i className="fas fa-key mr-1"></i>
           <Link
             to={{
               pathname: "/organization/reset",
@@ -143,7 +144,8 @@ class Login extends Component {
         thisprops.toggleVerify(data); //toggle the modal state to show verification form
       })
       .catch(function(error) {
-    
+        console.log(error)
+        
           p.loginErr(); //display the error message
         
       });

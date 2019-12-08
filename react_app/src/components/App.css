@@ -29,6 +29,9 @@
   background-position: center;
   clear: both;
 }
+input::placeholder {
+  text-align: left;
+}
 .backgrounddiv .container{
   z-index: 12;
   color:white;
@@ -95,6 +98,10 @@
   z-index: 15;
 }
 
+.modal-content{
+  border-color: #17a2b8;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
+}
 
 

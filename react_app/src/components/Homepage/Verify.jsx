@@ -41,7 +41,7 @@ class Verify extends React.Component {
                   name="Reset_code"
                   onChange={this.handleInputChange}
                   className="form-control form-control-lg  fontType"
-                  placeholder="Enter code here"
+                  placeholder="Enter code here..."
                   required
                 />
               </div>
@@ -90,7 +90,7 @@ class Verify extends React.Component {
       // if (fname === "VolunteerRegister" || fname === "OrganizationRegister") {
       //   axios
       //     .post(
-      //       "http://localhost:40951/register",
+      //       "/register",
       //       this.props.verifyCode["formData"]
       //     )
       //     .then(function(response) {

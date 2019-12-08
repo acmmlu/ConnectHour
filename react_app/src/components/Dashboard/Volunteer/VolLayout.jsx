@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import user from "../../user.png";
 import logo from "../../../favicon.png";
 import axios from "axios";
+import { CometChat } from "@cometchat-pro/chat";
 
 //navbar and sidebar layout
 class VolLayout extends React.Component {
@@ -117,7 +118,7 @@ class VolLayout extends React.Component {
                 >
                   <MDBListGroupItem>
                     {" "}
-                    <i className="fas m-1 fa-user-alt"></i>
+                    <i className="fas m-1 fa-envelope"></i>
                     Messages
                   </MDBListGroupItem>
                 </NavLink>
@@ -140,6 +141,14 @@ class VolLayout extends React.Component {
 
   //handle on logout
   handleLogout = () => {
+    CometChat.logout().then(
+      () => {
+        window.location.reload(true);
+      },
+      error => {
+        window.location.reload(true);
+      }
+    );
     Cookies.remove("token");
     console.log("removed");
     Cookies.remove("type");

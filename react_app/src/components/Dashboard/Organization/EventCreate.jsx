@@ -6,7 +6,6 @@ import "antd/dist/antd.css";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 
-
 class EventCreate extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +21,7 @@ class EventCreate extends Component {
         State: "",
         ZIP: "",
         date: "",
-        tag:'',
+        tag: "",
         StartTime: "",
         EndTime: ""
       }
@@ -65,8 +64,16 @@ class EventCreate extends Component {
             className="card  "
             onSubmit={e => this.onSubmit(e, this.state.formData)}
           >
-            <div className="form-group row pl-4 pr-4 pt-1 text-center">
-              <label className=" pt-2 col-3"  htmlFor="EventName">Event Name:</label>
+            <div className="form-group  bg-info card  p-4">
+              <span className=" pt-2 text-center " style={{ fontSize: "30px" }}>
+                {" "}
+                Create Event
+              </span>
+            </div>
+            <div className="form-group row px-3 pr-4 ml-1 pt-1 text-center">
+              <label  htmlFor="EventName">
+                Event Name:
+              </label>
               <input
                 type="text"
                 name="EventName"
@@ -77,7 +84,7 @@ class EventCreate extends Component {
                 required
               />
             </div>
-            <div className="form-group row pl-4 pr-4 pt-1 text-center">
+            <div className="form-group row px-3 pr-4 ml-1 pt-1 text-center">
               <label htmlFor="Tag">Category:</label>
               <input
                 type="text"
@@ -98,7 +105,7 @@ class EventCreate extends Component {
     '<option name="Construction">Construction</option>
   </select> */}
             </div>
-            <div className="form-group row pl-4 pr-4 text-center">
+            <div className="form-group row px-3 pr-4 ml-1 text-center">
               <label htmlFor="description">Event Description:</label>
               <textarea
                 className="form-control pr-3 "
@@ -110,8 +117,7 @@ class EventCreate extends Component {
               ></textarea>
             </div>
 
-          
-            <div className="form-group row pl-4 pr-4 text-center">
+            <div className="form-group row px-3 pr-4 ml-1 text-center">
               <label htmlFor="StreetName">Street Name:</label>
               <input
                 type="text"

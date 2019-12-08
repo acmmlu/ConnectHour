@@ -34,8 +34,7 @@ a {
   margin-left: 256px;
 }
 .event-card {
-  padding: 5px;
-  min-height: 350px;
+  min-height: 320px;
 }
 .orgdash{
   background:  #F0F0F0;

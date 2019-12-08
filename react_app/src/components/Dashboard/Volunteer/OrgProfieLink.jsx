@@ -173,12 +173,13 @@ toggleDonateModal(){
   }
 
   render() {
+
     return (
       <>
       <div className="container-fluid">
         <div className='row ml-2  justify-content-left'>
-          <div className='col ' style={{fontSize:'50px'}}>
-            My Profile
+          <div className='col ' style={{fontSize:'30px'}}>
+           {this.state.formData.Name+"'s" + ' Profile'}
           </div>
         </div>
         <hr/>
@@ -269,15 +270,7 @@ toggleDonateModal(){
                     <div className="col">
                       <h3 htmlFor="Description ">About Me</h3>
                     </div>
-                    <div className="col ">
-                      <button
-                        type="button"
-                        onClick={this.toggleEditForm}
-                        className="btn text-info visible float-right"
-                      >
-                        <i class="fas fa-edit"></i>
-                      </button>
-                    </div>
+                   
                   </div>
                   <div className="row" style={{maxHeight:'90px', overflow:'scroll'}}>
                     <div className="col">
@@ -384,6 +377,7 @@ toggleDonateModal(){
               </ModalHeader>
               <PaymentComponent
               formData={this.state.formData}
+              oid={this.props.location.state.oid}
                 toggleDonateModal={this.toggleDonateModal}
               />
             </Modal>
@@ -438,79 +432,83 @@ class PastEvents extends React.Component {
   // }
 
   render() {
+    console.log(this.props.activityData)
     return (
       <>
         {" "}
-        <div className="p-3 col-xl-4 col-lg-6 col-md-12">
-          <div className="card text-center  event-card shadow bg-white rounded ">
-            <h5 className="card-title">
-              {this.props.activityData.EventName}
-              <span className="badge badge-pill badge-primary">
-                {this.props.activityData.Tag}
-              </span>
-            </h5>
-            <span>{this.props.activityData.date}</span>
-            <hr />
-            <p className="card-text">
-              {this.props.activityData.Description.length > 58
-                ? this.props.activityData.Description.substring(1, 58) + "..."
-                : this.props.activityData.Description}
-            </p>
-            <div className="text-center">
-              {" "}
-              <span className="text-weight-bold">Address: </span>
-              {this.props.activityData.StreetNumber},{" "}
-              {this.props.activityData.StreetName},{" "}
-              {this.props.activityData.City}, {this.props.activityData.State},{" "}
-              {this.props.activityData.Zip}
+        <div className="col-xl-4 col-lg-6 col-md-12 ">
+        <div className="card event-card  shadow bg-white rounded border-info">
+          <div className="card-title p-2 text-center  pb-3 bg-info" style={{fontWeight:'bold',fontSize:'18px'}}>
+            {this.props.activityData.EventName}
+        
+           
+          </div>
+          <div className="container  px-3" style={{minHeight:'240px'}}>
+
+           
+
+            
+          <div className="row ">
+            <div className=" badge badge-pill  mx-auto float-right badge-dark">
+            {this.props.activityData.Tag}
+          </div>{" "}
             </div>
-            <div className="form-group col-9  text-center m-auto ">
-              <p>
-                {" "}
-                Date:{" "}
-                {moment(this.props.activityData.StartTime).format("MM-DD-YYYY")}
-              </p>{" "}
-              <p>
-                Starting At:{" "}
-                {moment(this.props.activityData.StartTime).format("HH:mm")}
-              </p>
+           
+            <div className="row py-1 text-center" style={{minHeight:'50px'}}>
+              <div className="col">
+                {this.props.activityData.Description.length > 58
+                  ? this.props.activityData.Description.substring(0, 58) + "..."
+                  : this.props.activityData.Description}
+              </div>
             </div>
-            <div className="m-auto row text-center">
-              <input
-                className="m-auto btn btn-info col"
+            <div className="row text-left py-1" style={{minHeight:'45px'}}>
+              <div className="col text-center">
+                <span className="text-info" style={{ fontWeight: "bold" }}>
+                  Address:{" "}
+                </span>
+                <span>
+                  {this.props.activityData.StreetNumber}, {this.props.activityData.StreetName}
+                  , {this.props.activityData.City}, {this.props.activityData.State},{" "}
+                  {this.props.activityData.ZIP}
+                </span>
+              </div>
+            </div>
+            <div className="row pt-1">
+              <div className="col text-center m-auto ">
+                <span className="text-info" style={{ fontWeight: "bold" }}>
+                  On {moment(this.props.activityData.StartTime).format("MM-DD-YYYY")}
+                </span>
+              </div>
+            </div>
+            <div className="row ">
+              <div className="col text-center m-auto ">
+                <span className="text-info" style={{ fontWeight: "bold" }}>
+                  At {moment(this.props.activityData.StartTime).format("HH:mm")}{" "}
+                  
+                </span>
+              </div>
+            </div>
+            <div className="justify-content-center row text-center mt-5">
+            
+              <div className="col ">
+              <button
+                className="btn btn-info text-nowrap "
                 id={this.props.activityData.EventId}
                 onClick={this.toggleeid}
                 value="Details"
+                
                 type="button"
-              />
+              >
+                Details<i className="fas ml-1 fa-info-circle"></i>
+         </button>
+              </div>
+              
             </div>
-            {/*             
-            <Dropdown  isOpen={showreg}  toggle={this.togglereg} >
-      <DropdownToggle className='bg-info' caret>
-        Show Registered Volunteers
-        </DropdownToggle>
-      <DropdownMenu >
-        <DropdownItem header>Registered Volunteers [ {this.state.registered_vol.length} ]</DropdownItem>
-        
-        {this.state.registered_vol.map(vol => (
-          <DropdownItem key={this.props.event.id}>
-                      <div  className="text-center m-auto">
-                        <div className=''>
-                          <span >Name: </span>
-                          {vol.FirstName} {vol.LastName}
-                        </div>
-                        <div className=''>
-                          <span >Email: </span>
-                          {vol.Email}
-                        </div>
-                      </div>
-                      </DropdownItem>
-                        ))}
-       
-      </DropdownMenu>
-    </Dropdown>
- */}
-
+            <div className="m-auto row text-center">
+             
+            </div>
+           
+</div>
             <Modal
               centered
               isOpen={String(this.state.eid) === String(this.props.activityData.EventId)}
@@ -526,7 +524,35 @@ class PastEvents extends React.Component {
     );
   }
 }
-
+{/* <div className="form-group col-9  text-center m-auto ">
+<p>
+  {" "}
+  Date:{" "}
+  {moment(this.props.activityData.StartTime).format("MM-DD-YYYY")}
+</p>{" "}
+<p>
+  Starting At:{" "}
+  {moment(this.props.activityData.StartTime).format("HH:mm")}
+</p>
+</div>
+<div className="m-auto row text-center">
+<input
+  className="m-auto btn btn-info col"
+  id={this.props.activityData.EventId}
+  onClick={this.toggleeid}
+  value="Details"
+  type="button"
+/>
+</div>
+<Modal
+              centered
+              isOpen={String(this.state.eid) === String(this.props.activityData.EventId)}
+            >
+              <ShowDetails
+                eventdata={this.props.activityData}
+                toggleeid={this.toggleeid}
+              />
+            </Modal> */}
 class ScheduledEvents extends React.Component {
   constructor(props) {
     super(props);
@@ -578,65 +604,98 @@ class ScheduledEvents extends React.Component {
    
     return (
       <>
-        <div className="p-3 col-xl-4 col-lg-6 col-md-12">
-          <div className="card event-card text-center shadow bg-white rounded">
-            <h5 className="card-title">
-              {this.props.event.EventName}
-              <span className="badge badge-pill badge-primary">
-                {this.props.event.Tag}
-              </span>
-            </h5>
+        <div className="col-xl-4 col-lg-6 col-md-12">
+        <div className="card event-card  my-3 shadow bg-white rounded border-info">
+          <div className="card-title p-2 text-center  pb-3 bg-info" style={{fontWeight:'bold',fontSize:'18px'}}>
+        {this.props.event.EventName}
+      
+       
+      </div>
+     
 
-            <hr />
-            <p className="card-text">
-              {this.props.event.Description.length > 58
-                ? this.props.event.Description.substring(1, 58) + "..."
-                : this.props.event.Description}
-            </p>
-            <div className="text-center">
-              {" "}
-              <span className="text-weight-bold">Address: </span>
-              {this.props.event.StreetNumber}, {this.props.event.StreetName},{" "}
-              {this.props.event.City}, {this.props.event.State},{" "}
-              {this.props.event.Zip}
-            </div>
-            <div className="form-group col-9  text-center m-auto ">
-              <p>
-                {" "}
-                Date: {moment(this.props.event.StartTime).format("MM-DD-YYYY")}
-              </p>{" "}
-              <p>
-                Starting At:{" "}
-                {moment(this.props.event.StartTime).format("HH:mm")}
-              </p>
-            </div>
+      <div className="container  px-3" style={{minHeight:'260px'}}>
 
-            <div className="m-auto   justify-content-center row text-center">
-             { !this.state.regeventid.includes(this.props.event.id) && <button
+        <div className="row ">
+        <div className=" badge badge-pill  mx-auto float-right badge-dark">
+        {this.props.event.Tag}
+      </div>{" "}
+        </div>
+        <div className="row py-1 text-center" style={{minHeight:'50px'}}>
+          <div className="col">
+            {this.props.event.Description.length > 58
+              ? this.props.event.Description.substring(0, 58) + "..."
+              : this.props.event.Description}
+          </div>
+        </div>
+        <div className="row text-left py-1 "style={{minHeight:'45px'}}>
+          <div className="col text-center">
+            <span className="text-info" style ={{ fontWeight: "bold" }}>
+              Address:{" "}
+            </span>
+            <span>
+              {this.props.event.StreetNumber}, {this.props.event.StreetName}
+              , {this.props.event.City}, {this.props.event.State},{" "}
+              {this.props.event.ZIP}
+            </span>
+          </div>
+        </div>
+
+        <div className="row pt-1">
+          <div className="col text-center m-auto ">
+            <span className="text-info" style={{ fontWeight: "bold" }}>
+              On {moment(this.props.event.StartTime).format("MM-DD-YYYY")}
+            </span>
+          </div>
+        </div>
+        <div className="row ">
+          <div className="col text-center m-auto ">
+            <span className="text-info" style={{ fontWeight: "bold" }}>
+              At {moment(this.props.event.StartTime).format("HH:mm")}{" "}
+              
+            </span>
+          </div>
+        </div>
+
+        <div className="justify-content-center row text-center mt-4">
+        { !this.state.regeventid.includes(this.props.event.id) && 
+        <div className='col'>
+        <button
                 className=" m-auto btn btn-success text-nowrap col "
                 type="submit"
                 onClick={e => this.onSubmit(e)}
               >
                 Register
+                <i className="fas fa-calendar-check ml-1"></i>
+
               </button>
+              </div>
              }
-              {/* <button
-              className="m-auto btn btn-info text-nowrap col-lg-5 col-md-5 "
-              id={this.props.event.id}
-              onClick={this.props.showForm}
-              name="Searched"
-              type="button"
-            >
-              Details
-            </button> */}
-            <input
-                className="m-auto btn btn-info col"
-                id={this.props.event.id}
+
+          <div className="col ">
+          <button
+                 className="btn btn-info text-nowrap "
+               
+                 name="Registered"
+               
+                 id={this.props.event.id}
                 onClick={this.toggleeid}
-                value="Details"
-                type="button"
-              />
-            </div>
+                  type="button"
+                >
+                  Details
+                  <i className="fas ml-1 fa-info-circle"></i>
+                </button>
+          </div>
+          
+        </div>
+       
+    
+    </div>
+            
+           
+
+            
+           
+            
             <Modal
               centered
               isOpen={String(this.state.eid) ===String(this.props.event.id)}
@@ -685,14 +744,14 @@ class PaymentComponent extends React.Component {
   }
   handleToken(token, addresses) {
   this.props.toggleDonateModal()
-  console.log("test");
+
   console.log({ token, addresses });
-let formData=this.props.formData
-let amount=this.state.amount
+
+
     axios
       .post(
         "/donate/" +
-        jwt_decode(Cookies.get("token")).uid +'/'+formData['id'],amount
+        jwt_decode(Cookies.get("token")).uid +'/'+this.props.oid,this.state
       )
       .then(function(response) {
         console.log(response)
@@ -803,53 +862,74 @@ class ShowDetails extends React.Component {
       <React.Fragment>
         <div className="showDetails ">
           <form className="  text-center">
+            
+
+
             <div className="form-group  bg-info card  p-4">
-              <span className=" pt-2 display-4 text-center ">
+              <span className=" pt-2 text-center " style={{ fontSize: "30px" }}>
                 {" "}
-                {data.EventName}
+                {this.state.formData.EventName}
               </span>
             </div>
-
-            <div className="form-group   text-center  ">{data.Description}</div>
-            <hr />
-
-            <div className="text-center">
-              {" "}
-              <span className="text-weight-bold">Address: </span>
-              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
-              {data.Zip}
-              {this.state.renderMap && this.state.gmap}
+            <div className="container">
+              <div className="row my-2">
+                <div className=" badge badge-pill  mx-auto float-right badge-dark">
+                  {this.state.formData.Tag}
+                </div>{" "}
+              </div>
+              <div className="row my-2">
+                <div className="col">{this.state.formData.Description}</div>
+              </div>
+              <div className="row my-2">
+                <div className="col">
+                  <span className="font-weight-bold text-info">Address: </span>
+                  {this.state.formData.StreetNumber},{" "}
+                  {this.state.formData.StreetName}, {this.state.formData.City},{" "}
+                  {this.state.formData.State}, {this.state.formData.Zip}
+                </div>
+              </div>
+              <div className="row my-2">
+                <div className="col">
+                  {this.state.renderMap && this.state.gmap}
+                </div>
+              </div>
+              <div className="row my-2 font-weight-bold text-info">
+                <div className="col">
+                  On{" "}
+                  {moment(this.state.formData.StartTime).format("MM-DD-YYYY")}
+                </div>
+              </div>
+              <div className="row my-2 font-weight-bold text-info">
+                <div className="col">
+                  At {moment(this.state.formData.StartTime).format("HH:mm")}
+                </div>
+              </div>
             </div>
 
-            <hr />
-            <div className="form-group col-9  text-center m-auto ">
-              <p>
-                {" "}
-                Date:{" "}
-                {moment(this.state.formData.StartTime).format("YYYY-MM-DD")}
-              </p>{" "}
-              <p>
-                Starting At-{" "}
-                {moment(this.state.formData.StartTime).format("HH:mm")}
-              </p>
-            </div>
-            <div className="m-auto text-center">
+            <div className="row my-2">
               {this.props.reg && (
-                <input
-                  className=" btn btn-success m-2"
-                  value="Register"
-                  type="submit"
-                />
+                <div className="col">
+                  <input
+                    className=" btn btn-success m-2"
+                    value="Register"
+                    type="submit"
+                  />
+                </div>
               )}
-              <input
-                className="btn btn-danger m-2"
-                value="Cancel"
-                type="button"
-                onClick={this.props.toggleeid}
-              />
+              
+
+              <div className="col">
+                <input
+                  className="btn btn-danger m-2"
+                  value="Cancel"
+                  type="button"
+                  onClick={this.props.toggleeid}
+                />
+              </div>
             </div>
           </form>
         </div>
+
       </React.Fragment>
     );
   }

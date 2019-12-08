@@ -34,6 +34,7 @@ const ContactConversation = props => {
     avatar: activeContactAvatar,
     status: activeContactStatus
   } = props.activeConversation;
+  console.log(props);
 
   let contact_status = activeContactStatus;
 
@@ -179,6 +180,7 @@ const ContactConversation = props => {
                   handleMessageDelete={props.handleMessageDelete}
                   handleMessageEdit={props.handleMessageEdit}
                   scrollToBottom={props.scrollToBottom}
+                  senderName="other"
                 />
               );
             } else if (m.sender.uid === props.subjectUID) {
@@ -199,6 +201,7 @@ const ContactConversation = props => {
                   handleMessageDelete={props.handleMessageDelete}
                   handleMessageEdit={props.handleMessageEdit}
                   scrollToBottom={props.scrollToBottom}
+                  senderName="You"
                 />
               );
             } else {
@@ -218,6 +221,7 @@ const ContactConversation = props => {
                   handleMessageDelete={props.handleMessageDelete}
                   handleMessageEdit={props.handleMessageEdit}
                   scrollToBottom={props.scrollToBottom}
+                  senderName={activeContactName}
                 />
               );
             }

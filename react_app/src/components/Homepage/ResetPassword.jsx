@@ -126,7 +126,7 @@ class Reset extends Component {
                         <i class="fas fa-chevron-left"></i>
                       </button>
                     </div>
-                    <h4 className="card-title mr-4 text-info col fontType">
+                    <h4 className="card-title mr-4 text-info col fontType"style={{fontWeight:'bold'}}>
                       Reset Password{" "}
                     </h4>
                   </div>
@@ -140,7 +140,7 @@ class Reset extends Component {
                         type="email"
                         name="email"
                         className="form-control form-control-lg fontType"
-                        placeholder="Enter email"
+                        placeholder="Enter email..."
                         value={this.state.email}
                         onChange={this.handleInputChange}
                         required
@@ -153,7 +153,7 @@ class Reset extends Component {
                         type="password"
                         name="new_password"
                         className="form-control form-control-lg fontType"
-                        placeholder="Enter new password"
+                        placeholder="Enter new password..."
                         onChange={this.handleInputChange}
                         onFocus={this.togglereq}
                         required
@@ -211,7 +211,7 @@ class Reset extends Component {
                       <input
                         type="password"
                         name="repeat_new_password"
-                        placeholder="Re-enter new password"
+                        placeholder="Re-enter new password..."
                         className="form-control form-control-lg fontType"
                         onChange={this.handleInputChange}
                         required

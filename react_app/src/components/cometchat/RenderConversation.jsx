@@ -18,6 +18,7 @@ import sentMsgIco from "../../resources/images/MsgStatusIcons/sent@2x.png";
 import seenMsgIco from "../../resources/images/MsgStatusIcons/seen@2x.png";
 import deliveredMsgIco from "../../resources/images/MsgStatusIcons/delivered@2x.png";
 import googleMapIco from "../../resources/images/google-maps-logo.png";
+import user from "../user.png";
 
 class RenderConversation extends Component {
   render() {
@@ -36,7 +37,8 @@ class RenderConversation extends Component {
       showMsgAction,
       handleMessageDelete,
       handleMessageEdit,
-      scrollToBottom
+      scrollToBottom,
+      senderName
     } = this.props;
 
     if (msgCategory === "incoming") {
@@ -52,6 +54,7 @@ class RenderConversation extends Component {
           handleMessageClick={handleMessageClick}
           showMsgAction={showMsgAction}
           scrollToBottom={scrollToBottom}
+          senderName={senderName}
         />
       );
     } else if (msgCategory === "groupMember" || msgCategory === "call") {
@@ -81,6 +84,7 @@ class RenderConversation extends Component {
           handleMessageEdit={handleMessageEdit}
           handleMessageDelete={handleMessageDelete}
           scrollToBottom={scrollToBottom}
+          senderName="You"
         />
       );
     }
@@ -122,7 +126,8 @@ function RenderIcomingMsg({
   avatar,
   attachmentData,
   handleMessageClick,
-  scrollToBottom
+  scrollToBottom,
+  senderName
 }) {
   let messageContent = "";
   let messageEdited = "";
@@ -305,10 +310,13 @@ function RenderIcomingMsg({
     <div className="incoming-msg mb-3">
       <div className="msg-row text-left">
         <div className="msg-avatar">
-          <img src={avatar} alt="user avatar" />
+          <img src={user} alt="user avatar" />
         </div>
         {messageContent}
         {msgSentAt}
+      </div>
+      <div className="msg-row text-left">
+        {senderName}
       </div>
     </div>
   );
@@ -327,7 +335,8 @@ function RenderOutgoingMsg({
   showMsgAction,
   handleMessageEdit,
   handleMessageDelete,
-  scrollToBottom
+  scrollToBottom,
+  senderName
 }) {
   let messageStatus = <img src={waitMsgIco} alt="waitMsgIco" />;
 
@@ -559,6 +568,9 @@ function RenderOutgoingMsg({
           handleMessageClick={handleMessageClick}
         />
         {msgReadReciepts}
+      </div>
+      <div className="msg-row text-right">
+        {senderName}
       </div>
     </div>
   );
