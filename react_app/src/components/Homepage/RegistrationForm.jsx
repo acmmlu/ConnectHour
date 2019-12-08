@@ -216,7 +216,8 @@ class Register extends React.Component {
           <ReCAPTCHA
             ref={recaptchaRef}
             onChange={this.isVerified}
-            sitekey="6Lehb8QUAAAAAAiJMvm-IETRGme1_i-8-DgawbzF"
+            sitekey="
+            6LfUcMQUAAAAALOGzwBYpjurYmt4FS9AzKySE0sh"
           /></div></div>
         </form>
       </div>
