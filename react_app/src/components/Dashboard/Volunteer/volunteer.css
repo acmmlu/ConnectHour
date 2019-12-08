@@ -55,3 +55,6 @@ background-size: cover;
   overflow: scroll;
 }
 
+.RegisteredEvents{
+  overflow-y: scroll
+}

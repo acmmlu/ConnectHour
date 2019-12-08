@@ -75,7 +75,7 @@ class Searched extends React.Component {
           <Modal
             centered
             isOpen={
-              this.props.showFormId === this.props.event.id &&
+              String(this.props.showFormId) === String(this.props.event.id) &&
               this.props.name === "Searched"
             }
           >

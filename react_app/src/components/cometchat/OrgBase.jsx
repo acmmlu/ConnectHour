@@ -43,7 +43,7 @@ export default class OrgBase extends Component {
 
       //getformdata
       axios
-        .get("/organizer/" + UID)
+        .get(" /organizer/" + UID)
         .then(function(response) {
           p.setState({ formData: response.data });
           p.setState({ name: response.data.Name });

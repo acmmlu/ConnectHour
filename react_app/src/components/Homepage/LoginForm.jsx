@@ -143,9 +143,9 @@ class Login extends Component {
         thisprops.toggleVerify(data); //toggle the modal state to show verification form
       })
       .catch(function(error) {
-        if (error.status === 401) {
+    
           p.loginErr(); //display the error message
-        }
+        
       });
   };
 }
