@@ -29,6 +29,8 @@ class ActivityOrg extends React.Component {
     } else {
       this.props.history.push("/");
     }
+
+    document.getElementById("orgbase").style.overflow = "scroll";
   }
   render() {
     return (

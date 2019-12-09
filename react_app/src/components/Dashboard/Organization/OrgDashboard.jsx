@@ -30,7 +30,7 @@ class OrgDashboard extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="orgdash">
+        <div id="orgbase" className="orgdash">
           <OrgLayout history={this.props.history}>
             <Route
               exact

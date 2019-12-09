@@ -166,7 +166,7 @@ exports.upload_photo = function(req, res) {
       res.status(421).send(error);
     }
   } else {
-    res.send(status(421).send("no picture"));
+    res.status(421).send("no picture");
   }
 };
 
