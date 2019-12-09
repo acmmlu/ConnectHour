@@ -181,7 +181,7 @@ export default class OrgBase extends Component {
         console.log(this.state.groupListId, groupList);
         if (groupID.length > 0) {
           groupID.forEach(element => this.createGroup(element));
-          window.location.reload()
+         
 
         }
       },
