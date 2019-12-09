@@ -48,6 +48,8 @@ export default class OrgBase extends Component {
           p.setState({ formData: response.data });
           p.setState({ name: response.data.Name });
           let nam = response.data.Name;
+          nam = nam.replace(/\s+/g, '');
+
           p.setState({ username: UID + nam + UID });
 
           //get registered events
