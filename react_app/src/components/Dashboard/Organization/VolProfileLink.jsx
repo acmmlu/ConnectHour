@@ -88,6 +88,7 @@ class VolProfileLink extends React.Component {
           <div className="row justify-content-center">
             <form
               className=" topdist volprofile"
+              style={{minWidth: 1100}}
               onSubmit={e => this.onSubmit(e, this.state.formData)}
             >
               <div className="container">
