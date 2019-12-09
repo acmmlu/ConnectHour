@@ -44,6 +44,9 @@ class ActivityTracking extends React.Component {
     } else {
       this.props.history.push("/");
     }
+
+    
+    document.getElementById("volbase").style.overflow = "scroll";
   }
   render() {
     return (
