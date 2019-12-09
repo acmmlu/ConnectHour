@@ -13,7 +13,19 @@ class EventEdit extends React.Component {
     this.onEndTime = this.onEndTime.bind(this);
     this.onStartTime = this.onStartTime.bind(this);
   }
+  componentDidMount(){
+    let formData=this.state.formData
+   formData["StartTime"] = 
+    moment(this.state.formData.StartTime).format("HH:mm")
+ 
+   formData["EndTime"] = 
+    moment(this.state.formData.EndTime).format("HH:mm")
+  
 
+  formData['date']=moment(this.state.formData.StartTime).format(
+    "YYYY-MM-DD"
+  )
+  }
   onStartTime(n, time) {
     console.log(time);
     let formData = { ...this.state.formData };
@@ -40,7 +52,7 @@ class EventEdit extends React.Component {
 
   render() {
     const formData = this.state.formData;
-
+    console.log(formData)
     return (
       <React.Fragment>
         <div className=" ">
