@@ -56,14 +56,13 @@ class GroupConversation extends Component {
           let uidToName = {};
           
           if (!_.isEmpty(groupMembers)) {
-            groupMembers = groupMembers.filter(function( element ) {
-              return element !== undefined;
-           });
+            
             _.forEach(groupMembers, (m) => {
+              if (this.props.subjectUID){
               if (m.uid === this.props.subjectUID.toLowerCase()) {
                 members = [...members, "You"];
                 uidToName[m.uid] = "You";
-              } else {
+              }} else {
                 members = [...members, m.name];
                 uidToName[m.uid] = m.name;
               }
