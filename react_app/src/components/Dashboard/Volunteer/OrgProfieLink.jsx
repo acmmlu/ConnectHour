@@ -380,6 +380,7 @@ toggleDonateModal(){
               formData={this.state.formData}
               oid={this.props.location.state.oid}
                 toggleDonateModal={this.toggleDonateModal}
+                Name={this.state.formData.Name}
               />
             </Modal>
       </div>
@@ -772,7 +773,10 @@ this.setState({amount: event.target.value});
 }
 
 render(){
+  let Oname=this.props.Name
+
   return (
+    
     <div className='container p-2'>
       <div className='row mt-1'>
         <div className='col'>
@@ -792,7 +796,7 @@ render(){
         billingAddress
         shippingAddress
         amount={this.state.amount * 100} //need to convert to cents while working with stripe
-        name="Donate to ConnectHour"
+        name={'Donate to '+Oname}
       />
 </div>
 </div>
