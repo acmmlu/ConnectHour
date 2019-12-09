@@ -216,8 +216,7 @@ export default class OrgBase extends Component {
         <div className="container-fluid">
           <div className="row">
             <main className="col-12 col-md-12 col-xl-12">
-              <div className="vertical-center">
-                <div className="container">
+              
                   {this.state.username !== "" && (
                     <ChatContainer
                       user={userstate}
@@ -225,8 +224,7 @@ export default class OrgBase extends Component {
                       handleLogout={this.handleLogout}
                     />
                   )}
-                </div>
-              </div>
+              
             </main>
           </div>
         </div>
