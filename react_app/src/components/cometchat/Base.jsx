@@ -82,10 +82,7 @@ export default class Base extends Component {
         this.props.history.push("/");
       }
 
-
-
-
-   
+      document.getElementById("volbase").style.overflow = "hidden";
   }
 
   loginUser() {

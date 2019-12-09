@@ -29,7 +29,7 @@ class VolDashboard extends React.Component {
           <EventsVol history={this.props.history} />
           <VolProfile history={this.props.history}/>
         </VolLayout> */}
-        <div className="volDashBack">
+        <div id="volbase" className="volDashBack">
           <VolLayout history={this.props.history}>
             <Route
               exact

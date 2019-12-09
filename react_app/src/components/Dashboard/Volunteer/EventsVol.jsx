@@ -61,6 +61,8 @@ class EventsVol extends React.Component {
     } else {
       this.props.history.push("/");
     }
+
+    document.getElementById("volbase").style.overflow = "scroll";
   }
 
   //shows the event forms

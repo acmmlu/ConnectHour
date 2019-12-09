@@ -68,6 +68,8 @@ export default class OrgBase extends Component {
     } else {
       this.props.history.push("/");
     }
+
+    document.getElementById("orgbase").style.overflow = "hidden";
   }
 
   loginUser() {

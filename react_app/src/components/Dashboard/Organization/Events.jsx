@@ -64,6 +64,8 @@ class Events extends Component {
     } else {
       this.props.history.push("/");
     }
+
+    document.getElementById("orgbase").style.overflow = "scroll";
   };
 
   addEvent(event) {
