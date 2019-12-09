@@ -97,11 +97,11 @@ label {
 
 
 .chat-box {
-  width: 1300px;
+  width: 1430px;
   border-radius: 15px;
  
 
-  height: 850px;
+  height: 893px;
 }
 
 .user-avatar {
@@ -285,7 +285,7 @@ button img.loader {
   border-radius: 10px;
   min-height: 50vh;
   overflow: auto;
-  max-height: 600px;
+  max-height: 650px;
 }
 .groups-container .groups-type-title:first-of-type,
 .group-member-listing .group-member-title:first-of-type {
@@ -304,7 +304,7 @@ button img.loader {
   border-radius: 10px;
   overflow: auto;
   height: calc(100% - 82.97px - 89.08px);
-  max-height: 600px;
+  max-height: 650px;
 }
 .group-member-listing {
   max-height: 600px;
@@ -918,6 +918,7 @@ video {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  
   .back-arrow {
     cursor: pointer;
   }
