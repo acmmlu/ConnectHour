@@ -216,6 +216,7 @@ export default class OrgBase extends Component {
                   {this.state.username !== "" && (
                     <ChatContainer
                       user={userstate}
+                      uid={this.state.username}
                       handleLogout={this.handleLogout}
                     />
                   )}
