@@ -662,7 +662,7 @@ class ScheduledEvents extends React.Component {
         { !this.state.regeventid.includes(this.props.event.id) && 
         <div className='col'>
         <button
-                className=" m-auto btn btn-success text-nowrap col "
+                className=" btn btn-success text-nowrap  "
                 type="submit"
                 onClick={e => this.onSubmit(e)}
               >

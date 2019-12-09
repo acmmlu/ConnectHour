@@ -64,8 +64,8 @@ class Searched extends React.Component {
             </div>
 
             <div className="row ">
-            <div className="col-1" />
-              <div className="col-4">
+      
+            <div className="col-xl-6 col-lg-12 col-md-12 my-1">
                 <button
                   className=" mx-1 btn btn-success text-nowrap   "
                   type="submit"
@@ -75,8 +75,8 @@ class Searched extends React.Component {
                   <i className="fas fa-calendar-check ml-1"></i>
                 </button>
               </div>
-              <div className="col-1" />
-              <div className="col-4">
+            
+              <div className="col-xl-6 col-lg-12 col-md-12 my-1">
                 <button
                   className="btn btn-info text-nowrap  "
                   id={this.props.event.id}

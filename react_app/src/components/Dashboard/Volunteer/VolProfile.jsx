@@ -97,7 +97,7 @@ class VolProfile extends React.Component {
     axios
       .put("/pfp/vol/" + p.state.id, data)
       .then(function(d) {
-        this.getPFP();
+        p.getPFP();
         p.togglePhotoModal();
       })
       .catch(function(error) {
@@ -270,8 +270,8 @@ class VolProfile extends React.Component {
                       {" "}
                       <div className="col">
                         {/* City & State */}
-                        {this.state.formData.StreetName},
-                        {this.state.formData.City},{this.state.formData.State},
+                        {this.state.formData.StreetName&&this.state.formData.StreetName+', '}
+                        {this.state.formData.City+', '}{this.state.formData.State}{this.state.formData.ZIP&&', '}
                         {this.state.formData.ZIP}
                       </div>
                     </div>

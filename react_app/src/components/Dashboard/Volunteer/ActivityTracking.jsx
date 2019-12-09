@@ -63,6 +63,8 @@ class ActivityTracking extends React.Component {
             <div className="col">
               <div className="DisplayRecommended container justify-content-left">
                 <div className="row">
+                {this.state.activityData.length===0 && <div className='ml-5' style={{fontSize:'20px'}}>No Past Events</div>}
+
                   {this.state.activityData.map(activityData => (
                     //call the registered component
                     <PastEvents
