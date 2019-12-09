@@ -181,6 +181,8 @@ export default class Base extends Component {
 
         if (difference.length > 0) {
           difference.forEach(element => this.joinNewGroups(String(element)));
+          window.location.reload()
+
         }
       },
       error => {

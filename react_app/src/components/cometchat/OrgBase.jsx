@@ -174,12 +174,15 @@ export default class OrgBase extends Component {
         this.state.eventList.forEach(element => {
           if (!this.state.groupListId.includes(String(element["id"]))) {
             groupID.push(element);
+            
           }
         });
         // let difference = groupID.filter(x => !groupListId.includes(x));
         console.log(this.state.groupListId, groupList);
         if (groupID.length > 0) {
           groupID.forEach(element => this.createGroup(element));
+          window.location.reload()
+
         }
       },
       error => {
