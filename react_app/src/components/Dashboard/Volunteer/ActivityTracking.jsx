@@ -258,7 +258,7 @@ class ShowEventDetails extends React.Component {
       .get(
         `https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
           `${encodeURIComponent(
-            `${data.Streetnumber} ${data.Streetname}, ` +
+            `${data.Streetname}, ` +
               `${data.City}, ${data.State} ${data.ZIP}`
           )}&format=json`
       )
@@ -319,7 +319,7 @@ class ShowEventDetails extends React.Component {
               <div className="row my-2">
                 <div className="col">
                 <span className="font-weight-bold text-info" >Address: </span>
-              {data.StreetNumber}, {data.StreetName}, {data.City}, {data.State},{" "}
+              {data.StreetName}, {data.City}, {data.State},{" "}
               {data.ZIP}
            
                 </div>

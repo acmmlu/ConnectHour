@@ -635,7 +635,7 @@ class ScheduledEvents extends React.Component {
               Address:{" "}
             </span>
             <span>
-              {this.props.event.StreetNumber}, {this.props.event.StreetName}
+               {this.props.event.StreetName}
               , {this.props.event.City}, {this.props.event.State},{" "}
               {this.props.event.ZIP}
             </span>
@@ -822,7 +822,7 @@ class ShowDetails extends React.Component {
     const key = "3579bae5570c63";
 
     axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
-              `${encodeURIComponent(`${data.StreetNumber} ${data.StreetName}, ` +
+              `${encodeURIComponent(`${data.StreetName}, ` +
               `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
       (response) => {
         // console.log(response);
@@ -888,7 +888,7 @@ class ShowDetails extends React.Component {
               <div className="row my-2">
                 <div className="col">
                   <span className="font-weight-bold text-info">Address: </span>
-                  {this.state.formData.StreetNumber},{" "}
+                
                   {this.state.formData.StreetName}, {this.state.formData.City},{" "}
                   {this.state.formData.State}, {this.state.formData.ZIP}
                 </div>
