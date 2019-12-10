@@ -176,7 +176,7 @@ class PastEvents extends React.Component {
                 </div>
               </div>
 
-              <div className="justify-content-center row text-center mt-5">
+              <div className="justify-content-center row text-center mt-3">
                 <div className="col ">
                   <button
                     className="btn btn-info text-nowrap "

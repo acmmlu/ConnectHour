@@ -65,8 +65,8 @@ class Searched extends React.Component {
 
             <div className="row ">
       
-            <div className="col-1" />
-              <div className="col-4">
+            
+            <div className="col-xl-6 col-lg-12 col-md-12 my-1">
                 <button
                   className=" btn btn-success text-nowrap   "
                   type="submit"
@@ -76,8 +76,8 @@ class Searched extends React.Component {
                   <i className="fas fa-calendar-check ml-1"></i>
                 </button>
               </div>
-              <div className="col-1" />
-              <div className="col-4">
+         
+              <div className="col-xl-6 col-lg-12 col-md-12 my-1">
                 <button
                   className="btn btn-info text-nowrap  "
                   id={this.props.event.id}
@@ -90,7 +90,7 @@ class Searched extends React.Component {
                   <i className="fas ml-1 fa-info-circle"></i>
                 </button>
               </div>
-              <div className="col-1" />
+         
               
             </div>
             <div className="row "style={{position:'absolute',bottom:'0',right:'0'}}>
