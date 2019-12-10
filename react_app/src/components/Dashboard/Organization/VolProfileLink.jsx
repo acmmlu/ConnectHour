@@ -335,7 +335,7 @@ class ShowEventDetails extends React.Component {
 
     axios.get(`https://us1.locationiq.com/v1/search.php?key=${key}&q=` +
               `${encodeURIComponent(`${data.StreetNumber} ${data.StreetName}, ` +
-              `${data.City}, ${data.State} ${data.Zip}`)}&format=json`).then(
+              `${data.City}, ${data.State} ${data.ZIP}`)}&format=json`).then(
       (response) => {
         // console.log(response);
 
@@ -404,7 +404,7 @@ class ShowEventDetails extends React.Component {
                   <span className="font-weight-bold text-info">Address: </span>
                   {this.state.formData.StreetNumber},{" "}
                   {this.state.formData.StreetName}, {this.state.formData.City},{" "}
-                  {this.state.formData.State}, {this.state.formData.Zip}
+                  {this.state.formData.State}, {this.state.formData.ZIP}
                 </div>
               </div>
               <div className="row my-2">
