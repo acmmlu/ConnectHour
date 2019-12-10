@@ -264,7 +264,7 @@ class Event extends Component {
                     Registered Volunteers [ {this.state.registered_vol.length} ]
                   </DropdownItem>
 
-                  {this.state.registered_vol.map(vol => (
+                  {this.state.registered_vol.map((vol,i) => (
                     <DropdownItem
                       key={this.props.event.id}
                       onClick={(e) => {this.volProfile(e,i)}}
