@@ -316,7 +316,7 @@ class Event extends Component {
       });
   };
 
-  volProfile = () => {
+  volProfile = (e,i) => {
     e.preventDefault();
     const id = this.state.registered_vol[i].volID;
     const t = this;
