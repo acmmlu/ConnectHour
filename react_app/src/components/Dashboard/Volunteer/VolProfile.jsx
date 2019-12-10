@@ -191,6 +191,7 @@ class VolProfile extends React.Component {
                         <div className="col ">
                           <img
                             id="pfp"
+                            title='Click to change profile picture'
                             alt=""
                             src={
                               this.state.formData.pfp

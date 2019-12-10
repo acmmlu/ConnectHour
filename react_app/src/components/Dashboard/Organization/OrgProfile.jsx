@@ -199,6 +199,7 @@ class OrgProfile extends React.Component {
                         <div className="col ">
                         <img
                         alt=''
+                        title='Click to change profile picture'
                       id="pfp"
                       src={this.state.formData.pfp ? this.state.formData.pfp : user}
                       className="img-thumbnail shadow p-3 bg-white rounded"

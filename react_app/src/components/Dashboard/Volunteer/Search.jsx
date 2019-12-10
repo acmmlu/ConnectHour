@@ -63,7 +63,7 @@ class Searched extends React.Component {
               </div>
             </div>
 
-            <div className="row ">
+            <div className="row text-center">
       
             
             <div className="col-xl-6 col-lg-12 col-md-12 my-1">
