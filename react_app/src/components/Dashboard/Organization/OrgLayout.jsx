@@ -112,7 +112,7 @@ class OrgLayout extends React.Component {
                 >
                   <MDBListGroupItem>
                     {" "}
-                    <i className="fas m-1 fa-user-alt"></i>
+                    <i className="fas m-1 fa-envelope"></i>
                     Messages
                   </MDBListGroupItem>
                 </NavLink>
