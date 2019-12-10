@@ -421,7 +421,7 @@ class SubscribedOrg extends React.Component {
         />
         <CardBody>
           <CardTitle
-            style={{ fontSize: "20px", width: "100px", maxWidth: "100px" }}
+            style={{ fontSize: "20px", width: "100px", maxWidth: "100px",wordWrap:'break-word' }}
           >
             {this.props.org.Name}
           </CardTitle>

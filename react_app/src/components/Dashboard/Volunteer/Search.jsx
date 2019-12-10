@@ -67,7 +67,7 @@ class Searched extends React.Component {
       
             <div className="col-xl-6 col-lg-12 col-md-12 my-1">
                 <button
-                  className=" mx-1 btn btn-success text-nowrap   "
+                  className=" btn btn-success text-nowrap   "
                   type="submit"
                   onClick={e => this.onSubmit(e)}
                 >
