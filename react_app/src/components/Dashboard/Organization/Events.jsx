@@ -267,8 +267,8 @@ class Event extends Component {
                   {this.state.registered_vol.map(vol => (
                     <DropdownItem
                       key={this.props.event.id}
-                      onClick={this.volProfile}
-                    >
+                      onClick={(e) => {this.volProfile(e,i)}}
+                      >
                       <div className="text-center m-auto">
                         <div className="">
                           <span>Name: </span>
@@ -317,7 +317,8 @@ class Event extends Component {
   };
 
   volProfile = () => {
-    const id = this.state.registered_vol[0].volID;
+    e.preventDefault();
+    const id = this.state.registered_vol[i].volID;
     const t = this;
     t.props.history.push({
       pathname: "/odashboard/profile/volunteer/" + id,
